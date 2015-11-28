@@ -3,6 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libShared", "libShared\libShared.csproj", "{338154BB-0C23-4663-BD6B-D7C72DD15038}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libCore", "libCore\libCore.csproj", "{160C8752-82C8-48A5-9590-00EF55141A2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libDesktop", "libDesktop\libDesktop.csproj", "{B80CE52B-2FBD-4F84-AEB7-88F4E9473846}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,13 +20,72 @@ Global
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{338154BB-0C23-4663-BD6B-D7C72DD15038}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{338154BB-0C23-4663-BD6B-D7C72DD15038}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{338154BB-0C23-4663-BD6B-D7C72DD15038}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{338154BB-0C23-4663-BD6B-D7C72DD15038}.Debug|ARM.Build.0 = Debug|Any CPU
+		{338154BB-0C23-4663-BD6B-D7C72DD15038}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{338154BB-0C23-4663-BD6B-D7C72DD15038}.Debug|x64.Build.0 = Debug|Any CPU
+		{338154BB-0C23-4663-BD6B-D7C72DD15038}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{338154BB-0C23-4663-BD6B-D7C72DD15038}.Debug|x86.Build.0 = Debug|Any CPU
+		{338154BB-0C23-4663-BD6B-D7C72DD15038}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{338154BB-0C23-4663-BD6B-D7C72DD15038}.Release|Any CPU.Build.0 = Release|Any CPU
+		{338154BB-0C23-4663-BD6B-D7C72DD15038}.Release|ARM.ActiveCfg = Release|Any CPU
+		{338154BB-0C23-4663-BD6B-D7C72DD15038}.Release|ARM.Build.0 = Release|Any CPU
+		{338154BB-0C23-4663-BD6B-D7C72DD15038}.Release|x64.ActiveCfg = Release|Any CPU
+		{338154BB-0C23-4663-BD6B-D7C72DD15038}.Release|x64.Build.0 = Release|Any CPU
+		{338154BB-0C23-4663-BD6B-D7C72DD15038}.Release|x86.ActiveCfg = Release|Any CPU
+		{338154BB-0C23-4663-BD6B-D7C72DD15038}.Release|x86.Build.0 = Release|Any CPU
+		{160C8752-82C8-48A5-9590-00EF55141A2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{160C8752-82C8-48A5-9590-00EF55141A2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{160C8752-82C8-48A5-9590-00EF55141A2B}.Debug|ARM.ActiveCfg = Debug|ARM
+		{160C8752-82C8-48A5-9590-00EF55141A2B}.Debug|ARM.Build.0 = Debug|ARM
+		{160C8752-82C8-48A5-9590-00EF55141A2B}.Debug|x64.ActiveCfg = Debug|x64
+		{160C8752-82C8-48A5-9590-00EF55141A2B}.Debug|x64.Build.0 = Debug|x64
+		{160C8752-82C8-48A5-9590-00EF55141A2B}.Debug|x86.ActiveCfg = Debug|x86
+		{160C8752-82C8-48A5-9590-00EF55141A2B}.Debug|x86.Build.0 = Debug|x86
+		{160C8752-82C8-48A5-9590-00EF55141A2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{160C8752-82C8-48A5-9590-00EF55141A2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{160C8752-82C8-48A5-9590-00EF55141A2B}.Release|ARM.ActiveCfg = Release|ARM
+		{160C8752-82C8-48A5-9590-00EF55141A2B}.Release|ARM.Build.0 = Release|ARM
+		{160C8752-82C8-48A5-9590-00EF55141A2B}.Release|x64.ActiveCfg = Release|x64
+		{160C8752-82C8-48A5-9590-00EF55141A2B}.Release|x64.Build.0 = Release|x64
+		{160C8752-82C8-48A5-9590-00EF55141A2B}.Release|x86.ActiveCfg = Release|x86
+		{160C8752-82C8-48A5-9590-00EF55141A2B}.Release|x86.Build.0 = Release|x86
+		{B80CE52B-2FBD-4F84-AEB7-88F4E9473846}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B80CE52B-2FBD-4F84-AEB7-88F4E9473846}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B80CE52B-2FBD-4F84-AEB7-88F4E9473846}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{B80CE52B-2FBD-4F84-AEB7-88F4E9473846}.Debug|ARM.Build.0 = Debug|Any CPU
+		{B80CE52B-2FBD-4F84-AEB7-88F4E9473846}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B80CE52B-2FBD-4F84-AEB7-88F4E9473846}.Debug|x64.Build.0 = Debug|Any CPU
+		{B80CE52B-2FBD-4F84-AEB7-88F4E9473846}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B80CE52B-2FBD-4F84-AEB7-88F4E9473846}.Debug|x86.Build.0 = Debug|Any CPU
+		{B80CE52B-2FBD-4F84-AEB7-88F4E9473846}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B80CE52B-2FBD-4F84-AEB7-88F4E9473846}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B80CE52B-2FBD-4F84-AEB7-88F4E9473846}.Release|ARM.ActiveCfg = Release|Any CPU
+		{B80CE52B-2FBD-4F84-AEB7-88F4E9473846}.Release|ARM.Build.0 = Release|Any CPU
+		{B80CE52B-2FBD-4F84-AEB7-88F4E9473846}.Release|x64.ActiveCfg = Release|Any CPU
+		{B80CE52B-2FBD-4F84-AEB7-88F4E9473846}.Release|x64.Build.0 = Release|Any CPU
+		{B80CE52B-2FBD-4F84-AEB7-88F4E9473846}.Release|x86.ActiveCfg = Release|Any CPU
+		{B80CE52B-2FBD-4F84-AEB7-88F4E9473846}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 1
+		SccNumberOfProjects = 4
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://raspi2.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
+		SccProjectUniqueName1 = libShared\\libShared.csproj
+		SccProjectName1 = libShared
+		SccLocalPath1 = libShared
+		SccProjectUniqueName2 = libCore\\libCore.csproj
+		SccProjectName2 = libCore
+		SccLocalPath2 = libCore
+		SccProjectUniqueName3 = libDesktop\\libDesktop.csproj
+		SccProjectName3 = libDesktop
+		SccLocalPath3 = libDesktop
 	EndGlobalSection
 EndGlobal
