@@ -10,7 +10,7 @@ namespace WebServer.ApiController
     {
         public LedController()
         {
-            this.RouteBase = "/LedController";
+            this.RouteBase = "/LedController/";
         }
     }
 }

@@ -96,10 +96,11 @@ namespace WebServer
             {
                 if (myMatch.Success)
                 {
-                    var routes = Routes.Where(o => o.URL == myMatch.Value);
+                    var routes = Routes.Where(o => o.URL == myMatch.Value).ToList();
+                    
                     if(routes.Count( )>1)
                         throw new Exception("Zuviele Routen");
-                    var route = routes.FirstOrDefault();
+                    Route route = routes.FirstOrDefault();
                     return route.Controller;
                 }
             }
