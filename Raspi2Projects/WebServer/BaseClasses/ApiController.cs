@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace WebServer.BaseClasses
 {
   
-    internal class ApiController
+    class ApiController
     {
 
         public string RouteBase { get; set; }
