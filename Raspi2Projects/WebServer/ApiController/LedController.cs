@@ -12,13 +12,16 @@ namespace WebServer.ApiController
     {
         public LedController()
         {
-            this.RouteBase = "/LedController/";
         }
 
         [Route("/LedController/LED")]
         public HttpResponseMessage Led(int LEDNumber)
         {
-            return new HttpResponseMessage() {StatusCode = HttpStatusCode.Accepted};
+            return new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent("LED Controller Methode LED")
+            };
         }
 
         public override string ToString()

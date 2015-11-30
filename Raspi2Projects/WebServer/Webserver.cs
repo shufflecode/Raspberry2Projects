@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
 using WebServer.ApiController;
+using WebServer.BaseClasses;
+
 namespace WebServer
 {
     internal class WebServer
@@ -21,7 +23,9 @@ namespace WebServer
         {
             var Routemanager = new RouteManager();
             var LEDController = new LedController();
-            Routemanager.BaseRoutes.Add(new ControllerRoute(LEDController));
+            Routemanager.Controllers.Add(LEDController);
+            Routemanager.InitRoutes();
+
             StreamSocketListener listener = new StreamSocketListener();
 
            
@@ -29,6 +33,7 @@ namespace WebServer
 
             listener.ConnectionReceived += async (sender, args) =>
             {
+                string retval = String.Empty;
                 StringBuilder request = new StringBuilder();
                 using (IInputStream input = args.Socket.InputStream)
                 {
@@ -43,14 +48,14 @@ namespace WebServer
                         reqstring = request.ToString();
                         dataRead = buffer.Length;
                     }
-                    Routemanager.InvokeMethod(reqstring);
+                    retval =  Routemanager.InvokeMethod(reqstring).ToString();
                 }
 
                 using (IOutputStream output = args.Socket.OutputStream)
                 {
                     using (Stream response = output.AsStreamForWrite())
                     {
-                        byte[] bodyArray = Encoding.UTF8.GetBytes("<html><body>Hello, World!"+ "" +"</body></html>");
+                        byte[] bodyArray = Encoding.UTF8.GetBytes("<html><body>Hello, World!"+ retval + "</body></html>");
                         var bodyStream = new MemoryStream(bodyArray);
 
                         var header = "HTTP/1.1 200 OK\r\n" +
@@ -85,81 +90,82 @@ namespace WebServer
         public RouteManager()
         {
             this.Routes = new List<Route>();
-            this.BaseRoutes = new List<ControllerRoute>();
+            this.Controllers = new List<BaseClasses.ApiController>();
         }
 
         public List<Route> Routes;
-        public List<ControllerRoute> BaseRoutes;
+        public List<BaseClasses.ApiController> Controllers;
 
-        public void InvokeMethod(string reqstring)
+        /// <summary>
+        /// Test
+        /// </summary>
+        /// <param name="reqstring"></param>
+        public object InvokeMethod(string reqstring)
         {
-            var controller = this.GetController(reqstring);
-            var methodname = this.GetMethodName(controller, reqstring);
+            Route methodToInvoke = FindRoute(reqstring);
+            //YES!!!
+            return methodToInvoke.Method.Invoke(methodToInvoke.Controller,new object[] {1});
         }
 
-        
-        private BaseClasses.ApiController GetController(string reqstring)
+        /// <summary>
+        /// Findet die Route zum aktuellen Request
+        /// </summary>
+        /// <param name="reqstring">HTTP Request</param>
+        /// <returns>Die Route mit Methode zum Ausführen</returns>
+        private Route FindRoute(string reqstring)
         {
-            string strRegex = @"/\w+/";
+            string strRegex = @"/\w+/*/.+ ";
             Regex myRegex = new Regex(strRegex, RegexOptions.IgnoreCase);
-
+            
             foreach (Match myMatch in myRegex.Matches(reqstring))
             {
                 if (myMatch.Success)
                 {
-                    var routes = BaseRoutes.Where(o => o.URL == myMatch.Value).ToList();
-                    
-                    if(routes.Count( )>1)
-                        throw new Exception("Zuviele Routen");
-                    ControllerRoute route = routes.FirstOrDefault();
-                    return route.Controller;
+                    Route TargetRoute = Routes.FirstOrDefault(
+                        route => String.Equals(route.URL, myMatch.Value.Trim(), StringComparison.CurrentCultureIgnoreCase));
+                    return TargetRoute;
                 }
             }
             return null;
         }
-
-        private string GetMethodName(BaseClasses.ApiController controller,string request)
+        
+        /// <summary>
+        /// Initialisiert die Routen für alle verfügbaren Controller
+        /// </summary>
+        internal void InitRoutes()
         {
-            var ControllerType = controller.GetType();
-            List<MethodInfo> methodInfos = ControllerType.GetMethods().ToList();
-            string strRegex = @"/\w+/";
-            Regex myRegex = new Regex(strRegex, RegexOptions.IgnoreCase);
-            foreach (Match myMatch in myRegex.Matches(request))
+            foreach (BaseClasses.ApiController apiController in Controllers)
             {
-                if (myMatch.Success)
+                var ControllerType = apiController.GetType();
+                MethodInfo[] methodsWithRoutes = ControllerType.GetMethods().Where(
+                    m => m.GetCustomAttributes(typeof(Route)).Any() ).ToArray();
+                foreach (var memberInfo in methodsWithRoutes)
                 {
-                    var methods = methodInfos.Where(o => o.Name == myMatch.Value).ToList();
-                    if (methods.Count() > 1 || !methods.Any())
-                       continue;
-                    MethodInfo methodInfo = methods.FirstOrDefault();
-                    return methodInfo.Name;
+                    var  route = memberInfo.GetCustomAttributes(typeof (Route)).FirstOrDefault() as Route;
+                    route.Method = memberInfo;
+                    route.Controller = apiController;
+                    route.Params = memberInfo.GetParameters();
+                    Routes.Add(route);
                 }
             }
-            return  String.Empty;
         }
     }
 
     internal class Route : Attribute
     {
         public string URL{get; set;}
+        public MethodInfo Method { get; set; }
+        public BaseClasses.ApiController Controller { get; internal set; }
+        public ParameterInfo[] Params { get; set; }
 
         public Route(string Route)
         {
             this.URL = Route;
         }
-    }
 
-    internal class ControllerRoute
-    {
-        public BaseClasses.ApiController Controller;
-        public string URL { get; set; }
-
-        public ControllerRoute(BaseClasses.ApiController controller)
+        public override string ToString()
         {
-            this.Controller = controller;
-            this.URL = controller.RouteBase;
+            return URL;
         }
     }
-
-
 }
