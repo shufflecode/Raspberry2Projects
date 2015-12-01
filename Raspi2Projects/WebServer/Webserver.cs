@@ -67,6 +67,7 @@ namespace WebServer
             {
                 await WriteResponseAsync(response, output);
             }
+            socket.Dispose();
         }
 
         private async Task WriteResponseAsync(HttpResponseMessage message, IOutputStream os)
@@ -85,7 +86,7 @@ namespace WebServer
                 await stream.CopyToAsync(resp);
                 await resp.FlushAsync();
             }
-
+            os.Dispose();
         }
     }
     internal class RouteManager
@@ -116,8 +117,10 @@ namespace WebServer
         /// Test
         /// </summary>
         /// <param name="reqstring"></param>
+        [Obsolete("Hier muss noch parameterparsing betrieben werden :(")]
         public HttpResponseMessage InvokeMethod(string reqstring)
         {
+            //Todo: get object[] aus dem request und aufruf der Methode mit diesen parametern
             Route methodToInvoke = FindRoute(reqstring);
             var retval = methodToInvoke.Method.Invoke(methodToInvoke.Controller, new object[] {1});
 
