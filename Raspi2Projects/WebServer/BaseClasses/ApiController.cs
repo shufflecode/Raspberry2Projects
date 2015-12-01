@@ -19,6 +19,11 @@ namespace WebServer.BaseClasses
             
         }
         
+        /// <summary>
+        /// ApiMeldung OK mit entsprechend Formatiertem Json Object
+        /// </summary>
+        /// <param name="response">Das Objekt das ausgegeben werden soll</param>
+        /// <returns>HttpResponse OK mit Json Daten</returns>
         public HttpResponseMessage Ok(object response)
         {
             var responseMessgae = new HttpResponseMessage();
