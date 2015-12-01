@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
@@ -12,66 +15,79 @@ using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
 using WebServer.ApiController;
 using WebServer.BaseClasses;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
+using Windows.ApplicationModel.AppService;
+using Windows.Foundation.Collections;
 
 namespace WebServer
 {
-    internal class WebServer
+    public sealed class HttpServer : IDisposable
     {
         private const uint BufferSize = 8192;
+        private int port = 80;
+        private readonly StreamSocketListener listener;
+        private HttpResponseMessage response;
 
-        public void Start()
+        public HttpServer(int serverPort)
         {
-            var Routemanager = new RouteManager();
-            var LEDController = new LedController();
-            Routemanager.Controllers.Add(LEDController);
-            Routemanager.InitRoutes();
+            listener = new StreamSocketListener();
+            port = serverPort;
+            listener.ConnectionReceived += (s, e) => ProcessRequestAsync(e.Socket);
+        }
 
-            StreamSocketListener listener = new StreamSocketListener();
+        public void StartServer()
+        {
+            listener.BindServiceNameAsync(port.ToString());
+        }
 
-           
-            listener.BindServiceNameAsync("80");
+        public void Dispose()
+        {
+            listener.Dispose();
+        }
 
-            listener.ConnectionReceived += async (sender, args) =>
+        private async void ProcessRequestAsync(StreamSocket socket)
+        {
+            StringBuilder request = new StringBuilder();
+            using (IInputStream input = socket.InputStream)
             {
-                string retval = String.Empty;
-                StringBuilder request = new StringBuilder();
-                using (IInputStream input = args.Socket.InputStream)
+                byte[] data = new byte[BufferSize];
+                IBuffer buffer = data.AsBuffer();
+                uint dataRead = BufferSize;
+                while (dataRead == BufferSize)
                 {
-                    byte[] data = new byte[BufferSize];
-                    IBuffer buffer = data.AsBuffer();
-                    uint dataRead = BufferSize;
-                    string reqstring = string.Empty;
-                    while (dataRead == BufferSize)
-                    {
-                        await input.ReadAsync(buffer, BufferSize, InputStreamOptions.Partial);
-                        request.Append(Encoding.UTF8.GetString(data, 0, data.Length));
-                        reqstring = request.ToString();
-                        dataRead = buffer.Length;
-                    }
-                    retval =  Routemanager.InvokeMethod(reqstring).ToString();
+                    await input.ReadAsync(buffer, BufferSize, InputStreamOptions.Partial);
+                    request.Append(Encoding.UTF8.GetString(data, 0, data.Length));
+                    dataRead = buffer.Length;
                 }
+                response = RouteManager.Instance.InvokeMethod(request.ToString());
+            }
 
-                using (IOutputStream output = args.Socket.OutputStream)
-                {
-                    using (Stream response = output.AsStreamForWrite())
-                    {
-                        byte[] bodyArray = Encoding.UTF8.GetBytes("<html><body>Hello, World!"+ retval + "</body></html>");
-                        var bodyStream = new MemoryStream(bodyArray);
+            using (IOutputStream output = socket.OutputStream)
+            {
+                await WriteResponseAsync(response, output);
+            }
+        }
 
-                        var header = "HTTP/1.1 200 OK\r\n" +
-                                    $"Content-Length: {bodyStream.Length}\r\n" +
-                                        "Connection: close\r\n\r\n";
+        private async Task WriteResponseAsync(HttpResponseMessage message, IOutputStream os)
+        {   
+            using (Stream resp = os.AsStreamForWrite())
+            {
+                byte[] bodyArray = await message.Content.ReadAsByteArrayAsync();
+                MemoryStream stream = new MemoryStream(bodyArray);
+                message.Content.Headers.ContentLength = stream.Length;
+                string header = string.Format( "HTTP/" + message.Version + " " +(int) message.StatusCode + " " +message.StatusCode + Environment.NewLine
+                                            + "Content-Type: " + message.Content.Headers.ContentType + Environment.NewLine
+                                            + "Content-Length: " + message.Content.Headers.ContentLength + Environment.NewLine 
+                                            + "Connection: close\r\n\r\n");
+                byte[] headerArray = Encoding.UTF8.GetBytes(header);
+                await resp.WriteAsync(headerArray, 0, headerArray.Length);
+                await stream.CopyToAsync(resp);
+                await resp.FlushAsync();
+            }
 
-                        byte[] headerArray = Encoding.UTF8.GetBytes(header);
-                        await response.WriteAsync(headerArray, 0, headerArray.Length);
-                        await bodyStream.CopyToAsync(response);
-                        await response.FlushAsync();
-                    }
-                }
-            };
         }
     }
-
     internal class RouteManager
     {
         private static RouteManager _instance;
@@ -100,11 +116,12 @@ namespace WebServer
         /// Test
         /// </summary>
         /// <param name="reqstring"></param>
-        public object InvokeMethod(string reqstring)
+        public HttpResponseMessage InvokeMethod(string reqstring)
         {
             Route methodToInvoke = FindRoute(reqstring);
-            //YES!!!
-            return methodToInvoke.Method.Invoke(methodToInvoke.Controller,new object[] {1});
+            var retval = methodToInvoke.Method.Invoke(methodToInvoke.Controller, new object[] {1});
+
+            return retval as HttpResponseMessage;
         }
 
         /// <summary>

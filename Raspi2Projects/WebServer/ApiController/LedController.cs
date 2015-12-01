@@ -5,6 +5,8 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI;
+using WebServer.Models;
 
 namespace WebServer.ApiController
 {
@@ -14,20 +16,25 @@ namespace WebServer.ApiController
         {
         }
 
-        [Route("/LedController/LED")]
-        public HttpResponseMessage Led(int LEDNumber)
+        [Route("/LedController/Green")]
+        public HttpResponseMessage LedGreen(int LEDNumber)
         {
-            return new HttpResponseMessage()
+            return Ok(new LEDStatus()
             {
-                StatusCode = HttpStatusCode.OK,
-                Content = new StringContent("LED Controller Methode LED")
-            };
+               status = LEDStatus.Status.on,
+               color = Colors.Green
+            });
         }
 
-        public override string ToString()
+
+        [Route("/LedController/Blue")]
+        public HttpResponseMessage LedBlue(int LEDNumber)
         {
-            return "LED - Controller";
+            return Ok(new LEDStatus()
+            {
+                status = LEDStatus.Status.on,
+                color = Colors.Blue
+            });
         }
-
     }
 }
