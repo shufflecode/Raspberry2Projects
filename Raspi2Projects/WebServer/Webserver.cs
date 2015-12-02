@@ -34,8 +34,12 @@ namespace WebServer
         {
             listener = new StreamSocketListener();
             port = serverPort;
-            listener.BindServiceNameAsync(port.ToString());
             listener.ConnectionReceived += (s, e) => ProcessRequestAsync(e.Socket);
+        }
+
+        public async void Start()
+        {
+            await listener.BindServiceNameAsync(port.ToString());
         }
 
         public void Dispose()
@@ -60,10 +64,8 @@ namespace WebServer
                         dataRead = buffer.Length;
                     }
                 }
-
-                response = new HttpResponseMessage(HttpStatusCode.Found);
-                response.Content = new StringContent("huhuh ?");
-                //response = RouteManager.CurrentRouteManager.InvokeMethod(request.ToString());
+                
+                response = RouteManager.CurrentRouteManager.InvokeMethod(request.ToString());
 
                 using (IOutputStream output = socket.OutputStream)
                 {
@@ -131,10 +133,14 @@ namespace WebServer
         /// Test
         /// </summary>
         /// <param name="reqstring"></param>
-        [Obsolete("Hier muss noch parameterparsing betrieben werden :(")]
+        [Obsolete("Hier muss noch Arbeit betrieben werden :(")]
         public HttpResponseMessage InvokeMethod(string reqstring)
         {
-            //Todo: get object[] aus dem request und aufruf der Methode mit diesen parametern
+            //Todo: get object[] aus dem request bei GET Aufruf und Invoke mit diesen Parametern 
+            //Todo: GET oder POST unterscheiden 
+            //Todo: Json Object Parsing bei POST Daten und Invoke mit diesem Object (ObjectCasting in der Methode die die Route vorgibt)
+
+            //DEMO:
             Route methodToInvoke = FindRoute(reqstring);
             var retval = methodToInvoke.Method.Invoke(methodToInvoke.Controller, new object[] {1});
 

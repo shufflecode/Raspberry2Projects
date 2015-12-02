@@ -23,17 +23,20 @@ namespace WebServer
 {
     public sealed class StartupTask : IBackgroundTask
     {
+        private BackgroundTaskDeferral _deferral;
         public void Run(IBackgroundTaskInstance taskInstance)
         {
-            taskInstance.GetDeferral();
+            ///Wird das ding nicht als Attribut gehalten kommt der GC vorbei und die APP Stirbt :/ 
+            this._deferral = taskInstance.GetDeferral();
             
             try
             {
+                HttpServer server = new HttpServer(80);
                 RouteManager.CurrentRouteManager.Controllers.Add(new LedController());
                 RouteManager.CurrentRouteManager.InitRoutes();
                 IAsyncAction asyncAction = ThreadPool.RunAsync(workItem =>
                 {
-                    HttpServer server = new HttpServer(80);
+                     server.Start();
                   
                 });
             }
