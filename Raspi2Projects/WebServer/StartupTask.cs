@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,7 @@ using Windows.Foundation.Collections;
 using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
 using Windows.System.Threading;
+using Windows.UI.Xaml;
 using WebServer.ApiController;
 
 // The Background Application template is documented at http://go.microsoft.com/fwlink/?LinkID=533884&clcid=0x409
@@ -24,13 +26,22 @@ namespace WebServer
         public void Run(IBackgroundTaskInstance taskInstance)
         {
             taskInstance.GetDeferral();
-            HttpServer server = new HttpServer(80);
-            RouteManager.Instance.Controllers.Add(new LedController());
-            RouteManager.Instance.InitRoutes();
-            ThreadPool.RunAsync(workItem =>
+            
+            try
             {
-                server.StartServer();
-            });
+                RouteManager.CurrentRouteManager.Controllers.Add(new LedController());
+                RouteManager.CurrentRouteManager.InitRoutes();
+                IAsyncAction asyncAction = ThreadPool.RunAsync(workItem =>
+                {
+                    HttpServer server = new HttpServer(80);
+                  
+                });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Fehler in Run: " + ex.Message);
+            }
+           
         }
     }
 
