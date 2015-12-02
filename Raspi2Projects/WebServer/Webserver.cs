@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -33,12 +34,8 @@ namespace WebServer
         {
             listener = new StreamSocketListener();
             port = serverPort;
-            listener.ConnectionReceived += (s, e) => ProcessRequestAsync(e.Socket);
-        }
-
-        public void StartServer()
-        {
             listener.BindServiceNameAsync(port.ToString());
+            listener.ConnectionReceived += (s, e) => ProcessRequestAsync(e.Socket);
         }
 
         public void Dispose()
@@ -48,51 +45,68 @@ namespace WebServer
 
         private async void ProcessRequestAsync(StreamSocket socket)
         {
-            StringBuilder request = new StringBuilder();
-            using (IInputStream input = socket.InputStream)
+            try
             {
-                byte[] data = new byte[BufferSize];
-                IBuffer buffer = data.AsBuffer();
-                uint dataRead = BufferSize;
-                while (dataRead == BufferSize)
+                StringBuilder request = new StringBuilder();
+                using (IInputStream input = socket.InputStream)
                 {
-                    await input.ReadAsync(buffer, BufferSize, InputStreamOptions.Partial);
-                    request.Append(Encoding.UTF8.GetString(data, 0, data.Length));
-                    dataRead = buffer.Length;
+                    byte[] data = new byte[BufferSize];
+                    IBuffer buffer = data.AsBuffer();
+                    uint dataRead = BufferSize;
+                    while (dataRead == BufferSize)
+                    {
+                        await input.ReadAsync(buffer, BufferSize, InputStreamOptions.Partial);
+                        request.Append(Encoding.UTF8.GetString(data, 0, data.Length));
+                        dataRead = buffer.Length;
+                    }
                 }
-                response = RouteManager.Instance.InvokeMethod(request.ToString());
-            }
 
-            using (IOutputStream output = socket.OutputStream)
-            {
-                await WriteResponseAsync(response, output);
+                response = new HttpResponseMessage(HttpStatusCode.Found);
+                response.Content = new StringContent("huhuh ?");
+                //response = RouteManager.CurrentRouteManager.InvokeMethod(request.ToString());
+
+                using (IOutputStream output = socket.OutputStream)
+                {
+                    await WriteResponseAsync(response, output);
+                }
             }
-            socket.Dispose();
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Fehler in ProcessRequestAsync: " + ex.Message);
+            }
+            
         }
 
         private async Task WriteResponseAsync(HttpResponseMessage message, IOutputStream os)
-        {   
-            using (Stream resp = os.AsStreamForWrite())
+        {
+            try
             {
-                byte[] bodyArray = await message.Content.ReadAsByteArrayAsync();
-                MemoryStream stream = new MemoryStream(bodyArray);
-                message.Content.Headers.ContentLength = stream.Length;
-                string header = string.Format( "HTTP/" + message.Version + " " +(int) message.StatusCode + " " +message.StatusCode + Environment.NewLine
-                                            + "Content-Type: " + message.Content.Headers.ContentType + Environment.NewLine
-                                            + "Content-Length: " + message.Content.Headers.ContentLength + Environment.NewLine 
-                                            + "Connection: close\r\n\r\n");
-                byte[] headerArray = Encoding.UTF8.GetBytes(header);
-                await resp.WriteAsync(headerArray, 0, headerArray.Length);
-                await stream.CopyToAsync(resp);
-                await resp.FlushAsync();
+                using (Stream resp = os.AsStreamForWrite())
+                {
+                    byte[] bodyArray = await message.Content.ReadAsByteArrayAsync();
+                    MemoryStream stream = new MemoryStream(bodyArray);
+                    message.Content.Headers.ContentLength = stream.Length;
+                    string header = string.Format("HTTP/" + message.Version + " " + (int)message.StatusCode + " " + message.StatusCode + Environment.NewLine
+                                                + "Content-Type: " + message.Content.Headers.ContentType + Environment.NewLine
+                                                + "Content-Length: " + message.Content.Headers.ContentLength + Environment.NewLine
+                                                + "Connection: close\r\n\r\n");
+                    byte[] headerArray = Encoding.UTF8.GetBytes(header);
+                    await resp.WriteAsync(headerArray, 0, headerArray.Length);
+                    await stream.CopyToAsync(resp);
+                    await resp.FlushAsync();
+                }
             }
-            os.Dispose();
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Fehler in WriteResponseAsync: " + ex.Message);
+            }
+            
         }
     }
     internal class RouteManager
     {
         private static RouteManager _instance;
-        public static RouteManager Instance
+        public static RouteManager CurrentRouteManager
         {
             get
             {
