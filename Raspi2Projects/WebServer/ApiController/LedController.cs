@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI;
-using WebServer.Models;
+using libShared.ApiModels;
 
 namespace WebServer.ApiController
 {
@@ -19,22 +19,14 @@ namespace WebServer.ApiController
         [Route("/LedController/Green")]
         public HttpResponseMessage LedGreen(int LEDNumber)
         {
-            return Ok(new LEDStatus()
-            {
-               status = LEDStatus.Status.on,
-               color = Colors.Green
-            });
+            return Ok(new object());
         }
 
 
         [Route("/LedController/Blue")]
         public HttpResponseMessage LedBlue(int LEDNumber)
         {
-            return Ok(new LEDStatus()
-            {
-                status = LEDStatus.Status.on,
-                color = Colors.Blue
-            });
+            return Ok(new object());
         }
     }
 }
