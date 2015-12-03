@@ -19,14 +19,22 @@ namespace WebServer.ApiController
         [Route("/LedController/Green")]
         public HttpResponseMessage LedGreen(int LEDNumber)
         {
-            return Ok(new object());
+            return Ok(new LEDStatus()
+            {
+                LedNumber = 2,
+                status = LEDStatus.Status.on
+            });
         }
 
 
         [Route("/LedController/Blue")]
         public HttpResponseMessage LedBlue(int LEDNumber)
         {
-            return Ok(new object());
+            return Ok(new LEDStatus()
+            {
+                LedNumber = 1,
+                status = LEDStatus.Status.on
+            });
         }
     }
 }
