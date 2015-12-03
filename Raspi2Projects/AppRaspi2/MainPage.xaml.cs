@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using WebServer;
 
 // Die Vorlage "Leere Seite" ist unter http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 dokumentiert.
 
@@ -26,11 +27,7 @@ namespace AppRaspi2
         public MainPage()
         {
             this.InitializeComponent();
-            WebServer.WebServer server = new WebServer.WebServer();
-            ThreadPool.RunAsync(workItem =>
-            {
-                server.Start();
-            });
+            var task = new StartupTask();
         }
     }
 }

@@ -1,7 +1,7 @@
 using System.Runtime.Serialization;
 using Windows.UI;
 
-namespace WebServer.Models
+namespace BackgroundWebserver.Models
 {
     [DataContract]
     class LEDStatus

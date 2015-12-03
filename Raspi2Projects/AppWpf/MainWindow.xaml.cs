@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SanaScanV2.Webservice;
 
 namespace AppWpf
 {
@@ -23,6 +24,7 @@ namespace AppWpf
         public MainWindow()
         {
             InitializeComponent();
+            var status = RaspiApi.GetLedStatus();
         }
     }
 }
