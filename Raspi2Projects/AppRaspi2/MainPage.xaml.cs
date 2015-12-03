@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.Background;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.System.Threading;
@@ -26,8 +27,14 @@ namespace AppRaspi2
     {
         public MainPage()
         {
+          
+            
             this.InitializeComponent();
-            var task = new StartupTask();
+            BackgroundTaskBuilder builder = new BackgroundTaskBuilder();
+            builder.Name = "WebserverTask";
+            builder.TaskEntryPoint = "WebServer.StartupTask";
+            builder.SetTrigger(new SystemTrigger(SystemTriggerType.Invalid, true));
+            BackgroundTaskRegistration task = builder.Register();
         }
     }
 }
