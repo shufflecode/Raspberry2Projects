@@ -1,7 +1,7 @@
 
 namespace libShared.ApiModels
 {
-    class LEDStatus
+    public class LEDStatus
     {
        
         public int LedNumber;
