@@ -137,6 +137,7 @@ namespace WebServer
         [Obsolete("Hier muss noch Arbeit betrieben werden :(")]
         public HttpResponseMessage InvokeMethod(string reqstring)
         {
+            HttpResponseMessage retval;
             var request = new Request(reqstring);
 
             //Todo: get object[] aus dem request bei GET Aufruf und Invoke mit diesen Parametern 
@@ -155,13 +156,18 @@ namespace WebServer
 
             var param = methodToInvoke.Params.First();
             var type = param?.ParameterType;
-            var instance = Activator.CreateInstance(type);
-            
-            JsonConvert.PopulateObject(request.Content,p);
+            if (type != null)
+            {
+                var instance = Activator.CreateInstance(type);
+                JsonConvert.PopulateObject(request.Content, instance);
+                retval = methodToInvoke.Method.Invoke(methodToInvoke.Controller, new [] { instance }) as HttpResponseMessage;
+            }
+            else
+            {
+                retval = methodToInvoke.Method.Invoke(methodToInvoke.Controller, null) as HttpResponseMessage;
+            }
 
-            var retval = methodToInvoke.Method.Invoke(methodToInvoke.Controller, null);
-
-            return retval as HttpResponseMessage;
+            return retval;
         }
 
         /// <summary>
