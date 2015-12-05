@@ -27,14 +27,8 @@ namespace AppRaspi2
     {
         public MainPage()
         {
-          
-            
             this.InitializeComponent();
-            BackgroundTaskBuilder builder = new BackgroundTaskBuilder();
-            builder.Name = "WebserverTask";
-            builder.TaskEntryPoint = "WebServer.StartupTask";
-            builder.SetTrigger(new SystemTrigger(SystemTriggerType.Invalid, true));
-            BackgroundTaskRegistration task = builder.Register();
+          
         }
     }
 }
