@@ -16,8 +16,8 @@ namespace WebServer.ApiController
         {
         }
 
-        [Route("/LedController/Green")]
-        public HttpResponseMessage LedGreen(int LEDNumber)
+        [Route("/LedController/Green",Route.Type.GET)]
+        public HttpResponseMessage LedGreen( )
         {
             return Ok(new LEDStatus()
             {
@@ -27,8 +27,8 @@ namespace WebServer.ApiController
         }
 
 
-        [Route("/LedController/Blue")]
-        public HttpResponseMessage LedBlue(int LEDNumber)
+        [Route("/LedController/Blue",Route.Type.GET)]
+        public HttpResponseMessage LedBlue( )
         {
             return Ok(new LEDStatus()
             {

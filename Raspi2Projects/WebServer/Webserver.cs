@@ -136,13 +136,23 @@ namespace WebServer
         [Obsolete("Hier muss noch Arbeit betrieben werden :(")]
         public HttpResponseMessage InvokeMethod(string reqstring)
         {
+            var request = new Request(reqstring);
+
             //Todo: get object[] aus dem request bei GET Aufruf und Invoke mit diesen Parametern 
             //Todo: GET oder POST unterscheiden 
             //Todo: Json Object Parsing bei POST Daten und Invoke mit diesem Object (ObjectCasting in der Methode die die Route vorgibt)
 
             //DEMO:
-            Route methodToInvoke = FindRoute(reqstring);
-            var retval = methodToInvoke.Method.Invoke(methodToInvoke.Controller, new object[] {1});
+            Route methodToInvoke = FindRoute(request.Path);
+            if (methodToInvoke == null)
+            {
+                var response = new HttpResponseMessage();
+                response.StatusCode = HttpStatusCode.NotFound;
+                response.Content = new StringContent("Keine Route gefunden");
+                return response;
+            }
+            
+            var retval = methodToInvoke.Method.Invoke(methodToInvoke.Controller, null);
 
             return retval as HttpResponseMessage;
         }
@@ -154,7 +164,7 @@ namespace WebServer
         /// <returns>Die Route mit Methode zum Ausführen</returns>
         private Route FindRoute(string reqstring)
         {
-            string strRegex = @"/\w+/*/.+ ";
+            string strRegex = @"/\w+/*/.+";
             Regex myRegex = new Regex(strRegex, RegexOptions.IgnoreCase);
             
             foreach (Match myMatch in myRegex.Matches(reqstring))
@@ -189,23 +199,90 @@ namespace WebServer
                 }
             }
         }
+        
     }
 
     internal class Route : Attribute
     {
+        public Type MethodType;
         public string URL{get; set;}
         public MethodInfo Method { get; set; }
         public BaseClasses.ApiController Controller { get; internal set; }
         public ParameterInfo[] Params { get; set; }
 
-        public Route(string Route)
+        public Route(string Route,Type type)
         {
             this.URL = Route;
+            this.MethodType = type;
         }
 
         public override string ToString()
         {
             return URL;
+        }
+
+        public enum Type
+        {
+            GET =1,
+            POST =2
+        }
+    }
+
+    class Request
+    {
+        private string rawstring;
+        public RequestType type;
+        private object ContentLenght;
+        public string Path { get; set; }
+
+        public Request(string rawrequest)
+        {
+            this.rawstring = rawrequest;
+            this.type = GetRequestType(rawstring);
+            this.Path = GetRequestPath(rawstring);
+            this.ContentLenght = GetContentLenght(rawstring);
+        }
+
+        private int GetContentLenght(string request)
+        {
+            int lenght = 0;
+            string strRegex = @"Content-Length:.*";
+            Regex myRegex = new Regex(strRegex, RegexOptions.IgnoreCase);
+            foreach (Match myMatch in myRegex.Matches(request))
+            {
+                if (myMatch.Success)
+                {
+                    strRegex = @"[0-9]";
+                    Regex numbers = new Regex(strRegex, RegexOptions.IgnoreCase);
+                    foreach (Match numbermatch in numbers.Matches(myMatch.Value))
+                    {
+                        if (numbermatch.Success)
+                        {
+                            int.TryParse(numbermatch.Value, out lenght);
+                        }
+                    }
+                }
+            }
+            return lenght;
+        }
+
+        private RequestType GetRequestType(string reqstring)
+        {
+            RequestType type;
+            var words = reqstring.Split(' ');
+            Enum.TryParse(words[0], out type);
+            return type;
+        }
+
+        private string GetRequestPath(string reqstring)
+        {
+            var words = reqstring.Split(' ');
+            return words[1];
+        }
+        public enum RequestType
+        {
+            GET,
+            POST
         }
     }
 }

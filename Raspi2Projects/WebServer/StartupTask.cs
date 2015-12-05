@@ -33,6 +33,7 @@ namespace WebServer
             {
                 HttpServer server = new HttpServer(80);
                 RouteManager.CurrentRouteManager.Controllers.Add(new LedController());
+                RouteManager.CurrentRouteManager.Controllers.Add(new GPIOController());
                 RouteManager.CurrentRouteManager.InitRoutes();
                 IAsyncAction asyncAction = ThreadPool.RunAsync(workItem =>
                 {

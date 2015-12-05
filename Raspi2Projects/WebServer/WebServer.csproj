@@ -100,8 +100,10 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiController\GPIOController.cs" />
     <Compile Include="ApiController\LedController.cs" />
     <Compile Include="BaseClasses\ApiController.cs" />
+    <Compile Include="Models\GPIOModel.cs" />
     <Compile Include="StartupTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Webserver.cs" />

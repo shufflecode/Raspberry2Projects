@@ -15,7 +15,14 @@ namespace WebServer.BaseClasses
         {
             
         }
-        
+
+        public HttpResponseMessage Ok()
+        {
+            var responseMessgae = new HttpResponseMessage();
+            responseMessgae.StatusCode = HttpStatusCode.OK;
+            return responseMessgae;
+        }
+
         /// <summary>
         /// ApiMeldung OK mit entsprechend Formatiertem Json Object
         /// </summary>
