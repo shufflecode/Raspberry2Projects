@@ -139,12 +139,7 @@ namespace WebServer
         {
             HttpResponseMessage retval;
             var request = new Request(reqstring);
-
-            //Todo: get object[] aus dem request bei GET Aufruf und Invoke mit diesen Parametern 
-            //Todo: GET oder POST unterscheiden 
-            //Todo: Json Object Parsing bei POST Daten und Invoke mit diesem Object (ObjectCasting in der Methode die die Route vorgibt)
-
-            //DEMO:
+            
             Route methodToInvoke = FindRoute(request.Path);
             if (methodToInvoke == null)
             {
