@@ -20,6 +20,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation.Collections;
+using Newtonsoft.Json;
 
 namespace WebServer
 {
@@ -151,7 +152,13 @@ namespace WebServer
                 response.Content = new StringContent("Keine Route gefunden");
                 return response;
             }
+
+            var param = methodToInvoke.Params.First();
+            var type = param?.ParameterType;
+            var instance = Activator.CreateInstance(type);
             
+            JsonConvert.PopulateObject(request.Content,p);
+
             var retval = methodToInvoke.Method.Invoke(methodToInvoke.Controller, null);
 
             return retval as HttpResponseMessage;
@@ -232,8 +239,9 @@ namespace WebServer
     {
         private string rawstring;
         public RequestType type;
-        private object ContentLenght;
+        public int ContentLenght { get; set; }
         public string Path { get; set; }
+        public string Content { get; set; }
 
         public Request(string rawrequest)
         {
@@ -241,6 +249,21 @@ namespace WebServer
             this.type = GetRequestType(rawstring);
             this.Path = GetRequestPath(rawstring);
             this.ContentLenght = GetContentLenght(rawstring);
+            this.Content = GetContent(rawstring);
+        }
+        
+        private string GetContent(string request)
+        {
+            string strRegex = @"{((?>[^{}]+|{(?<c>)|}(?<-c>))*(?(c)(?!))).";
+            Regex myRegex = new Regex(strRegex, RegexOptions.IgnoreCase);
+            foreach (Match myMatch in myRegex.Matches(request))
+            {
+                if (myMatch.Success)
+                {
+                    return myMatch.Value;
+                }
+            }
+            return string.Empty;
         }
 
         private int GetContentLenght(string request)

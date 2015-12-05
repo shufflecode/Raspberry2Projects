@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace libCore
+namespace libShared
 {
-    using System;
-
     /// <summary>
     /// Klasse für das Exception Handling
     /// </summary>

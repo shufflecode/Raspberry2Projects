@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Windows.Input;
 
-namespace libCore
+namespace libShared
 {
-    using System;
-    using System.Diagnostics;
-    using System.Windows.Input;
-
     /// <summary>
     /// Hilfsklasse für die Trennung von UI und Code (MVVM -> Model-View-ViewModel-Pattern)
     /// Quelle: http://msdn.microsoft.com/de-de/magazine/dd419663.aspx
