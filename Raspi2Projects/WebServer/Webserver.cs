@@ -106,6 +106,10 @@ namespace WebServer
             
         }
     }
+
+    /// <summary>
+    /// Singleton, verwaltet die ApiRouten des Servers
+    /// </summary>
     internal class RouteManager
     {
         private static RouteManager _instance;
@@ -127,14 +131,21 @@ namespace WebServer
             this.Controllers = new List<BaseClasses.ApiController>();
         }
 
+        /// <summary>
+        /// Alle verfügbaren Routen der Registrierten Controller
+        /// </summary>
         public List<Route> Routes;
+
+        /// <summary>
+        /// Alle Registrierten Controller der Api
+        /// </summary>
         public List<BaseClasses.ApiController> Controllers;
 
         /// <summary>
-        /// Test
+        /// Ermittelt aus dem rohen Request die aufzurufende Methode und 
+        /// ruft diese mit den nnthaltenen Informationen und Paramtern auf
         /// </summary>
-        /// <param name="reqstring"></param>
-        [Obsolete("Hier muss noch Arbeit betrieben werden :(")]
+        /// <param name="reqstring">der ungefilterte HTTPRequest</param>
         public HttpResponseMessage InvokeMethod(string reqstring)
         {
             HttpResponseMessage retval;
