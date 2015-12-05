@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
@@ -14,12 +12,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
-using WebServer.ApiController;
-using WebServer.BaseClasses;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
-using Windows.ApplicationModel.AppService;
-using Windows.Foundation.Collections;
 using Newtonsoft.Json;
 
 namespace WebServer
@@ -218,9 +210,11 @@ namespace WebServer
                 }
             }
         }
-        
     }
 
+    /// <summary>
+    /// Enthält Informationen zu einer ApiRoute
+    /// </summary>
     internal class Route : Attribute
     {
         public Type MethodType;
@@ -247,6 +241,9 @@ namespace WebServer
         }
     }
 
+    /// <summary>
+    /// Hilfsklasse zum Parsen eines HTTPRequests
+    /// </summary>
     class Request
     {
         private string rawstring;
