@@ -19,25 +19,25 @@ namespace WebServer
     public sealed class HttpServer : IDisposable
     {
         private const uint BufferSize = 8192;
-        private int port = 80;
-        private readonly StreamSocketListener listener;
-        private HttpResponseMessage response;
+        private readonly int _port;
+        private readonly StreamSocketListener _listener;
+        private HttpResponseMessage _response;
 
         public HttpServer(int serverPort)
         {
-            listener = new StreamSocketListener();
-            port = serverPort;
-            listener.ConnectionReceived += (s, e) => ProcessRequestAsync(e.Socket);
+            _listener = new StreamSocketListener();
+            _port = serverPort;
+            _listener.ConnectionReceived += (s, e) => ProcessRequestAsync(e.Socket);
         }
 
         public async void Start()
         {
-            await listener.BindServiceNameAsync(port.ToString());
+            await _listener.BindServiceNameAsync(_port.ToString());
         }
 
         public void Dispose()
         {
-            listener.Dispose();
+            _listener.Dispose();
         }
 
         private async void ProcessRequestAsync(StreamSocket socket)
@@ -58,11 +58,11 @@ namespace WebServer
                     }
                 }
                 
-                response = RouteManager.CurrentRouteManager.InvokeMethod(request.ToString());
+                _response = RouteManager.CurrentRouteManager.InvokeMethod(request.ToString());
 
                 using (IOutputStream output = socket.OutputStream)
                 {
-                    await WriteResponseAsync(response, output);
+                    await WriteResponseAsync(_response, output);
                 }
             }
             catch (Exception ex)
@@ -100,7 +100,7 @@ namespace WebServer
     }
 
     /// <summary>
-    /// Singleton, verwaltet die ApiRouten des Servers
+    /// Verwaltet die ApiRouten des Servers
     /// </summary>
     internal class RouteManager
     {
@@ -119,8 +119,8 @@ namespace WebServer
 
         public RouteManager()
         {
-            this.Routes = new List<Route>();
-            this.Controllers = new List<BaseClasses.ApiController>();
+            Routes = new List<Route>();
+            Controllers = new List<BaseClasses.ApiController>();
         }
 
         /// <summary>
@@ -182,9 +182,9 @@ namespace WebServer
             {
                 if (myMatch.Success)
                 {
-                    Route TargetRoute = Routes.FirstOrDefault(
-                        route => String.Equals(route.URL, myMatch.Value.Trim(), StringComparison.CurrentCultureIgnoreCase));
-                    return TargetRoute;
+                    var targetRoute = Routes.FirstOrDefault(
+                        route => string.Equals(route.Url, myMatch.Value.Trim(), StringComparison.CurrentCultureIgnoreCase));
+                    return targetRoute;
                 }
             }
             return null;
@@ -197,12 +197,13 @@ namespace WebServer
         {
             foreach (BaseClasses.ApiController apiController in Controllers)
             {
-                var ControllerType = apiController.GetType();
-                MethodInfo[] methodsWithRoutes = ControllerType.GetMethods().Where(
+                var controllerType = apiController.GetType();
+                var methodsWithRoutes = controllerType.GetMethods().Where(
                     m => m.GetCustomAttributes(typeof(Route)).Any() ).ToArray();
                 foreach (var memberInfo in methodsWithRoutes)
                 {
                     var  route = memberInfo.GetCustomAttributes(typeof (Route)).FirstOrDefault() as Route;
+                    if (route == null) continue;
                     route.Method = memberInfo;
                     route.Controller = apiController;
                     route.Params = memberInfo.GetParameters();
@@ -218,26 +219,26 @@ namespace WebServer
     internal class Route : Attribute
     {
         public Type MethodType;
-        public string URL{get; set;}
+        public string Url{get; set;}
         public MethodInfo Method { get; set; }
         public BaseClasses.ApiController Controller { get; internal set; }
         public ParameterInfo[] Params { get; set; }
 
-        public Route(string Route,Type type)
+        public Route(string route,Type type)
         {
-            this.URL = Route;
-            this.MethodType = type;
+            Url = route;
+            MethodType = type;
         }
 
         public override string ToString()
         {
-            return URL;
+            return Url;
         }
 
         public enum Type
         {
-            GET =1,
-            POST =2
+            Get =1,
+            Post =2
         }
     }
 
@@ -246,25 +247,25 @@ namespace WebServer
     /// </summary>
     class Request
     {
-        private string rawstring;
-        public RequestType type;
+        private readonly string _rawstring;
+        public RequestType Type;
         public int ContentLenght { get; set; }
         public string Path { get; set; }
         public string Content { get; set; }
 
         public Request(string rawrequest)
         {
-            this.rawstring = rawrequest;
-            this.type = GetRequestType(rawstring);
-            this.Path = GetRequestPath(rawstring);
-            this.ContentLenght = GetContentLenght(rawstring);
-            this.Content = GetContent(rawstring);
+            _rawstring = rawrequest;
+            Type = GetRequestType(_rawstring);
+            Path = GetRequestPath(_rawstring);
+            ContentLenght = GetContentLenght(_rawstring);
+            Content = GetContent(_rawstring);
         }
         
-        private string GetContent(string request)
+        private static string GetContent(string request)
         {
-            string strRegex = @"{((?>[^{}]+|{(?<c>)|}(?<-c>))*(?(c)(?!))).";
-            Regex myRegex = new Regex(strRegex, RegexOptions.IgnoreCase);
+            const string strRegex = @"{((?>[^{}]+|{(?<c>)|}(?<-c>))*(?(c)(?!))).";
+            var myRegex = new Regex(strRegex, RegexOptions.IgnoreCase);
             foreach (Match myMatch in myRegex.Matches(request))
             {
                 if (myMatch.Success)
@@ -275,7 +276,7 @@ namespace WebServer
             return string.Empty;
         }
 
-        private int GetContentLenght(string request)
+        private static int GetContentLenght(string request)
         {
             int lenght = 0;
             string strRegex = @"Content-Length:.*";
@@ -298,7 +299,7 @@ namespace WebServer
             return lenght;
         }
 
-        private RequestType GetRequestType(string reqstring)
+        private static RequestType GetRequestType(string reqstring)
         {
             RequestType type;
             var words = reqstring.Split(' ');
@@ -306,15 +307,15 @@ namespace WebServer
             return type;
         }
 
-        private string GetRequestPath(string reqstring)
+        private static string GetRequestPath(string reqstring)
         {
             var words = reqstring.Split(' ');
             return words[1];
         }
         public enum RequestType
         {
-            GET,
-            POST
+            Get,
+            Post
         }
     }
 }

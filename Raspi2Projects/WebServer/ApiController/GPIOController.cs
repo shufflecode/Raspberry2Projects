@@ -11,13 +11,13 @@ namespace WebServer.ApiController
 {
     class GPIOController:BaseClasses.ApiController
     {
-        [Route("/GPIO/",Route.Type.GET)]
+        [Route("/GPIO/",Route.Type.Get)]
         public HttpResponseMessage SetPortStatus(int portNumber)
         {
             return Ok(new GPIOPort(1,GPIOPort.Portstatus.low));
         }
 
-        [Route("/GPIO/SetGlobal",Route.Type.POST)]
+        [Route("/GPIO/SetGlobal",Route.Type.Post)]
         public HttpResponseMessage SetGPIOStatus(GPIOStatus status)
         {
             GPIOModel.SetGpio(status);
@@ -25,7 +25,7 @@ namespace WebServer.ApiController
 
         }
 
-        [Route("/GPIO/GetGlobal", Route.Type.GET)]
+        [Route("/GPIO/GetGlobal", Route.Type.Get)]
         public HttpResponseMessage GetGPIOStatus()
         {
             var status = GPIOModel.GetStatus();
