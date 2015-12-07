@@ -18,14 +18,12 @@ namespace libShared
             {
                 return string.Empty;
             }
-            else if (ex.InnerException == null)
+            if (ex.InnerException == null)
             {
                 return ex.Message;
             }
-            else
-            {
-                return ex.Message + "\n----- Inner Exception -----\n" + GetExceptionText(ex.InnerException);
-            }
+            return ex.Message + "\n----- Inner Exception -----\n" + GetExceptionText(ex.InnerException);
+            
         }
     }
 }
