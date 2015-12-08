@@ -15,6 +15,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppWpf", "AppWpf\AppWpf.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebServer", "WebServer\WebServer.csproj", "{0106470C-88B5-4DE3-8F4D-ADD749B6575A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppWpfInterfacesDemoV1", "AppWpfInterfacesDemo\AppWpfInterfacesDemoV1.csproj", "{5B3ECC75-3172-4FE0-865C-3BACF3730C9D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppUwaInterfacesDemoV1", "AppUwaInterfacesDemo\AppUwaInterfacesDemoV1.csproj", "{379AA26E-1089-49BB-91D7-1C7A2FE45D1A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InterfacesDemo", "InterfacesDemo", "{942FB9B0-E3A0-454F-B24E-1006DA4E1E3A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -133,12 +139,52 @@ Global
 		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Release|x86.ActiveCfg = Release|x86
 		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Release|x86.Build.0 = Release|x86
 		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Release|x86.Deploy.0 = Release|x86
+		{5B3ECC75-3172-4FE0-865C-3BACF3730C9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B3ECC75-3172-4FE0-865C-3BACF3730C9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B3ECC75-3172-4FE0-865C-3BACF3730C9D}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{5B3ECC75-3172-4FE0-865C-3BACF3730C9D}.Debug|ARM.Build.0 = Debug|Any CPU
+		{5B3ECC75-3172-4FE0-865C-3BACF3730C9D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5B3ECC75-3172-4FE0-865C-3BACF3730C9D}.Debug|x64.Build.0 = Debug|Any CPU
+		{5B3ECC75-3172-4FE0-865C-3BACF3730C9D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5B3ECC75-3172-4FE0-865C-3BACF3730C9D}.Debug|x86.Build.0 = Debug|Any CPU
+		{5B3ECC75-3172-4FE0-865C-3BACF3730C9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B3ECC75-3172-4FE0-865C-3BACF3730C9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B3ECC75-3172-4FE0-865C-3BACF3730C9D}.Release|ARM.ActiveCfg = Release|Any CPU
+		{5B3ECC75-3172-4FE0-865C-3BACF3730C9D}.Release|ARM.Build.0 = Release|Any CPU
+		{5B3ECC75-3172-4FE0-865C-3BACF3730C9D}.Release|x64.ActiveCfg = Release|Any CPU
+		{5B3ECC75-3172-4FE0-865C-3BACF3730C9D}.Release|x64.Build.0 = Release|Any CPU
+		{5B3ECC75-3172-4FE0-865C-3BACF3730C9D}.Release|x86.ActiveCfg = Release|Any CPU
+		{5B3ECC75-3172-4FE0-865C-3BACF3730C9D}.Release|x86.Build.0 = Release|Any CPU
+		{379AA26E-1089-49BB-91D7-1C7A2FE45D1A}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{379AA26E-1089-49BB-91D7-1C7A2FE45D1A}.Debug|ARM.ActiveCfg = Debug|ARM
+		{379AA26E-1089-49BB-91D7-1C7A2FE45D1A}.Debug|ARM.Build.0 = Debug|ARM
+		{379AA26E-1089-49BB-91D7-1C7A2FE45D1A}.Debug|ARM.Deploy.0 = Debug|ARM
+		{379AA26E-1089-49BB-91D7-1C7A2FE45D1A}.Debug|x64.ActiveCfg = Debug|x64
+		{379AA26E-1089-49BB-91D7-1C7A2FE45D1A}.Debug|x64.Build.0 = Debug|x64
+		{379AA26E-1089-49BB-91D7-1C7A2FE45D1A}.Debug|x64.Deploy.0 = Debug|x64
+		{379AA26E-1089-49BB-91D7-1C7A2FE45D1A}.Debug|x86.ActiveCfg = Debug|x86
+		{379AA26E-1089-49BB-91D7-1C7A2FE45D1A}.Debug|x86.Build.0 = Debug|x86
+		{379AA26E-1089-49BB-91D7-1C7A2FE45D1A}.Debug|x86.Deploy.0 = Debug|x86
+		{379AA26E-1089-49BB-91D7-1C7A2FE45D1A}.Release|Any CPU.ActiveCfg = Release|x86
+		{379AA26E-1089-49BB-91D7-1C7A2FE45D1A}.Release|ARM.ActiveCfg = Release|ARM
+		{379AA26E-1089-49BB-91D7-1C7A2FE45D1A}.Release|ARM.Build.0 = Release|ARM
+		{379AA26E-1089-49BB-91D7-1C7A2FE45D1A}.Release|ARM.Deploy.0 = Release|ARM
+		{379AA26E-1089-49BB-91D7-1C7A2FE45D1A}.Release|x64.ActiveCfg = Release|x64
+		{379AA26E-1089-49BB-91D7-1C7A2FE45D1A}.Release|x64.Build.0 = Release|x64
+		{379AA26E-1089-49BB-91D7-1C7A2FE45D1A}.Release|x64.Deploy.0 = Release|x64
+		{379AA26E-1089-49BB-91D7-1C7A2FE45D1A}.Release|x86.ActiveCfg = Release|x86
+		{379AA26E-1089-49BB-91D7-1C7A2FE45D1A}.Release|x86.Build.0 = Release|x86
+		{379AA26E-1089-49BB-91D7-1C7A2FE45D1A}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5B3ECC75-3172-4FE0-865C-3BACF3730C9D} = {942FB9B0-E3A0-454F-B24E-1006DA4E1E3A}
+		{379AA26E-1089-49BB-91D7-1C7A2FE45D1A} = {942FB9B0-E3A0-454F-B24E-1006DA4E1E3A}
+	EndGlobalSection
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 7
+		SccNumberOfProjects = 9
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://raspi2.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -160,5 +206,13 @@ Global
 		SccProjectUniqueName6 = WebServer\\WebServer.csproj
 		SccProjectName6 = WebServer
 		SccLocalPath6 = WebServer
+		SccProjectUniqueName7 = AppUwaInterfacesDemo\\AppUwaInterfacesDemoV1.csproj
+		SccProjectTopLevelParentUniqueName7 = Raspi2Projects.sln
+		SccProjectName7 = AppUwaInterfacesDemo
+		SccLocalPath7 = AppUwaInterfacesDemo
+		SccProjectUniqueName8 = AppWpfInterfacesDemo\\AppWpfInterfacesDemoV1.csproj
+		SccProjectTopLevelParentUniqueName8 = Raspi2Projects.sln
+		SccProjectName8 = AppWpfInterfacesDemo
+		SccLocalPath8 = AppWpfInterfacesDemo
 	EndGlobalSection
 EndGlobal
