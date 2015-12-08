@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="ApiModels\GPIOStatus.cs" />
     <Compile Include="ApiModels\LEDStatus.cs" />
+    <Compile Include="ConverterParameterHelper.cs" />
     <Compile Include="Converters.cs" />
     <Compile Include="Defines.cs" />
     <Compile Include="ExceptionHandling.cs" />
