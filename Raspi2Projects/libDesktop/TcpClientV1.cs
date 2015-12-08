@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace libDesktop
 {
-    public class TcpClientV1 : INotifyPropertyChanged, IDisposable, IEthernet
+    public class TcpClientV1 : INotifyPropertyChanged, IDisposable, IEthernetSync
     {
         public event NotifyTextDelegate NotifyTextEvent;
         public event NotifyexceptionDelegate NotifyexceptionEvent;
