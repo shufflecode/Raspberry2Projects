@@ -111,9 +111,52 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncSerialPort.cs" />
+    <Compile Include="Async_TCP_StreamSocketClient.cs" />
+    <Compile Include="Async_TCP_StreamSocketServer.cs" />
+    <Compile Include="Pages\PageEthernet.xaml.cs">
+      <DependentUpon>PageEthernet.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\PageSerial.xaml.cs">
+      <DependentUpon>PageSerial.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserControls\UcEthernet.xaml.cs">
+      <DependentUpon>UcEthernet.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\UcSerial.xaml.cs">
+      <DependentUpon>UcSerial.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ValueConverters\ByteCollectionToHexString.cs" />
+    <Compile Include="ValueConverters\ByteCollectionToUTF8.cs" />
+    <Compile Include="ValueConverters\IPAddressToString.cs" />
     <Content Include="Properties\libCore.rd.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libShared\libShared.csproj">
+      <Project>{338154bb-0c23-4663-bd6b-d7c72dd15038}</Project>
+      <Name>libShared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Pages\PageEthernet.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\PageSerial.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\UcEthernet.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\UcSerial.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
