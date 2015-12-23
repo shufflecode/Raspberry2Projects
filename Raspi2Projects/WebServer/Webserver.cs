@@ -148,11 +148,11 @@ namespace WebServer
             {
                 var response = new HttpResponseMessage();
                 response.StatusCode = HttpStatusCode.NotFound;
-                response.Content = new StringContent("Keine Route gefunden");
+                response.Content = new StringContent("Keine Route gefunden :/");
                 return response;
             }
 
-            var param = methodToInvoke.Params.First();
+            var param = methodToInvoke.Params.FirstOrDefault();
             var type = param?.ParameterType;
             if (type != null)
             {

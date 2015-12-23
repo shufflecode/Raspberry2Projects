@@ -22,7 +22,6 @@ namespace WebServer.ApiController
         {
             GPIOModel.SetGpio(status);
             return Ok();
-
         }
 
         [Route("/GPIO/GetGlobal", Route.Type.Get)]

@@ -26,7 +26,6 @@ namespace WebServer.ApiController
             });
         }
 
-
         [Route("/LedController/Blue",Route.Type.Get)]
         public HttpResponseMessage LedBlue( )
         {
