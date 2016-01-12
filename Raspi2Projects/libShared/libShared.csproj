@@ -49,6 +49,8 @@
     <Compile Include="Converters.cs" />
     <Compile Include="Defines.cs" />
     <Compile Include="ExceptionHandling.cs" />
+    <Compile Include="HardwareNah\AnalogDefinitions.cs" />
+    <Compile Include="HardwareNah\LEDDefinitions.cs" />
     <Compile Include="Interfaces\IEthernet.cs" />
     <Compile Include="Interfaces\ISerial.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
