@@ -114,6 +114,13 @@
     <Compile Include="AsyncSerialPort.cs" />
     <Compile Include="Async_TCP_StreamSocketClient.cs" />
     <Compile Include="Async_TCP_StreamSocketServer.cs" />
+    <Compile Include="IOevalBoard\ADCclasses.cs" />
+    <Compile Include="IOevalBoard\ComplexParts.cs" />
+    <Compile Include="IOevalBoard\DACclasses.cs" />
+    <Compile Include="IOevalBoard\GenericSlaveClasses.cs" />
+    <Compile Include="IOevalBoard\GPIOclasses.cs" />
+    <Compile Include="IOevalBoard\LEDclasses.cs" />
+    <Compile Include="IOevalBoard\RaspiSlaveEssentials.cs" />
     <Compile Include="Pages\PageEthernet.xaml.cs">
       <DependentUpon>PageEthernet.xaml</DependentUpon>
     </Compile>
@@ -156,7 +163,11 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <SDKReference Include="WindowsIoT, Version=10.0.10240.0">
+      <Name>Windows IoT Extensions for the UWP</Name>
+    </SDKReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
