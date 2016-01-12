@@ -11,13 +11,12 @@ namespace WebServer.Models
     {
         public static void SetGpio(GPIOStatus status)
         {
-            //mach was 
-                    
+            //mach was ;) 
         }
 
         public static GPIOStatus GetStatus()
         {
-            GPIOStatus status = new GPIOStatus();
+            var status = new GPIOStatus();
             status.Ports.Add(new GPIOPort(1,GPIOPort.Portstatus.high));
             status.Ports.Add(new GPIOPort(2, GPIOPort.Portstatus.high));
             status.Ports.Add(new GPIOPort(3, GPIOPort.Portstatus.high));
