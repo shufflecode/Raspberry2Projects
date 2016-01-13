@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI;
 using libShared.ApiModels;
+using WebServer.Models.LedModels;
 
 namespace WebServer.ApiController
 {
@@ -16,9 +17,12 @@ namespace WebServer.ApiController
         {
         }
 
-        [Route("/LedController/Green",Route.Type.Get)]
+        [Route("/LedController/RGBDemo",Route.Type.Get)]
         public HttpResponseMessage LedGreen( )
         {
+            var demo = new LEDDemo();
+            demo.Start();
+
             return Ok(new LEDStatus()
             {
                 LedNumber = 2,
