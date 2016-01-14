@@ -23,6 +23,10 @@
       <Extensions>
         <Extension Category="windows.backgroundTasks" EntryPoint="WebServer.StartupTask">
           <BackgroundTasks>
+            <Task Type="general" />
+            <Task Type="systemEvent" />
+            <Task Type="timer" />
+            <Task Type="deviceUse" />
             <iot:Task Type="startup" />
           </BackgroundTasks>
         </Extension>

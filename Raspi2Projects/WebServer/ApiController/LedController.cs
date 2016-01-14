@@ -13,21 +13,24 @@ namespace WebServer.ApiController
 {
     class LedController : BaseClasses.ApiController
     {
+        private LEDDemo demo;
         public LedController()
         {
+            demo = new LEDDemo();
         }
 
-        [Route("/LedController/RGBDemo",Route.Type.Get)]
-        public HttpResponseMessage LedGreen( )
+        [Route("/LedController/Demo/on", Route.Type.Get)]
+        public HttpResponseMessage DemoON()
         {
-            var demo = new LEDDemo();
-            demo.Start();
+            demo.StartTimer(5);
+            return Ok();
+        }
 
-            return Ok(new LEDStatus()
-            {
-                LedNumber = 2,
-                status = LEDStatus.Status.on
-            });
+        [Route("/LedController/Demo/off", Route.Type.Get)]
+        public HttpResponseMessage DemoOff()
+        {
+            demo.ArrayOff();
+            return Ok();
         }
 
         [Route("/LedController/Blue",Route.Type.Get)]
