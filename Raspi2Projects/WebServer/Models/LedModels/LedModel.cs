@@ -20,13 +20,10 @@ namespace WebServer.Models.LedModels
         private const int SPI_CS_LINE = 0;
 
         // Interface Objects
-        private SpiDevice SPIinterface_Status;
         private SpiDevice SPIinterface_Demo;
-        private ThreadPoolTimer StatusTimer;
         private ThreadPoolTimer ArrayTimer;
 
         // Objects for cyclic access
-        private LED_APA102 StatusLED;
         private LED_APA102 LEDArray;
         SPIAddressObject CSadrLEDD;
 
@@ -73,9 +70,7 @@ namespace WebServer.Models.LedModels
 
                 await InitSpi();
 
-
                 CSadrLEDD = new SPIAddressObject(SPIAddressObject.eCSadrMode.SPIdedicated, null, null, 0);
-                StatusLED = new LED_APA102(SPIinterface_Status, CSadrLEDD);
                 // Bei der Instanziierung wird erstes LED-Objekt erstellt.
                 LEDArray = new LED_APA102(SPIinterface_Demo, CSadrLEDD);
                 // Bei der Instanziierung wird erstes LED-Objekt erstellt.
@@ -105,7 +100,7 @@ namespace WebServer.Models.LedModels
             try
             {
                 var settings = new SpiConnectionSettings(SPI_CS_LINE); /* Create SPI initialization settings                               */
-                settings.ClockFrequency = 2000000;                             /* Datasheet specifies maximum SPI clock frequency of 10MHz         */
+                settings.ClockFrequency = 16000000;                             /* Datasheet specifies maximum SPI clock frequency of 10MHz         */
                 settings.Mode = SpiMode.Mode0; // Bedeutet, dass CLK-Idle ist low, Sample bei Steigender Flank
 
                 string spiAqs1 = SpiDevice.GetDeviceSelector(SPI_DEMO_CONTROLLER_NAME);       /* Find the selector string for the SPI bus controller          */
