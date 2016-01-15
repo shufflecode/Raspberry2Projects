@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppRaspi2", "AppRaspi2\AppR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppWpf", "AppWpf\AppWpf.csproj", "{5E90B531-CBD8-4567-BA30-2936AE7F12AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebServer", "WebServer\WebServer.csproj", "{0106470C-88B5-4DE3-8F4D-ADD749B6575A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartHomeController", "WebServer\SmartHomeController.csproj", "{0106470C-88B5-4DE3-8F4D-ADD749B6575A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppWpfInterfacesDemoV1", "AppWpfInterfacesDemo\AppWpfInterfacesDemoV1.csproj", "{5B3ECC75-3172-4FE0-865C-3BACF3730C9D}"
 EndProject
@@ -247,22 +247,22 @@ Global
 		SccProjectUniqueName5 = AppWpf\\AppWpf.csproj
 		SccProjectName5 = AppWpf
 		SccLocalPath5 = AppWpf
-		SccProjectUniqueName6 = WebServer\\WebServer.csproj
-		SccProjectName6 = WebServer
-		SccLocalPath6 = WebServer
-		SccProjectUniqueName7 = AppUwaInterfacesDemo\\AppUwaInterfacesDemoV1.csproj
+		SccProjectUniqueName6 = AppUwaInterfacesDemo\\AppUwaInterfacesDemoV1.csproj
+		SccProjectTopLevelParentUniqueName6 = Raspi2Projects.sln
+		SccProjectName6 = AppUwaInterfacesDemo
+		SccLocalPath6 = AppUwaInterfacesDemo
+		SccProjectUniqueName7 = AppWpfInterfacesDemo\\AppWpfInterfacesDemoV1.csproj
 		SccProjectTopLevelParentUniqueName7 = Raspi2Projects.sln
-		SccProjectName7 = AppUwaInterfacesDemo
-		SccLocalPath7 = AppUwaInterfacesDemo
-		SccProjectUniqueName8 = AppWpfInterfacesDemo\\AppWpfInterfacesDemoV1.csproj
-		SccProjectTopLevelParentUniqueName8 = Raspi2Projects.sln
-		SccProjectName8 = AppWpfInterfacesDemo
-		SccLocalPath8 = AppWpfInterfacesDemo
-		SccProjectUniqueName9 = App_IO_Demo\\App_IO_Demo.csproj
-		SccProjectName9 = App_IO_Demo
-		SccLocalPath9 = App_IO_Demo
-		SccProjectUniqueName10 = RGB_Demo\\RGB_Demo.csproj
-		SccProjectName10 = RGB_Demo
-		SccLocalPath10 = RGB_Demo
+		SccProjectName7 = AppWpfInterfacesDemo
+		SccLocalPath7 = AppWpfInterfacesDemo
+		SccProjectUniqueName8 = App_IO_Demo\\App_IO_Demo.csproj
+		SccProjectName8 = App_IO_Demo
+		SccLocalPath8 = App_IO_Demo
+		SccProjectUniqueName9 = RGB_Demo\\RGB_Demo.csproj
+		SccProjectName9 = RGB_Demo
+		SccLocalPath9 = RGB_Demo
+		SccProjectUniqueName10 = WebServer\\SmartHomeController.csproj
+		SccProjectName10 = WebServer
+		SccLocalPath10 = WebServer
 	EndGlobalSection
 EndGlobal

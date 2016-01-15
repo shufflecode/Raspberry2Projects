@@ -67,28 +67,38 @@ namespace WebServer.Models.LedModels
         }
         private async void InitAll()
         {
-            await InitSpi();
+            try
+            {
 
 
-            CSadrLEDD = new SPIAddressObject(SPIAddressObject.eCSadrMode.SPIdedicated, null, null, 0);
-            StatusLED = new LED_APA102(SPIinterface_Status, CSadrLEDD);
-            // Bei der Instanziierung wird erstes LED-Objekt erstellt.
-            LEDArray = new LED_APA102(SPIinterface_Demo, CSadrLEDD);
-            // Bei der Instanziierung wird erstes LED-Objekt erstellt.
-            LEDArray.AddLED(RGBDefines.Black);
-            LEDArray.AddLED(RGBDefines.Black);
-            LEDArray.AddLED(RGBDefines.Black);
-            LEDArray.AddLED(RGBDefines.Black);
-            LEDArray.AddLED(RGBDefines.Black);
-            LEDArray.AddLED(RGBDefines.Black);
-            LEDArray.AddLED(RGBDefines.Black);
-            LEDArray.AddLED(RGBDefines.Black);
-            LEDArray.AddLED(RGBDefines.Black);
-            BlackoutArray();
-            LEDArray.UpdateLEDs();
+                await InitSpi();
 
-            this.ArrayTimer = ThreadPoolTimer.CreatePeriodicTimer(ArrayTimer_Tick, TimeSpan.FromMilliseconds(refreshCycle * 10));
-            ArrayTimer.Cancel();
+
+                CSadrLEDD = new SPIAddressObject(SPIAddressObject.eCSadrMode.SPIdedicated, null, null, 0);
+                StatusLED = new LED_APA102(SPIinterface_Status, CSadrLEDD);
+                // Bei der Instanziierung wird erstes LED-Objekt erstellt.
+                LEDArray = new LED_APA102(SPIinterface_Demo, CSadrLEDD);
+                // Bei der Instanziierung wird erstes LED-Objekt erstellt.
+                LEDArray.AddLED(RGBDefines.Black);
+                LEDArray.AddLED(RGBDefines.Black);
+                LEDArray.AddLED(RGBDefines.Black);
+                LEDArray.AddLED(RGBDefines.Black);
+                LEDArray.AddLED(RGBDefines.Black);
+                LEDArray.AddLED(RGBDefines.Black);
+                LEDArray.AddLED(RGBDefines.Black);
+                LEDArray.AddLED(RGBDefines.Black);
+                LEDArray.AddLED(RGBDefines.Black);
+                BlackoutArray();
+                LEDArray.UpdateLEDs();
+
+                this.ArrayTimer = ThreadPoolTimer.CreatePeriodicTimer(ArrayTimer_Tick,
+                    TimeSpan.FromMilliseconds(refreshCycle*10));
+                ArrayTimer.Cancel();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error:" + ex);
+            }
         }
         private async Task InitSpi()
         {
@@ -101,8 +111,7 @@ namespace WebServer.Models.LedModels
                 string spiAqs1 = SpiDevice.GetDeviceSelector(SPI_DEMO_CONTROLLER_NAME);       /* Find the selector string for the SPI bus controller          */
                 var devicesInfo1 = await DeviceInformation.FindAllAsync(spiAqs1);         /* Find the SPI bus controller device with our selector string  */
                 SPIinterface_Demo = await SpiDevice.FromIdAsync(devicesInfo1[0].Id, settings);  /* Create an SpiDevice with our bus controller and SPI settings */
-
-
+                
             }
             catch (Exception ex)
             {
