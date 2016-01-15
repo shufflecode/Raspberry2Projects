@@ -38,7 +38,7 @@ namespace WebServer
             param = param.Replace("/", string.Empty);
             int Parameter = 0;
             int.TryParse(param, out Parameter);
-            if (RequestParameter > 0)
+            if (Parameter > 0)
             {
                 Path = Path.Replace(rawstring.Substring(index), string.Empty);
             }

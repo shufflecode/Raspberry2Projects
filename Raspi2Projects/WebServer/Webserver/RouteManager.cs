@@ -69,7 +69,7 @@ namespace WebServer
             if (type != null)
             {
                 var instance = Activator.CreateInstance(type);
-                JsonConvert.PopulateObject(request.Content, instance);
+                instance = request.RequestParameter;
                 retval = methodToInvoke.Method.Invoke(methodToInvoke.Controller, new [] { instance }) as HttpResponseMessage;
             }
             else
