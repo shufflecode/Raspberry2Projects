@@ -9,6 +9,7 @@ using Windows.Devices.Gpio;
 using libCore.IOevalBoard;
 using Windows.Devices.Spi;
 using Windows.System.Threading;
+using libShared.HardwareNah;
 
 
 namespace WebServer.Models.LedModels
@@ -25,8 +26,9 @@ namespace WebServer.Models.LedModels
         private ThreadPoolTimer ArrayTimer;
 
         // Objects for cyclic access
-        private LED_APA102eval StatusLED;
-        private LED_APA102eval LEDArray;
+        private LED_APA102 StatusLED;
+        private LED_APA102 LEDArray;
+        SPIAddressObject CSadrLEDD;
 
         int cycleCount = 0;
         int statusMachineCount = 0;
@@ -42,7 +44,7 @@ namespace WebServer.Models.LedModels
             InitAll();
         }
 
-        public LED_APA102eval LedArray => LEDArray;
+        public LED_APA102 LedArray => LEDArray;
 
         public void StartTimer(int speed)
         {
@@ -53,7 +55,7 @@ namespace WebServer.Models.LedModels
         {
             for (int i = 0; i < 8; i++)
             {
-                LEDArray.SetLED(i, LED_APA102eval.Colors.Dark);
+                LEDArray.SetLED(i, RGBDefines.Black);
             }
             LEDArray.UpdateLEDs();
         }
@@ -67,16 +69,21 @@ namespace WebServer.Models.LedModels
         {
             await InitSpi();
 
-            LEDArray = new LED_APA102eval(SPIinterface_Demo);
-            LEDArray.AddLED(LED_APA102eval.Colors.Dark);
-            LEDArray.AddLED(LED_APA102eval.Colors.Dark);
-            LEDArray.AddLED(LED_APA102eval.Colors.Dark);
-            LEDArray.AddLED(LED_APA102eval.Colors.Dark);
-            LEDArray.AddLED(LED_APA102eval.Colors.Dark);
-            LEDArray.AddLED(LED_APA102eval.Colors.Dark);
-            LEDArray.AddLED(LED_APA102eval.Colors.Dark);
-            LEDArray.AddLED(LED_APA102eval.Colors.Dark);
-            LEDArray.AddLED(LED_APA102eval.Colors.Dark);
+
+            CSadrLEDD = new SPIAddressObject(SPIAddressObject.eCSadrMode.SPIdedicated, null, null, 0);
+            StatusLED = new LED_APA102(SPIinterface_Status, CSadrLEDD);
+            // Bei der Instanziierung wird erstes LED-Objekt erstellt.
+            LEDArray = new LED_APA102(SPIinterface_Demo, CSadrLEDD);
+            // Bei der Instanziierung wird erstes LED-Objekt erstellt.
+            LEDArray.AddLED(RGBDefines.Black);
+            LEDArray.AddLED(RGBDefines.Black);
+            LEDArray.AddLED(RGBDefines.Black);
+            LEDArray.AddLED(RGBDefines.Black);
+            LEDArray.AddLED(RGBDefines.Black);
+            LEDArray.AddLED(RGBDefines.Black);
+            LEDArray.AddLED(RGBDefines.Black);
+            LEDArray.AddLED(RGBDefines.Black);
+            LEDArray.AddLED(RGBDefines.Black);
             BlackoutArray();
             LEDArray.UpdateLEDs();
 
@@ -110,48 +117,48 @@ namespace WebServer.Models.LedModels
             switch (cycleCount)
             {
                 case 1:
-                    LEDArray.SetLED(8, LED_APA102eval.Colors.Dark);
-                    LEDArray.SetLED(0, LED_APA102eval.Colors.Blue);
+                    LEDArray.SetLED(8, RGBDefines.Black);
+                    LEDArray.SetLED(0, RGBDefines.Cyan);
                     break;
 
                 case 2:
-                    LEDArray.SetLED(0, LED_APA102eval.Colors.Dark);
-                    LEDArray.SetLED(1, LED_APA102eval.Colors.Blue);
+                    LEDArray.SetLED(0, RGBDefines.Black);
+                    LEDArray.SetLED(1,  RGBDefines.Cyan);
                     break;
 
                 case 3:
-                    LEDArray.SetLED(1, LED_APA102eval.Colors.Dark);
-                    LEDArray.SetLED(2, LED_APA102eval.Colors.Blue);
+                    LEDArray.SetLED(1, RGBDefines.Black);
+                    LEDArray.SetLED(2,  RGBDefines.Cyan);
                     break;
 
                 case 4:
-                    LEDArray.SetLED(2, LED_APA102eval.Colors.Dark);
-                    LEDArray.SetLED(3, LED_APA102eval.Colors.Blue);
+                    LEDArray.SetLED(2, RGBDefines.Black);
+                    LEDArray.SetLED(3,  RGBDefines.Cyan);
                     break;
 
                 case 5:
-                    LEDArray.SetLED(3, LED_APA102eval.Colors.Dark);
-                    LEDArray.SetLED(4, LED_APA102eval.Colors.Blue);
+                    LEDArray.SetLED(3, RGBDefines.Black);
+                    LEDArray.SetLED(4,  RGBDefines.Cyan);
                     break;
 
                 case 6:
-                    LEDArray.SetLED(4, LED_APA102eval.Colors.Dark);
-                    LEDArray.SetLED(5, LED_APA102eval.Colors.Blue);
+                    LEDArray.SetLED(4, RGBDefines.Black);
+                    LEDArray.SetLED(5,  RGBDefines.Cyan);
                     break;
 
                 case 7:
-                    LEDArray.SetLED(5, LED_APA102eval.Colors.Dark);
-                    LEDArray.SetLED(6, LED_APA102eval.Colors.Blue);
+                    LEDArray.SetLED(5, RGBDefines.Black);
+                    LEDArray.SetLED(6,  RGBDefines.Cyan);
                     break;
 
                 case 8:
-                    LEDArray.SetLED(6, LED_APA102eval.Colors.Dark);
-                    LEDArray.SetLED(7, LED_APA102eval.Colors.Blue);
+                    LEDArray.SetLED(6, RGBDefines.Black);
+                    LEDArray.SetLED(7,  RGBDefines.Cyan);
                     break;
 
                 case 9:
-                    LEDArray.SetLED(7, LED_APA102eval.Colors.Dark);
-                    LEDArray.SetLED(8, LED_APA102eval.Colors.Blue);
+                    LEDArray.SetLED(7, RGBDefines.Black);
+                    LEDArray.SetLED(8,  RGBDefines.Cyan);
                     cycleCount = 0;
                     break;
 
