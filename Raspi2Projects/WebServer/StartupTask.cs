@@ -26,28 +26,24 @@ namespace WebServer
         private BackgroundTaskDeferral _deferral;
         public void Run(IBackgroundTaskInstance taskInstance)
         {
-            ///Wird das ding nicht als Attribut gehalten kommt der GC vorbei und die APP Stirbt :/ 
+            //Necessary to keep the App Running in BG
             this._deferral = taskInstance.GetDeferral();
             
             try
             {
-                HttpServer server = new HttpServer(80);
-                RouteManager.CurrentRouteManager.Controllers.Add(new LedController());
-                RouteManager.CurrentRouteManager.Controllers.Add(new GPIOController());
-                RouteManager.CurrentRouteManager.InitRoutes();
+                var server = new HttpServer(80);
+                RouteManager.Current.Register(new LedController());
+                RouteManager.Current.Register(new GPIOController());
+                RouteManager.Current.InitRoutes();
                 IAsyncAction asyncAction = ThreadPool.RunAsync(workItem =>
                 {
                      server.Start();
-                  
                 });
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Fehler in Run: " + ex.Message);
+                Debug.WriteLine("Error in Run " + ex);
             }
-           
         }
     }
-
-   
 }

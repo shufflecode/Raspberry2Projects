@@ -20,6 +20,7 @@ namespace WebServer.BaseClasses
         {
             var responseMessgae = new HttpResponseMessage();
             responseMessgae.StatusCode = HttpStatusCode.OK;
+            responseMessgae.Content = new StringContent(string.Empty);
             return responseMessgae;
         }
 

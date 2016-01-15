@@ -49,13 +49,18 @@ namespace WebServer.Models.LedModels
             this.ArrayTimer = ThreadPoolTimer.CreatePeriodicTimer(ArrayTimer_Tick, TimeSpan.FromMilliseconds(refreshCycle * 10));
         }
 
-        public void ArrayOff()
+        private void BlackoutArray()
         {
-            foreach (var led in LEDArray.LEDs)
+            for (int i = 0; i < 8; i++)
             {
-                led.SetRGBvalue(0,0,0);
+                LEDArray.SetLED(i, LED_APA102eval.Colors.Dark);
             }
             LEDArray.UpdateLEDs();
+        }
+
+        public void StopDemo()
+        {
+            BlackoutArray();
             ArrayTimer.Cancel();
         }
         private async void InitAll()
@@ -72,9 +77,11 @@ namespace WebServer.Models.LedModels
             LEDArray.AddLED(LED_APA102eval.Colors.Dark);
             LEDArray.AddLED(LED_APA102eval.Colors.Dark);
             LEDArray.AddLED(LED_APA102eval.Colors.Dark);
+            BlackoutArray();
             LEDArray.UpdateLEDs();
 
             this.ArrayTimer = ThreadPoolTimer.CreatePeriodicTimer(ArrayTimer_Tick, TimeSpan.FromMilliseconds(refreshCycle * 10));
+            ArrayTimer.Cancel();
         }
         private async Task InitSpi()
         {

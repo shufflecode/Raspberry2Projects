@@ -105,9 +105,12 @@
     <Compile Include="BaseClasses\ApiController.cs" />
     <Compile Include="Models\GPIOModel.cs" />
     <Compile Include="Models\LedModels\LedModel.cs" />
+    <Compile Include="Webserver\Request.cs" />
     <Compile Include="StartupTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Webserver.cs" />
+    <Compile Include="Webserver\Route.cs" />
+    <Compile Include="Webserver\RouteManager.cs" />
+    <Compile Include="Webserver\Webserver.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

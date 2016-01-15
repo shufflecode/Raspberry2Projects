@@ -20,17 +20,17 @@ namespace WebServer.ApiController
         }
 
         [Route("/LedController/Demo/on", Route.Type.Get)]
-        public HttpResponseMessage DemoON()
+        public HttpResponseMessage DemoON(int time)
         {
-            demo.StartTimer(5);
-            return Ok();
+            demo.StartTimer(time);
+            return Ok("Gestartet ;) ");
         }
 
         [Route("/LedController/Demo/off", Route.Type.Get)]
         public HttpResponseMessage DemoOff()
         {
-            demo.ArrayOff();
-            return Ok();
+            demo.StopDemo();
+            return Ok("RGB Demo aus");
         }
 
         [Route("/LedController/Blue",Route.Type.Get)]
