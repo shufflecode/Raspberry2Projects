@@ -40,7 +40,7 @@ namespace libCore.IOevalBoard
 
         const UInt32 StartVal = 0x00000000;
         const UInt32 EndVal = 0xFFFFFFFF;
-        List<RGB_Val> LEDs = new List<RGB_Val>();
+        public List<RGB_Val> LEDs = new List<RGB_Val>();
 
         /// <summary>
         /// Constructor for LED_APA102 class
@@ -87,6 +87,7 @@ namespace libCore.IOevalBoard
         {
             LEDs[index] = new RGB_Val { LEDValue = (UInt32)(Intensitiy.Medium) << 24 | (UInt32)color };
         }
+        
 
         public void SetLED(int index, byte intens, byte red, byte green, byte blue)
         {

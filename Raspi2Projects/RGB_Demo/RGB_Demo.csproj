@@ -143,6 +143,10 @@
       <Project>{160c8752-82c8-48a5-9590-00ef55141a2b}</Project>
       <Name>libCore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\libShared\libShared.csproj">
+      <Project>{338154bb-0c23-4663-bd6b-d7c72dd15038}</Project>
+      <Name>libShared</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

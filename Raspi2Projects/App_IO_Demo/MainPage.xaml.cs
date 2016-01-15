@@ -34,294 +34,303 @@ namespace App_IO_Demo
     // @todo Bindings Zwischen Oberfläche und Lokalen Variablen einbauen
     // @todo Styles in WPF einführen ... normales Windows vorgehen funktioniert hier nicht
 
-        /// <summary>
-        /// Eine leere Seite, die eigenständig verwendet werden kann oder auf die innerhalb eines Rahmens navigiert werden kann.
-        /// </summary>
-        public sealed partial class MainPage : Page, INotifyPropertyChanged
+    /// <summary>
+    /// Eine leere Seite, die eigenständig verwendet werden kann oder auf die innerhalb eines Rahmens navigiert werden kann.
+    /// </summary>
+    public sealed partial class MainPage : Page, INotifyPropertyChanged
+    {
+
+        #region Constants
+        private const int HW_PowerOut1_Pin = 4;
+        private const int HW_PowerOut2_Pin = 27;
+        private const int HW_LEDDriver_GSMode = 6;
+        private const int HW_LEDDriver_DCLatch = 12;
+        private const int HW_LEDDriver_GSLatch = 13;
+        private const int HW_CSAdrSelction_A0 = 18;
+        private const int HW_CSAdrSelction_A1 = 22;
+        private const int HW_CSAdrSelction_A2 = 23;
+
+        private const int HW_ADC_CSadr = 1;
+        private const int HW_DAC_CSadr = 2;
+        private const int HW_GPIO_CSadr = 3;
+        private const int HW_Reset_CSadr = 7;
+
+        private const int MaxSliderValue = 100;
+
+        private const string HW_SPI_IO_Controller = "SPI0";
+        private const int HW_SPI_CS_Line = 0;
+        private const string HW_SPI_LED_Controller = "SPI1";
+        #endregion
+
+        #region private Attributes
+       
+        GpioController GPIOinterface;
+        SpiDevice SPIOInterface;
+        SpiDevice StatusLEDInterface;
+
+        GpioPin PowerOut1;
+        GpioPin PowerOut2;
+        GpioPin GSLEDdriverMode;
+        GpioPin GSLEDdriverLatch;
+        GpioPin DCLEDdriverLatch;
+        GpioPin CSAdrSelectionA0;
+        GpioPin CSAdrSelectionA1;
+        GpioPin CSAdrSelcttionA2;
+
+        GpioPin[] CSAdrSelection;
+
+        SPIAddressObject CSadrADC;
+        SPIAddressObject CSadrDAC;
+        SPIAddressObject CSadrGPIO;
+        SPIAddressObject CSadrLEDD;
+        SPIAddressObject CSadrLED;
+        
+        LEDD_TLC5941 GSLEDdriver;
+        LEDD_TLC5925 DCLEDDriver;
+        LED_APA102 StatusLED;
+        ADC_MCP3208 ADCslave;
+        DAC_MCP4922 DACslave;
+        GPIO_MCP23S17 GPIOslave;
+        int _StatusRedCh = 0;
+        #endregion
+
+        #region Public Attributes
+
+        public int StatusRedCh
         {
-            private const int HW_PowerOut1_Pin = 4;
-            private const int HW_PowerOut2_Pin = 27;
-            private const int HW_LEDDriver_GSMode = 6;
-            private const int HW_LEDDriver_DCLatch = 12;
-            private const int HW_LEDDriver_GSLatch = 13;
-            private const int HW_CSAdrSelction_A0 = 18;
-            private const int HW_CSAdrSelction_A1 = 22;
-            private const int HW_CSAdrSelction_A2 = 23;
-
-            private const int HW_ADC_CSadr = 1;
-            private const int HW_DAC_CSadr = 2;
-            private const int HW_GPIO_CSadr = 3;
-            private const int HW_Reset_CSadr = 7;
-
-            private const int MaxSliderValue = 100;
-
-            private const string HW_SPI_IO_Controller = "SPI0";
-            private const int HW_SPI_CS_Line = 0;
-            private const string HW_SPI_LED_Controller = "SPI1";
-
-            GpioController GPIOinterface;
-            SpiDevice SPIOInterface;
-            SpiDevice StatusLEDInterface;
-
-            GpioPin PowerOut1;
-            GpioPin PowerOut2;
-            GpioPin GSLEDdriverMode;
-            GpioPin GSLEDdriverLatch;
-            GpioPin DCLEDdriverLatch;
-            GpioPin CSAdrSelectionA0;
-            GpioPin CSAdrSelectionA1;
-            GpioPin CSAdrSelcttionA2;
-
-            GpioPin[] CSAdrSelection;
-
-            SPIAddressObject CSadrADC;
-            SPIAddressObject CSadrDAC;
-            SPIAddressObject CSadrGPIO;
-            SPIAddressObject CSadrLEDD;
-            SPIAddressObject CSadrLED;
-
-
-            LEDD_TLC5941 GSLEDdriver;
-            LEDD_TLC5925 DCLEDDriver;
-            LED_APA102 StatusLED;
-            ADC_MCP3208 ADCslave;
-            DAC_MCP4922 DACslave;
-            GPIO_MCP23S17 GPIOslave;
-
-            int _StatusRedCh = 0;
-            public int StatusRedCh
+            get
             {
-                get
-                {
-                    return _StatusRedCh;
-                }
-                set
-                {
-                    this.OnPropertyChanged();
-                    _StatusRedCh = value;
-                }
+                return _StatusRedCh;
+            }
+            set
+            {
+                this.OnPropertyChanged();
+                _StatusRedCh = value;
+            }
+        }
+
+
+        int _StatusGreenCh = 0;
+        public int StatusGreenCh
+        {
+            get
+            {
+                return _StatusGreenCh;
             }
 
-            int _StatusGreenCh = 0;
-            public int StatusGreenCh
+            set
             {
-                get
-                {
-                    return _StatusGreenCh;
-                }
+                this.OnPropertyChanged();
+                _StatusGreenCh = value;
+            }
+        }
 
-                set
-                {
-                    this.OnPropertyChanged();
-                    _StatusGreenCh = value;
-                }
+        int _StatusBlueCh = 0;
+        public int StatusBlueCh
+        {
+            get
+            {
+                return _StatusBlueCh;
             }
 
-            int _StatusBlueCh = 0;
-            public int StatusBlueCh
+            set
             {
-                get
-                {
-                    return _StatusBlueCh;
-                }
+                this.OnPropertyChanged();
+                _StatusBlueCh = value;
+            }
+        }
 
-                set
-                {
-                    this.OnPropertyChanged();
-                    _StatusBlueCh = value;
-                }
+        int _StatusIntensitiy = 0;
+        public int StatusIntensitiy
+        {
+            get
+            {
+                return _StatusIntensitiy;
             }
 
-            int _StatusIntensitiy = 0;
-            public int StatusIntensitiy
+            set
             {
-                get
-                {
-                    return _StatusIntensitiy;
-                }
+                this.OnPropertyChanged();
+                _StatusIntensitiy = value;
+            }
+        }
+        #endregion
 
-                set
-                {
-                    this.OnPropertyChanged();
-                    _StatusIntensitiy = value;
-                }
+
+        public MainPage()
+        {
+            this.InitializeComponent();
+            Unloaded += MainPage_Unloaded;
+
+            InitAll();
+            this.DataContext = this;
+
+        }
+
+        private async void InitAll()
+        {
+            InitGpio();
+            await InitSpi();
+
+            InitIOModule();
+
+            InitDemo();
+        }
+
+        /// <summary>
+        /// Set Ressources Free
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void MainPage_Unloaded(object sender, object args)
+        {
+            // Cleanup
+            // HardwareRessourcen bereinigen
+            // SPIinterface.Dispose();
+        }
+
+        /// <summary>
+        /// Init used GPIO Pins
+        /// </summary>
+        private void InitGpio()
+        {
+            GPIOinterface = GpioController.GetDefault(); /* Get the default GPIO controller on the system */
+            if (GPIOinterface == null)
+            {
+                throw new Exception("GPIO does not exist on the current system.");
             }
 
-            public MainPage()
+            PowerOut1 = GPIOinterface.OpenPin(HW_PowerOut1_Pin);
+            PowerOut2 = GPIOinterface.OpenPin(HW_PowerOut2_Pin);
+            PowerOut1.SetDriveMode(GpioPinDriveMode.Output);
+            PowerOut2.SetDriveMode(GpioPinDriveMode.Output);
+            PowerOut1.Write(GpioPinValue.Low);
+            PowerOut2.Write(GpioPinValue.Low);
+            GSLEDdriverMode = GPIOinterface.OpenPin(HW_LEDDriver_GSMode);
+            GSLEDdriverLatch = GPIOinterface.OpenPin(HW_LEDDriver_GSLatch);
+            DCLEDdriverLatch = GPIOinterface.OpenPin(HW_LEDDriver_DCLatch);
+            CSAdrSelectionA0 = GPIOinterface.OpenPin(HW_CSAdrSelction_A0);
+            CSAdrSelectionA1 = GPIOinterface.OpenPin(HW_CSAdrSelction_A1);
+            CSAdrSelcttionA2 = GPIOinterface.OpenPin(HW_CSAdrSelction_A2);
+
+            /// @todo Reihenfolge prüfen
+            CSAdrSelection = new GpioPin[3] { CSAdrSelectionA0, CSAdrSelectionA1, CSAdrSelcttionA2 };
+        }
+
+        /// <summary>
+        /// Init SP-interfaces
+        /// </summary>
+        /// <returns></returns>
+        private async Task InitSpi()
+        {
+            try
             {
-                this.InitializeComponent();
-                Unloaded += MainPage_Unloaded;
-
-                InitAll();
-                this.DataContext = this;
-
+                var settings = new SpiConnectionSettings(HW_SPI_CS_Line);
+                settings.ClockFrequency = 2000000;
+                settings.Mode = SpiMode.Mode0; // CLK-Idle ist low, Dataset on Falling Edge, Sample on Rising Edge
+                string spiAqs = SpiDevice.GetDeviceSelector(HW_SPI_IO_Controller);
+                var devicesInfo = await DeviceInformation.FindAllAsync(spiAqs);
+                SPIOInterface = await SpiDevice.FromIdAsync(devicesInfo[0].Id, settings);
             }
-
-            private async void InitAll()
+            /* If initialization fails, display the exception and stop running */
+            catch (Exception ex)
             {
-                InitGpio();
-                await InitSpi();
-
-                InitIOModule();
-
-                InitDemo();
+                throw new Exception("SPI Initialization Failed", ex);
             }
-
-            /// <summary>
-            /// Set Ressources Free
-            /// </summary>
-            /// <param name="sender"></param>
-            /// <param name="args"></param>
-            private void MainPage_Unloaded(object sender, object args)
+            try
             {
-                // Cleanup
-                // HardwareRessourcen bereinigen
-                // SPIinterface.Dispose();
+                var settings = new SpiConnectionSettings(HW_SPI_CS_Line);
+                settings.ClockFrequency = 4000000;
+                settings.Mode = SpiMode.Mode0; // CLK-Idle ist low, Dataset on Falling Edge, Sample on Rising Edge
+                string spiAqs = SpiDevice.GetDeviceSelector(HW_SPI_LED_Controller);
+                var devicesInfo = await DeviceInformation.FindAllAsync(spiAqs);
+                StatusLEDInterface = await SpiDevice.FromIdAsync(devicesInfo[0].Id, settings);
             }
-
-            /// <summary>
-            /// Init used GPIO Pins
-            /// </summary>
-            private void InitGpio()
+            /* If initialization fails, display the exception and stop running */
+            catch (Exception ex)
             {
-                GPIOinterface = GpioController.GetDefault(); /* Get the default GPIO controller on the system */
-                if (GPIOinterface == null)
-                {
-                    throw new Exception("GPIO does not exist on the current system.");
-                }
-
-                PowerOut1 = GPIOinterface.OpenPin(HW_PowerOut1_Pin);
-                PowerOut2 = GPIOinterface.OpenPin(HW_PowerOut2_Pin);
-                PowerOut1.SetDriveMode(GpioPinDriveMode.Output);
-                PowerOut2.SetDriveMode(GpioPinDriveMode.Output);
-                PowerOut1.Write(GpioPinValue.Low);
-                PowerOut2.Write(GpioPinValue.Low);
-                GSLEDdriverMode = GPIOinterface.OpenPin(HW_LEDDriver_GSMode);
-                GSLEDdriverLatch = GPIOinterface.OpenPin(HW_LEDDriver_GSLatch);
-                DCLEDdriverLatch = GPIOinterface.OpenPin(HW_LEDDriver_DCLatch);
-                CSAdrSelectionA0 = GPIOinterface.OpenPin(HW_CSAdrSelction_A0);
-                CSAdrSelectionA1 = GPIOinterface.OpenPin(HW_CSAdrSelction_A1);
-                CSAdrSelcttionA2 = GPIOinterface.OpenPin(HW_CSAdrSelction_A2);
-
-                /// @todo Reihenfolge prüfen
-                CSAdrSelection = new GpioPin[3] { CSAdrSelectionA0, CSAdrSelectionA1, CSAdrSelcttionA2 };
+                throw new Exception("SPI Initialization Failed", ex);
             }
+        }
 
-            /// <summary>
-            /// Init SP-interfaces
-            /// </summary>
-            /// <returns></returns>
-            private async Task InitSpi()
+        private void InitIOModule()
+        {
+            CSadrADC = new SPIAddressObject(SPIAddressObject.eCSadrMode.SPIwithCSdemux, null, CSAdrSelection, HW_ADC_CSadr);
+            CSadrDAC = new SPIAddressObject(SPIAddressObject.eCSadrMode.SPIwithCSdemux, null, CSAdrSelection, HW_DAC_CSadr);
+            CSadrGPIO = new SPIAddressObject(SPIAddressObject.eCSadrMode.SPIwithCSdemux, null, CSAdrSelection, HW_GPIO_CSadr);
+            CSadrLEDD = new SPIAddressObject(SPIAddressObject.eCSadrMode.SPIdedicated, null, null, 0);
+
+            GSLEDdriver = new LEDD_TLC5941(SPIOInterface, CSadrLEDD, GSLEDdriverLatch, GSLEDdriverMode, null);
+            DCLEDDriver = new LEDD_TLC5925(SPIOInterface, CSadrLEDD, DCLEDdriverLatch, null);
+            StatusLED = new LED_APA102(StatusLEDInterface, CSadrLEDD);
+            DACslave = new DAC_MCP4922(SPIOInterface, CSadrDAC, null, null);
+            ADCslave = new ADC_MCP3208(SPIOInterface, CSadrADC);
+            GPIOslave = new GPIO_MCP23S17(SPIOInterface, CSadrGPIO, null, null, 0);
+        }
+
+        private void InitDemo()
+        {
+            StatusRefresh = new DispatcherTimer();
+            StatusRefresh.Interval = TimeSpan.FromMilliseconds(StatusLEDrefreshCycle);
+            StatusRefresh.Tick += StatusRefresh_Tick;
+
+            AnalogRefresh = new DispatcherTimer();
+            AnalogRefresh.Interval = TimeSpan.FromMilliseconds(AnalogCycle);
+            AnalogRefresh.Tick += AnalogRefresh_Tick;
+
+        }
+
+        /// <summary>
+        /// Occurs when [property changed].
+        /// </summary>
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Wird manuell Aufgerufen wenn sich eine Property ändert, dammit alle Elemente die an diese Property gebunden sind (UI-Elemente) aktualisiert werden.
+        /// </summary>
+        /// <param name="propertyname">Name der Property welche sich geändert hat.</param>
+        private void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
+            if (handler != null)
             {
-                try
-                {
-                    var settings = new SpiConnectionSettings(HW_SPI_CS_Line);
-                    settings.ClockFrequency = 2000000;
-                    settings.Mode = SpiMode.Mode0; // CLK-Idle ist low, Dataset on Falling Edge, Sample on Rising Edge
-                    string spiAqs = SpiDevice.GetDeviceSelector(HW_SPI_IO_Controller);
-                    var devicesInfo = await DeviceInformation.FindAllAsync(spiAqs);
-                    SPIOInterface = await SpiDevice.FromIdAsync(devicesInfo[0].Id, settings);
-                }
-                /* If initialization fails, display the exception and stop running */
-                catch (Exception ex)
-                {
-                    throw new Exception("SPI Initialization Failed", ex);
-                }
-                try
-                {
-                    var settings = new SpiConnectionSettings(HW_SPI_CS_Line);
-                    settings.ClockFrequency = 4000000;
-                    settings.Mode = SpiMode.Mode0; // CLK-Idle ist low, Dataset on Falling Edge, Sample on Rising Edge
-                    string spiAqs = SpiDevice.GetDeviceSelector(HW_SPI_LED_Controller);
-                    var devicesInfo = await DeviceInformation.FindAllAsync(spiAqs);
-                    StatusLEDInterface = await SpiDevice.FromIdAsync(devicesInfo[0].Id, settings);
-                }
-                /* If initialization fails, display the exception and stop running */
-                catch (Exception ex)
-                {
-                    throw new Exception("SPI Initialization Failed", ex);
-                }
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
+        }
 
-            private void InitIOModule()
+        private void btn_SetRGBvalues(object sender, RoutedEventArgs e)
+        {
+            //@todo hier auf Binding setzten
+
+            int tempRed = (int)RGBValue.MaxValue * (int)RedChannel.Value / MaxSliderValue;
+            int tempGreen = (int)RGBValue.MaxValue * (int)GreenChannel.Value / MaxSliderValue;
+            int tempBlue = (int)RGBValue.MaxValue * (int)BlueChannel.Value / MaxSliderValue;
+            int tempIntens = (int)RGBValue.MaxValue * (int)IntensitySet.Value / MaxSliderValue;
+            RGBValue newLEDval = new RGBValue { Red = (ushort)tempRed, Green = (ushort)tempGreen, Blue = (ushort)tempBlue, Intensity = (ushort)tempIntens };
+
+            StatusLED.SetLED(0, newLEDval);
+            StatusLED.UpdateLEDs();
+        }
+
+        DispatcherTimer StatusRefresh;
+        const int StatusLEDrefreshCycle = 100;
+        bool InstantRGBsetIsActive = false;
+
+        private void btn_InstantRGBrefresh(object sender, RoutedEventArgs e)
+        {
+            if (InstantRGBsetIsActive == false)
             {
-
-                CSadrADC = new SPIAddressObject(SPIAddressObject.eCSadrMode.SPIwithCSdemux, null, CSAdrSelection, HW_ADC_CSadr);
-                CSadrDAC = new SPIAddressObject(SPIAddressObject.eCSadrMode.SPIwithCSdemux, null, CSAdrSelection, HW_DAC_CSadr);
-                CSadrGPIO = new SPIAddressObject(SPIAddressObject.eCSadrMode.SPIwithCSdemux, null, CSAdrSelection, HW_GPIO_CSadr);
-                CSadrLEDD = new SPIAddressObject(SPIAddressObject.eCSadrMode.SPIdedicated, null, null, 0);
-
-                GSLEDdriver = new LEDD_TLC5941(SPIOInterface, CSadrLEDD, GSLEDdriverLatch, GSLEDdriverMode, null);
-                DCLEDDriver = new LEDD_TLC5925(SPIOInterface, CSadrLEDD, DCLEDdriverLatch, null);
-                StatusLED = new LED_APA102(StatusLEDInterface, CSadrLEDD);
-                DACslave = new DAC_MCP4922(SPIOInterface, CSadrDAC, null, null);
-                ADCslave = new ADC_MCP3208(SPIOInterface, CSadrADC);
-                GPIOslave = new GPIO_MCP23S17(SPIOInterface, CSadrGPIO, null, null, 0);
+                InstantRGBsetIsActive = true;
+                btn_InstantRGB.Background = new SolidColorBrush(Colors.LightGreen);
+                StatusRefresh.Start();
             }
-
-            private void InitDemo()
+            else
             {
-                StatusRefresh = new DispatcherTimer();
-                StatusRefresh.Interval = TimeSpan.FromMilliseconds(StatusLEDrefreshCycle);
-                StatusRefresh.Tick += StatusRefresh_Tick;
-
-                AnalogRefresh = new DispatcherTimer();
-                AnalogRefresh.Interval = TimeSpan.FromMilliseconds(AnalogCycle);
-                AnalogRefresh.Tick += AnalogRefresh_Tick;
-
+                InstantRGBsetIsActive = false;
+                btn_InstantRGB.Background = new SolidColorBrush(Colors.LightGray);
+                StatusRefresh.Stop();
             }
-
-            /// <summary>
-            /// Occurs when [property changed].
-            /// </summary>
-            public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
-            /// <summary>
-            /// Wird manuell Aufgerufen wenn sich eine Property ändert, dammit alle Elemente die an diese Property gebunden sind (UI-Elemente) aktualisiert werden.
-            /// </summary>
-            /// <param name="propertyname">Name der Property welche sich geändert hat.</param>
-            private void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
-            {
-                System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
-                if (handler != null)
-                {
-                    handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-                }
-            }
-
-            private void btn_SetRGBvalues(object sender, RoutedEventArgs e)
-            {
-                //@todo hier auf Binding setzten
-
-                int tempRed = (int)RGBValue.MaxValue * (int)RedChannel.Value / MaxSliderValue;
-                int tempGreen = (int)RGBValue.MaxValue * (int)GreenChannel.Value / MaxSliderValue;
-                int tempBlue = (int)RGBValue.MaxValue * (int)BlueChannel.Value / MaxSliderValue;
-                int tempIntens = (int)RGBValue.MaxValue * (int)IntensitySet.Value / MaxSliderValue;
-                RGBValue newLEDval = new RGBValue { Red = (ushort)tempRed, Green = (ushort)tempGreen, Blue = (ushort)tempBlue, Intensity = (ushort)tempIntens };
-
-                StatusLED.SetLED(0, newLEDval);
-                StatusLED.UpdateLEDs();
-            }
-
-            DispatcherTimer StatusRefresh;
-            const int StatusLEDrefreshCycle = 100;
-            bool InstantRGBsetIsActive = false;
-
-            private void btn_InstantRGBrefresh(object sender, RoutedEventArgs e)
-            {
-                if (InstantRGBsetIsActive == false)
-                {
-                    InstantRGBsetIsActive = true;
-                    btn_InstantRGB.Background = new SolidColorBrush(Colors.LightGreen);
-                    StatusRefresh.Start();
-                }
-                else
-                {
-                    InstantRGBsetIsActive = false;
-                    btn_InstantRGB.Background = new SolidColorBrush(Colors.LightGray);
-                    StatusRefresh.Stop();
-                }
-            }
+        }
 
             private void StatusRefresh_Tick(object sender, object e)
             {
@@ -522,7 +531,7 @@ namespace App_IO_Demo
 
                 tempChVals[0] = (ushort)((int)LEDD_TLC5941.LEDclassDefines.MaxLEDportValue * (int)GrayCh0.Value / MaxSliderValue);
                 tempChVals[1] = (ushort)((int)LEDD_TLC5941.LEDclassDefines.MaxLEDportValue * (int)GrayCh1.Value / MaxSliderValue);
-                tempChVals[2] = (ushort)((int)LEDD_TLC5941.LEDclassDefines.MaxLEDportValue * (int)GrayCh2.Value / MaxSliderValue);
+                tempChVals[2] = (ushort)(LEDD_TLC5941.LEDclassDefines.MaxLEDportValue * (int)GrayCh2.Value / MaxSliderValue);
                 tempChVals[3] = (ushort)((int)LEDD_TLC5941.LEDclassDefines.MaxLEDportValue * (int)GrayCh3.Value / MaxSliderValue);
                 tempChVals[4] = (ushort)((int)LEDD_TLC5941.LEDclassDefines.MaxLEDportValue * (int)GrayCh4.Value / MaxSliderValue);
                 tempChVals[5] = (ushort)((int)LEDD_TLC5941.LEDclassDefines.MaxLEDportValue * (int)GrayCh5.Value / MaxSliderValue);
@@ -535,7 +544,7 @@ namespace App_IO_Demo
                 tempChVals[12] = (ushort)((int)LEDD_TLC5941.LEDclassDefines.MaxLEDportValue * (int)GrayCh12.Value / MaxSliderValue);
                 tempChVals[13] = (ushort)((int)LEDD_TLC5941.LEDclassDefines.MaxLEDportValue * (int)GrayCh13.Value / MaxSliderValue);
                 tempChVals[14] = (ushort)((int)LEDD_TLC5941.LEDclassDefines.MaxLEDportValue * (int)GrayCh14.Value / MaxSliderValue);
-                tempChVals[15] = (ushort)((int)LEDD_TLC5941.LEDclassDefines.MaxLEDportValue * (int)GrayCh15.Value / MaxSliderValue);
+                tempChVals[15] = (ushort)(GenreicLEDslave.LEDclassDefines.MaxLEDportValue * (int)GrayCh15.Value / MaxSliderValue);
 
                 GSLEDdriver.SetLED(0, tempChVals);
                 GSLEDdriver.UpdateLEDs();
