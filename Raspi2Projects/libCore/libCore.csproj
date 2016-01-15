@@ -120,7 +120,6 @@
     <Compile Include="IOevalBoard\GenericSlaveClasses.cs" />
     <Compile Include="IOevalBoard\GPIOclasses.cs" />
     <Compile Include="IOevalBoard\LEDclasses.cs" />
-    <Compile Include="IOevalBoard\LED_APA102eval.cs" />
     <Compile Include="IOevalBoard\RaspiSlaveEssentials.cs" />
     <Compile Include="Pages\PageEthernet.xaml.cs">
       <DependentUpon>PageEthernet.xaml</DependentUpon>
