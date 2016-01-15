@@ -22,6 +22,7 @@ using System.Runtime.CompilerServices;
 using Windows.Networking.Connectivity;
 using Windows.UI.Core;
 using libCore.IOevalBoard;
+using libShared.HardwareNah;
 
 // Die Vorlage "Leere Seite" ist unter http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 dokumentiert.
 
@@ -48,8 +49,9 @@ namespace RGB_Demo
         private DispatcherTimer ArrayTimer;
 
         // Objects for cyclic access
-        LED_APA102eval StatusLED;
-        LED_APA102eval LEDArray;
+        SPIAddressObject CSadrLEDD;
+        LED_APA102 StatusLED;
+        LED_APA102 LEDArray;
 
         int cycleCount = 0;
         int statusMachineCount = 0;
@@ -84,18 +86,23 @@ namespace RGB_Demo
             GPIOvar = GpioController.GetDefault(); /* Get the default GPIO controller on the system */
             await InitSpi();        /* Initialize the SPI controller                */
 
-            StatusLED = new LED_APA102eval(SPIinterface_Status);
-            StatusLED.AddLED(LED_APA102eval.Colors.Dark);
-            LEDArray = new LED_APA102eval(SPIinterface_Demo);
-            LEDArray.AddLED(LED_APA102eval.Colors.Dark);
-            LEDArray.AddLED(LED_APA102eval.Colors.Dark);
-            LEDArray.AddLED(LED_APA102eval.Colors.Dark);
-            LEDArray.AddLED(LED_APA102eval.Colors.Dark);
-            LEDArray.AddLED(LED_APA102eval.Colors.Dark);
-            LEDArray.AddLED(LED_APA102eval.Colors.Dark);
-            LEDArray.AddLED(LED_APA102eval.Colors.Dark);
-            LEDArray.AddLED(LED_APA102eval.Colors.Dark);
-            LEDArray.AddLED(LED_APA102eval.Colors.Dark);
+
+
+            CSadrLEDD = new SPIAddressObject(SPIAddressObject.eCSadrMode.SPIdedicated, null, null, 0);
+            StatusLED = new LED_APA102(SPIinterface_Status, CSadrLEDD);
+            // Bei der Instanziierung wird erstes LED-Objekt erstellt.
+            LEDArray = new LED_APA102(SPIinterface_Demo, CSadrLEDD);
+            // Bei der Instanziierung wird erstes LED-Objekt erstellt.
+
+
+            LEDArray.AddLED(RGBDefines.Black);
+            LEDArray.AddLED(RGBDefines.Black);
+            LEDArray.AddLED(RGBDefines.Black);
+            LEDArray.AddLED(RGBDefines.Black);
+            LEDArray.AddLED(RGBDefines.Black);
+            LEDArray.AddLED(RGBDefines.Black);
+            LEDArray.AddLED(RGBDefines.Black);
+            LEDArray.AddLED(RGBDefines.Black);
 
             // LED-Demo
             StatusTimer.Start();
@@ -131,48 +138,48 @@ namespace RGB_Demo
         private bool currAccenting = true;
         private void StatusTimer_Tick(object sender, object e)
         {
-            LED_APA102eval.RGB_Val tempLEDobj;
-            tempLEDobj = StatusLED.GetLEDobj(0);
+            RGBValue tempLEDobj;
+            StatusLED.GetLEDvalue(0,out tempLEDobj);
 
             if (currAccenting == true)
             {
-                currCount += 5;
+                currCount += 0x500;
             }
             else
             {
-                currCount -= 5;
+                currCount -= 0x500;
             }
 
             switch (statusMachineCount)
             {
                 case 0: // fading red
-                    tempLEDobj.Red = (byte)currCount;
+                    tempLEDobj.Red = (ushort)currCount;
                     break;
                 case 1: // fading green
-                    tempLEDobj.Green = (byte)currCount;
+                    tempLEDobj.Green = (ushort)currCount;
                     break;
                 case 2: // fading blue
-                    tempLEDobj.Blue = (byte)currCount;
+                    tempLEDobj.Blue = (ushort)currCount;
                     break;
                 case 3: // fading red
-                    tempLEDobj.Red = (byte)currCount;
-                    tempLEDobj.Green = (byte)currCount;
+                    tempLEDobj.Red = (ushort)currCount;
+                    tempLEDobj.Green = (ushort)currCount;
                     break;
                 case 4: // fading red
-                    tempLEDobj.Red = (byte)currCount;
-                    tempLEDobj.Blue = (byte)currCount;
+                    tempLEDobj.Red = (ushort)currCount;
+                    tempLEDobj.Blue = (ushort)currCount;
                     break;
                 case 5: // fading red
-                    tempLEDobj.Green = (byte)currCount;
-                    tempLEDobj.Blue = (byte)currCount;
+                    tempLEDobj.Green = (ushort)currCount;
+                    tempLEDobj.Blue = (ushort)currCount;
                     break;
                 case 6: // fading red
-                    tempLEDobj.Red = (byte)currCount;
-                    tempLEDobj.Green = (byte)currCount;
-                    tempLEDobj.Blue = (byte)currCount;
+                    tempLEDobj.Red = (ushort)currCount;
+                    tempLEDobj.Green = (ushort)currCount;
+                    tempLEDobj.Blue = (ushort)currCount;
                     break;
                 case 7: // fading red
-                    tempLEDobj.Red = (byte)currCount;
+                    tempLEDobj.Red = (ushort)currCount;
                     statusMachineCount = 0;
                     break;
 
@@ -180,8 +187,9 @@ namespace RGB_Demo
                     statusMachineCount = 0;
                     break;
             }
+            tempLEDobj.Intensity = RGBValue.MaxValue;
 
-            if ((currAccenting == true) && (currCount >= 100))
+            if ((currAccenting == true) && (currCount >= 0x6400))
             {
                 currAccenting = false;
             }
@@ -197,54 +205,54 @@ namespace RGB_Demo
 
         private void ArrayTimer_Tick(object sender, object e)
         {
-            LED_APA102eval.RGB_Val tempNewLEDval, tempOldLEDval;
-            tempNewLEDval = StatusLED.GetLEDobj(0);
+            RGBValue tempNewLEDval;
+            StatusLED.GetLEDvalue(0, out tempNewLEDval);
             cycleCount++;
 
             switch (cycleCount)
             {
                 case 1:
-                    LEDArray.SetLED(8, LED_APA102eval.Colors.Dark);
+                    LEDArray.SetLED(8, RGBDefines.Black);
                     LEDArray.SetLED(0, tempNewLEDval);
                     break;
 
                 case 2:
-                    LEDArray.SetLED(0, LED_APA102eval.Colors.Dark);
+                    LEDArray.SetLED(0, RGBDefines.Black);
                     LEDArray.SetLED(1, tempNewLEDval);
                     break;
 
                 case 3:
-                    LEDArray.SetLED(1, LED_APA102eval.Colors.Dark);
+                    LEDArray.SetLED(1, RGBDefines.Black);
                     LEDArray.SetLED(2, tempNewLEDval);
                     break;
 
                 case 4:
-                    LEDArray.SetLED(2, LED_APA102eval.Colors.Dark);
+                    LEDArray.SetLED(2, RGBDefines.Black);
                     LEDArray.SetLED(3, tempNewLEDval);
                     break;
 
                 case 5:
-                    LEDArray.SetLED(3, LED_APA102eval.Colors.Dark);
+                    LEDArray.SetLED(3, RGBDefines.Black);
                     LEDArray.SetLED(4, tempNewLEDval);
                     break;
 
                 case 6:
-                    LEDArray.SetLED(4, LED_APA102eval.Colors.Dark);
+                    LEDArray.SetLED(4, RGBDefines.Black);
                     LEDArray.SetLED(5, tempNewLEDval);
                     break;
 
                 case 7:
-                    LEDArray.SetLED(5, LED_APA102eval.Colors.Dark);
+                    LEDArray.SetLED(5, RGBDefines.Black);
                     LEDArray.SetLED(6, tempNewLEDval);
                     break;
 
                 case 8:
-                    LEDArray.SetLED(6, LED_APA102eval.Colors.Dark);
+                    LEDArray.SetLED(6, RGBDefines.Black);
                     LEDArray.SetLED(7, tempNewLEDval);
                     break;
 
                 case 9:
-                    LEDArray.SetLED(7, LED_APA102eval.Colors.Dark);
+                    LEDArray.SetLED(7, RGBDefines.Black);
                     LEDArray.SetLED(8, tempNewLEDval);
                     cycleCount = 0;
                     break;
@@ -254,27 +262,6 @@ namespace RGB_Demo
                     break;
             }
             LEDArray.UpdateLEDs();
-        }
-
-        /// <summary>
-        /// Converts String to Byte-Array
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        private byte[] StringToByteArray(string str)
-        {
-            System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
-            return enc.GetBytes(str);
-        }
-        /// <summary>
-        /// Converts Byte-Array to String
-        /// </summary>
-        /// <param name="arr"></param>
-        /// <returns></returns>
-        private string ByteArrayToString(byte[] arr)
-        {
-            System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
-            return enc.GetString(arr);
         }
     }
 }
