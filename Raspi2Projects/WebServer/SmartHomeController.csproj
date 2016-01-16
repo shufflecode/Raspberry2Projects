@@ -103,7 +103,7 @@
     <Compile Include="ApiController\GPIOController.cs" />
     <Compile Include="ApiController\LedController.cs" />
     <Compile Include="BaseClasses\ApiController.cs" />
-    <Compile Include="Models\GPIOModel.cs" />
+    <Compile Include="Models\GPIOModels\GPIOModel.cs" />
     <Compile Include="Models\LedModels\LedModel.cs" />
     <Compile Include="Webserver\Request.cs" />
     <Compile Include="StartupTask.cs" />

@@ -16,7 +16,7 @@ namespace WebServer.ApiController
         private LEDDemo demo;
         public LedController()
         {
-            demo = new LEDDemo();
+           // demo = new LEDDemo();
         }
 
         [Route("/LedController/Demo/on", Route.Type.Get)]

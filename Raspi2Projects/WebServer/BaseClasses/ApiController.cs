@@ -16,6 +16,10 @@ namespace WebServer.BaseClasses
             
         }
 
+        /// <summary>
+        /// Empty HTTP 200 OK Message
+        /// </summary>
+        /// <returns> Empty HTTP 200 OK Message</returns>
         public HttpResponseMessage Ok()
         {
             var responseMessgae = new HttpResponseMessage();
@@ -25,10 +29,10 @@ namespace WebServer.BaseClasses
         }
 
         /// <summary>
-        /// ApiMeldung OK mit entsprechend Formatiertem Json Object
+        /// HTTP 200 OK Message 
         /// </summary>
-        /// <param name="response">Das Objekt das ausgegeben werden soll</param>
-        /// <returns>HttpResponse OK mit Json Daten</returns>
+        /// <param name="response">Object to pass to the client</param>
+        /// <returns>HttpResponse OK with JSONB Formatted Data</returns>
         public HttpResponseMessage Ok(object response)
         {
             var responseMessgae = new HttpResponseMessage();
@@ -44,7 +48,8 @@ namespace WebServer.BaseClasses
             }
             catch (Exception ex)
             {
-                var msg = ex.Message;
+                responseMessgae.StatusCode = HttpStatusCode.InternalServerError;
+                responseMessgae.Content = new StringContent("Exception thrown"+ ex,Encoding.ASCII);
             }
             return responseMessgae;
         }

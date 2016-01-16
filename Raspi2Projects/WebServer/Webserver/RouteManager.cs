@@ -36,7 +36,7 @@ namespace WebServer
 
         #region methods
         /// <summary>
-        /// Contains all available ApiRoutes for the ApiControllers registered in this routemanager
+        /// Contains all available Routes for the ApiControllers registered in this routemanager
         /// </summary>
         public List<Route> Routes;
 
