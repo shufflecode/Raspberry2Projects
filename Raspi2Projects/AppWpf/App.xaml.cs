@@ -18,7 +18,7 @@ namespace AppWpf
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             //Hauptfenster
-            var mainWindow = new Views.MainWindow();
+            var mainWindow = new MainWindow();
             this.MainWindow = mainWindow;
 
             //HauptViewmodel zuweisen
