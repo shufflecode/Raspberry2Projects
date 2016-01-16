@@ -1,9 +1,12 @@
 ﻿<Application x:Class="AppWpf.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:AppWpf"
-             StartupUri="MainWindow.xaml">
+             xmlns:vm="clr-namespace:AppWpf.ViewModels"
+             xmlns:views="clr-namespace:AppWpf.Views"
+             Startup="Application_Startup">
     <Application.Resources>
-         
+        <DataTemplate DataType="{x:Type vm:MainWindowViewModel}" >
+            <views:MainWindow></views:MainWindow>
+        </DataTemplate>
     </Application.Resources>
 </Application>

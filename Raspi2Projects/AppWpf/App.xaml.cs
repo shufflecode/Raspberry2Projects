@@ -5,6 +5,8 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using AppWpf.Views;
+using AppWpf.ViewModels;
 
 namespace AppWpf
 {
@@ -13,5 +15,17 @@ namespace AppWpf
     /// </summary>
     public partial class App : Application
     {
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            //Hauptfenster
+            var mainWindow = new Views.MainWindow();
+            this.MainWindow = mainWindow;
+
+            //HauptViewmodel zuweisen
+            var mainWindowViewModel = new MainWindowViewModel();
+            mainWindow.DataContext = mainWindowViewModel;
+
+            mainWindow.Show();
+        }
     }
 }
