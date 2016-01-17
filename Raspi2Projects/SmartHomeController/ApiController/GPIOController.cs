@@ -14,7 +14,7 @@ namespace WebServer.ApiController
         private GPIOModel model;
         public GPIOController()
         {
-            model = new GPIOModel();
+            //model = new GPIOModel();
         }
 
         [Route("/GPIO/",Route.Type.Get)]
