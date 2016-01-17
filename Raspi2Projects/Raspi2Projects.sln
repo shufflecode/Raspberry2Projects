@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppRaspi2", "AppRaspi2\AppR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppWpf", "AppWpf\AppWpf.csproj", "{5E90B531-CBD8-4567-BA30-2936AE7F12AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartHomeController", "WebServer\SmartHomeController.csproj", "{0106470C-88B5-4DE3-8F4D-ADD749B6575A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppWpfInterfacesDemoV1", "AppWpfInterfacesDemo\AppWpfInterfacesDemoV1.csproj", "{5B3ECC75-3172-4FE0-865C-3BACF3730C9D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppUwaInterfacesDemoV1", "AppUwaInterfacesDemo\AppUwaInterfacesDemoV1.csproj", "{379AA26E-1089-49BB-91D7-1C7A2FE45D1A}"
@@ -24,6 +22,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App_IO_Demo", "App_IO_Demo\App_IO_Demo.csproj", "{64B18241-80F4-40FF-B544-B6887EE26A0B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RGB_Demo", "RGB_Demo\RGB_Demo.csproj", "{C8B3E4FD-E031-49FB-9687-60D5850E7B93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartHomeController", "SmartHomeController\SmartHomeController.csproj", "{0106470C-88B5-4DE3-8F4D-ADD749B6575A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -121,28 +121,6 @@ Global
 		{5E90B531-CBD8-4567-BA30-2936AE7F12AB}.Release|x64.Build.0 = Release|Any CPU
 		{5E90B531-CBD8-4567-BA30-2936AE7F12AB}.Release|x86.ActiveCfg = Release|Any CPU
 		{5E90B531-CBD8-4567-BA30-2936AE7F12AB}.Release|x86.Build.0 = Release|Any CPU
-		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Debug|Any CPU.Build.0 = Debug|x86
-		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Debug|Any CPU.Deploy.0 = Debug|x86
-		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Debug|ARM.ActiveCfg = Debug|ARM
-		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Debug|ARM.Build.0 = Debug|ARM
-		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Debug|ARM.Deploy.0 = Debug|ARM
-		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Debug|x64.ActiveCfg = Debug|x64
-		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Debug|x64.Build.0 = Debug|x64
-		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Debug|x64.Deploy.0 = Debug|x64
-		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Debug|x86.ActiveCfg = Debug|x86
-		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Debug|x86.Build.0 = Debug|x86
-		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Debug|x86.Deploy.0 = Debug|x86
-		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Release|Any CPU.ActiveCfg = Release|x86
-		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Release|ARM.ActiveCfg = Release|ARM
-		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Release|ARM.Build.0 = Release|ARM
-		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Release|ARM.Deploy.0 = Release|ARM
-		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Release|x64.ActiveCfg = Release|x64
-		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Release|x64.Build.0 = Release|x64
-		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Release|x64.Deploy.0 = Release|x64
-		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Release|x86.ActiveCfg = Release|x86
-		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Release|x86.Build.0 = Release|x86
-		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Release|x86.Deploy.0 = Release|x86
 		{5B3ECC75-3172-4FE0-865C-3BACF3730C9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5B3ECC75-3172-4FE0-865C-3BACF3730C9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B3ECC75-3172-4FE0-865C-3BACF3730C9D}.Debug|ARM.ActiveCfg = Debug|Any CPU
@@ -219,6 +197,26 @@ Global
 		{C8B3E4FD-E031-49FB-9687-60D5850E7B93}.Release|x86.ActiveCfg = Release|x86
 		{C8B3E4FD-E031-49FB-9687-60D5850E7B93}.Release|x86.Build.0 = Release|x86
 		{C8B3E4FD-E031-49FB-9687-60D5850E7B93}.Release|x86.Deploy.0 = Release|x86
+		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Debug|ARM.ActiveCfg = Debug|ARM
+		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Debug|ARM.Build.0 = Debug|ARM
+		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Debug|ARM.Deploy.0 = Debug|ARM
+		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Debug|x64.ActiveCfg = Debug|x64
+		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Debug|x64.Build.0 = Debug|x64
+		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Debug|x64.Deploy.0 = Debug|x64
+		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Debug|x86.ActiveCfg = Debug|x86
+		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Debug|x86.Build.0 = Debug|x86
+		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Debug|x86.Deploy.0 = Debug|x86
+		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Release|Any CPU.ActiveCfg = Release|x86
+		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Release|ARM.ActiveCfg = Release|ARM
+		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Release|ARM.Build.0 = Release|ARM
+		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Release|ARM.Deploy.0 = Release|ARM
+		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Release|x64.ActiveCfg = Release|x64
+		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Release|x64.Build.0 = Release|x64
+		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Release|x64.Deploy.0 = Release|x64
+		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Release|x86.ActiveCfg = Release|x86
+		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Release|x86.Build.0 = Release|x86
+		{0106470C-88B5-4DE3-8F4D-ADD749B6575A}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -261,8 +259,8 @@ Global
 		SccProjectUniqueName9 = RGB_Demo\\RGB_Demo.csproj
 		SccProjectName9 = RGB_Demo
 		SccLocalPath9 = RGB_Demo
-		SccProjectUniqueName10 = WebServer\\SmartHomeController.csproj
-		SccProjectName10 = WebServer
-		SccLocalPath10 = WebServer
+		SccProjectUniqueName10 = SmartHomeController\\SmartHomeController.csproj
+		SccProjectName10 = SmartHomeController
+		SccLocalPath10 = SmartHomeController
 	EndGlobalSection
 EndGlobal
