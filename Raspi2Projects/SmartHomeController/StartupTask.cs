@@ -11,8 +11,6 @@ using IotWeb.Common;
 using WebServer.ApiController;
 using IotWeb.Server;
 
-// The Background Application template is documented at http://go.microsoft.com/fwlink/?LinkID=533884&clcid=0x409
-
 namespace WebServer
 {
     public sealed class StartupTask : IBackgroundTask
@@ -30,7 +28,6 @@ namespace WebServer
             {
                 
                 var server = new HttpServer(80);
-                
                 RouteManager.Current.Register(new LedController());
                 RouteManager.Current.Register(new GPIOController());
                 RouteManager.Current.InitRoutes();
@@ -43,7 +40,6 @@ namespace WebServer
                 {
                     server.Start();
                     srv.Start();
-                    
                 });
             }
             catch (Exception ex)
@@ -59,12 +55,18 @@ namespace WebServer
                 var sr = new StreamReader(input);
                 var result = sr.ReadLine();
                 Debug.WriteLine("Request:" + sender + hostname + "Rsult :" + result);
+                sr.Dispose();
+
+                var sw = new StreamWriter(output);
+                await sw.WriteAsync("Echo: " + result);
+                sw.Flush();
+                sw.Dispose();
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("Requested:" + ex);
             }
-            
+           
         }
     }
 }
