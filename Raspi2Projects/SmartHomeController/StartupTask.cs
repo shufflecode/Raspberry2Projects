@@ -53,7 +53,7 @@ namespace WebServer
             try
             {
                 var sr = new StreamReader(input);
-                var result = sr.ReadLine();
+                var result = sr.ReadToEndAsync().Result;
                 Debug.WriteLine("Request:" + sender + hostname + "Rsult :" + result);
                 sr.Dispose();
 
