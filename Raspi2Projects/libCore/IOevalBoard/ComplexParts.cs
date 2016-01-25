@@ -7,7 +7,7 @@
     using Windows.Devices.Spi;
 
     /// <summary>
-    /// LED-Objekt
+    /// LED-Object with tree dedicated binary pins of common logic
     /// </summary>
     struct RGB_LEDpins
     {
@@ -20,13 +20,13 @@
         private E_RGB_LEDType LEDstat;
 
         /// <summary>
-        /// Konstruktor für RGB-LED-Objekt. Reserviert Hardwarepins und definiert Schaltlogik
+        /// Constructor for RGB-LED-object. Reserves hardware IO and defines pin-logic
         /// </summary>
-        /// <param name="gpio">GPIO-Objekt von IO-Controller</param>
-        /// <param name="redPin">PinNummer für RotKanal</param>
-        /// <param name="greenPin">PinNummer für GrünKanal</param>
-        /// <param name="bluePin">PinNummer für BlauKanal</param>
-        /// <param name="ledType">Schaltlogik der LED pins</param>
+        /// <param name="gpio">GPIO-object of IO-Controller</param>
+        /// <param name="redPin">Pin number for red channel</param>
+        /// <param name="greenPin">Pin number for green channel</param>
+        /// <param name="bluePin">Pin number for blue channel</param>
+        /// <param name="ledType">LED logic of channel-pins</param>
         public RGB_LEDpins(GpioController gpio, int redPin, int greenPin, int bluePin, E_RGB_LEDType ledType)
         {
             this.red = gpio.OpenPin(redPin);
@@ -43,18 +43,18 @@
                 enableLEDpin = GpioPinValue.Low;
                 disableLEDpin = GpioPinValue.High;
             }
-            // Setzen der Pins als Output
+            // Set associated pins as output
             this.red.SetDriveMode(GpioPinDriveMode.Output);
             this.green.SetDriveMode(GpioPinDriveMode.Output);
             this.blue.SetDriveMode(GpioPinDriveMode.Output);
         }
 
         /// <summary>
-        /// Setzten der LED-Ausgangspins
+        /// Set LED output pins
         /// </summary>
-        /// <param name="red">Rot-Kanal</param>
-        /// <param name="green">Grün-Kanal</param>
-        /// <param name="blue">Blau-Kanal</param>
+        /// <param name="red">Red channel</param>
+        /// <param name="green">Green channel</param>
+        /// <param name="blue">Blue channel</param>
         public void SetLEDOutputs(bool red, bool green, bool blue)
         {
             if (red == true)
@@ -84,7 +84,7 @@
         }
 
         /// <summary>
-        /// LED-PinRessourcen freigeben
+        /// Dispose LED pins
         /// </summary>
         public void DisposePins()
         {
@@ -93,12 +93,12 @@
             this.blue.Dispose();
         }
         /// <summary>
-        /// Gibt den RGB-LED-Typen an (Common Anode oder Common Catode)
+        /// Defines LED driving logic (Common Anode oder Common Cathode)
         /// </summary>
         public enum E_RGB_LEDType
         {
-            LowActive, // Wenn Common Anode
-            HighActive, // Wenn Common Catode
+            LowActive, // For Common Anode LEDs
+            HighActive, // For Common Cathode LEDs
         }
     }
 }

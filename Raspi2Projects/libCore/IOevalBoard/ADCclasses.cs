@@ -20,7 +20,7 @@
         // Protocol:
         // Pull CS-line
         // Send 5 bit command byte 
-        // Sned min 14 clock pulses to poll the required data
+        // Send min 14 clock pulses to poll the required data
         // Release CS-line
 
         //	Control byte format (the command byte is dislocated to LSBit to get a left justified ADC Value)
@@ -36,13 +36,13 @@
 
         // Protocol
         // SingleDataUnit [Byte]
-        // Send -> [Commeand] 	[00]    	[00]
+        // Send -> [Command] 	[00]    	[00]
         //  Rec <- [00]			[MSB]		[LSB]
         // ReseulValue is 16 bit left Justified [0,B9,B8,B7,B6,B5,B4,B3],[B2,B1,B0, S1 S0, S1,S2,S3] // last 3 bits have to be masked
 
 
-        // ADC Modul supports only one conversion per command byte
-        // The nexet AD-conversion can only start after release of the CS-Line
+        // ADC Module supports only one conversion per command byte
+        // The next AD-conversion can only start after release of the CS-Line
         // To get a right justified ADC value the command has to start after the 5th clock pulse
         // To get a left justified Value the command byte hast to be send after 2nd clock pulse, the last 3 bits of Conversion result has to be masked
         
@@ -51,9 +51,9 @@
             */
 
         /// <summary>
-        /// Command frame for AD-converision
+        /// Command frame for AD-conversion
         /// The AD-converter has to send left justified values. Hence the command has to start after the second clock pulse
-        /// [0,0, Startbit, Singelbit, Adrbit2, Adrbit1, Adrbit0, 0]
+        /// [0,0, start-bit, single-bit, Adrbit2, Adrbit1, Adrbit0, 0]
         /// </summary>
         const byte CommandFrame = 0x20;
         /// <summary>
@@ -87,7 +87,7 @@
         /// <summary>
         /// Constructor for MCP_3208
         /// </summary>
-        /// <param name="spiInterface"> Defines the SP-interface on Raspi board</param>
+        /// <param name="spiInterface"> Defines the SP-interface on RasPi board</param>
         /// <param name="spiAdr">Defines the CS-address combination for addressing the slave</param>
         public ADC_MCP3208(SpiDevice spiInterface, SPIAddressObject spiAdr)
             : base(spiInterface, spiAdr, InterfaceConstrains, ConverterDefines)
@@ -98,7 +98,7 @@
         /// <summary>
         /// Get single value for given ADC-channel
         /// </summary>
-        /// <param name="chNum">Channelnumber starting with 0 for first ADC-channel</param>
+        /// <param name="chNum">Channel-number starting with 0 for first ADC-channel</param>
         /// <param name="adcVal"></param>
         /// <returns></returns>
         public override void GetSingleChannel(int chNum, out Int16 adcVal)
@@ -124,7 +124,7 @@
         }
 
         /// <summary>
-        /// Generates adress for conversion command
+        /// Generates address for conversion command
         /// </summary>
         /// <param name="chNum"></param>
         /// <param name="cMode"></param>
@@ -147,9 +147,9 @@
         }
 
         /// <summary>
-        /// Extracts read value from bytestream
+        /// Extracts read value from byte-stream
         /// </summary>
-        /// <param name="rec">Received bytestream</param>
+        /// <param name="rec">Received byte-stream</param>
         /// <returns></returns>
         protected Int16 ExtractValue(byte[] rec)
         {

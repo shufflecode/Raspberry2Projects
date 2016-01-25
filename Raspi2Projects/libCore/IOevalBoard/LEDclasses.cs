@@ -14,7 +14,7 @@
 
     /// <summary>
     /// LED-Driver class for TLC5925
-    /// Texas Intrumens Driver with 16 binary Ports. Configurable in daisychain supported.
+    /// Texas Instruments Driver with 16 binary Ports. Configurable in daisy-chain supported.
     /// </summary>
     public class LEDD_TLC5925 : GenreicLEDslave
     {
@@ -24,12 +24,12 @@
         // Driver sets serial output on rising edge / MOSI has to be sampled on falling edge
 
         // Protocol:
-        // Send port data (binary, for each port) to SP-interface (MSbyte first) (total lenth 16 bits)
+        // Send port data (binary, for each port) to SP-interface (MSbyte first) (total length 16 bits)
         // Execute high-level Pulse on latch enable pin (LE-Pin) to latch the port values to internal register
 
-        // LED-driver can be used in daisychain. Therefor LED port data for last driver in the daisychain 
+        // LED-driver can be used in daisy-chain. Therefor LED port data for last driver in the daisy-chain 
         // has to be transmitted first.
-        // Data can be latched at all LED drivers simultaniously
+        // Data can be latched at all LED drivers simultaneously
         // Output enable (/OE, low active) has to be low to enable LED outputs. LEDs can be blanked by setting 
         // the /OE pin high
         */
@@ -67,17 +67,17 @@
         };
 
         /// <summary>
-        /// LED daisychain object
+        /// LED daisy-chain object
         /// </summary>
         List<UInt16> PortData;
 
         /// <summary>
         /// Constructor for TLC_5925
         /// </summary>
-        /// <param name="spiInterface"> Defines the SP-interface on Raspi board</param>
+        /// <param name="spiInterface"> Defines the SP-interface on RasPi board</param>
         /// <param name="spiAdr">Defines the CS-address combination for addressing the slave</param>
         /// <param name="lePin">Latch enable pin (LE-Pin) to latch the port values to internal register</param>
-        /// <param name="oePin">Output enable pin (optional) disables LED-driber when high, accepts null if not connected</param>
+        /// <param name="oePin">Output enable pin (optional) disables LED-driver when high, accepts null if not connected</param>
         public LEDD_TLC5925(SpiDevice spiInterface, SPIAddressObject spiAdr, GpioPin lePin, GpioPin oePin)
             : base(spiInterface, spiAdr, InterfaceConstrains, DriverDefines)
         {
@@ -99,7 +99,7 @@
 
                 PortData = new List<UInt16>();
 
-                /// Add first LED to DaisyChain
+                /// Add first LED to daisy-chain
                 AddLED(0);
             }
             else
@@ -110,7 +110,7 @@
         }
 
         /// <summary>
-        /// Add LED driver to daisychain
+        /// Add LED driver to daisy-chain
         /// </summary>
         /// <param name="startValues"></param>
         public void AddLED(UInt16 startValues)
@@ -187,7 +187,7 @@
 
     /// <summary>
     /// LED-Driver Class for TLC5941
-    /// Texas Intrumens Driver with 16 binary Ports. Configurable in daisychain.
+    /// Texas Instruments Driver with 16 binary Ports. Configurable in daisy-chain.
     /// </summary>
     public class LEDD_TLC5941 : GenreicLEDslave
     {
@@ -197,15 +197,15 @@
         // Driver sets serial Output at rising edge / MOSI has to be sampled on falling edge
 
         // Protocol:
-        // First send with ModePin=high the configuration (96 bits / 12 Bytes). Theses are dotcorrection Values. 
+        // First send with ModePin=high the configuration (96 bits / 12 Bytes). Theses are dot correction Values. 
         //      Latch data with short pulse on XLAT-pin.
         // Then send with ModePin=low  the port data gray values (192 bits / 24 Bytes). 
         //      Latch data with short pulse on XLAT-pin.
-        // Data has to be clocked bith MSByte (Out15 ... Out 0) first
+        // Data has to be clocked with MSByte (Out15 ... Out 0) first
         //      Set blank to low to enable outputs. 
 
-        // LED-Driver can be used in daisychain. Therefor LED port data for last driver in the daisychain has to be transmitted first.
-        // Data can be latched at all LED drivers simultaniously
+        // LED-Driver can be used in daisy-chain. Therefor LED port data for last driver in the daisy-chain has to be transmitted first.
+        // Data can be latched at all LED drivers simultaneously
         // Blank (high active) has to be low to enable LED outputs. LEDs can be blanked by setting Blank-pin high.
         */
 
@@ -214,11 +214,11 @@
         /// </summary>
         GpioPin XLatPin;
         /// <summary>
-        /// Mode pin defines the mode of datatransmission (wether dot correction values are to be transmitted or gray values)
+        /// Mode pin defines the mode of data transmission (whether dot correction values are to be transmitted or gray values)
         /// </summary>
         GpioPin ModePin;
         /// <summary>
-        /// Handle for blank pIn (high acrive). Blank has to be low to enable ports
+        /// Handle for blank pIn (high active). Blank has to be low to enable ports
         /// </summary>
         GpioPin BlankPin;
 
@@ -245,14 +245,14 @@
         };
 
         /// <summary>
-        /// LED daisychain object
+        /// LED daisy-chain object
         /// </summary>
         List<UInt16[]> PortData;
 
         /// <summary>
         /// Constructor for LEDD_TLC5941
         /// </summary>
-        /// <param name="spiInterface"> Defines the SP-interface on Raspi board</param>
+        /// <param name="spiInterface"> Defines the SP-interface on RasPi board</param>
         /// <param name="spiAdr">Defines the CS-address combination for addressing the slave</param>
         /// <param name="xlatPin">Latch enable pin to latch the port-values to internal register</param>
         /// <param name="modePin">Mode pin defines whether the correction or gray-values are written</param>
@@ -281,7 +281,7 @@
 
                 PortData = new List<UInt16[]>();
 
-                /// Add first LED Driver to daisychain
+                /// Add first LED Driver to daisy-chain
                 UInt16[] firstData = new ushort[1] { 0 };
                 AddLED(firstData);
             }
@@ -293,7 +293,7 @@
         }
 
         /// <summary>
-        /// Adds new LED driver to daisychain
+        /// Adds new LED driver to daisy-chain
         /// </summary>
         /// <param name="startValues"></param>
         public void AddLED(UInt16[] startValues)
@@ -335,7 +335,7 @@
         }
 
         /// <summary>
-        /// Eather cuts given data to fit in exisitng slots or expands the given data/pattern to write it in all slots
+        /// Ether cuts given data to fit in existing slots or expands the given data/pattern to write it in all slots
         /// </summary>
         /// <param name="newData"></param>
         /// <param name="preparedData"></param>
@@ -414,7 +414,7 @@
             base.SendByteStram(Send);
 
             ModePin.Write(GpioPinValue.Low);
-
+            BlankPin.Write(GpioPinValue.Low);
 
         }
 
@@ -455,6 +455,15 @@
             }
             base.UpdateLEDs();
         }
+
+        /// <summary>
+        /// Refreshes the intrinsic PWM-counter of the Gray scale LED driver
+        /// </summary>
+        public void RefreshPWMcounter()
+        {
+            BlankPin.Write(GpioPinValue.High);
+            BlankPin.Write(GpioPinValue.Low);
+        }
     }
 
 
@@ -468,7 +477,7 @@
         // Driver samples serial input at rising edge / MOSI has to be set on falling edge
 
         // The LEDs have a serial-data-input and a clock-Input for incoming LED-data
-        // The LEDs have a serial-data-output and a cLock output for following LEDs (daisychain)
+        // The LEDs have a serial-data-output and a cLock output for following LEDs (daisy-chain)
         // Each LED-value has a width of 32-Bit
         //  Start: 0x00000000
         //  Color:   8bit:      [111iiiii] Drive current (5 bit value)
@@ -479,11 +488,11 @@
 
         // Protocol:
         // Send start sequence.
-        // Send color data to first LED in daisychain
+        // Send color data to first LED in daisy-chain
         // Send color data for the following LEDs
         // Send end sequence
 
-        // LED can be used in daisychain. LED data for first LED ist transmitted first.
+        // LED can be used in daisy-chain. LED data for first LED is transmitted first.
         */
 
         /// <summary>
@@ -521,13 +530,13 @@
         public LED_APA102(SpiDevice spiInterface, SPIAddressObject spiAdr)
             : base(spiInterface, spiAdr, InterfaceConstrains, DriverDefines)
         {
-            LEDs = new List<RGBset>();
+            LEDs = new List<RGBset>(); //@todo hier ggf. auf etwas Ressourcenschonenderes umsteigen
 
             AddLED(RGBDefines.Black);
         }
 
         /// <summary>
-        /// Adds new RGB-LED to daisychain
+        /// Adds new RGB-LED to daisy-chain
         /// </summary>
         /// <param name="color"></param>
         public void AddLED(RGBValue startColor)
@@ -538,10 +547,10 @@
         }
 
         /// <summary>
-        /// Sets LED intensity and color by generic RGBvalue of a certain LED in the daisychain
+        /// Sets LED intensity and color by generic RGBvalue of a certain LED in the daisy-chain
         /// </summary>
         /// <param name="index">Index of LED (starting with 0)</param>
-        /// <param name="color">Colorvalue to be set on chosen Index</param>
+        /// <param name="color">Color value to be set on chosen Index</param>
         public void SetLED(int index, RGBValue color)
         {
             if (index < LEDs.Count)
@@ -553,7 +562,26 @@
         }
 
         /// <summary>
-        /// Sets LED intensity and color by local LED-Set of a certain LED in the daisychain
+        /// Sets all LEDs with according to given Array.
+        /// </summary>
+        /// <param name="colors">Defines the new Colors for the array. 
+        /// The array-length has to meet actual number of added LEDs</param>
+        public void SetAllLEDs(RGBValue[] colors)
+        {
+            if (colors.Length == LEDs.Count)
+            {
+                RGBset tLED = new RGBset();
+                for (int idx = 0; idx < LEDs.Count; idx++)
+                {
+                    tLED.SetRGBvalue(colors[idx]);
+                    LEDs[idx] = tLED;
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// Sets LED intensity and color by local LED-Set of a certain LED in the daisy-chain
         /// </summary>
         /// <param name="index"></param>
         /// <param name="led"></param>
@@ -667,7 +695,7 @@
             private UInt32 LEDValue { get; set; }
 
             /// <summary>
-            /// Generates Bytestream to set one single RGB-LED
+            /// Generates byte stream to set one single RGB-LED
             /// </summary>
             /// <param name="stream"></param>
             public void GenValueStram(out byte[] stream)

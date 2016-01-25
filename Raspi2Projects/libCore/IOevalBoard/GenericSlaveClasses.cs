@@ -13,7 +13,7 @@
     using libShared.HardwareNah;
 
     /// <summary>
-    /// Generic class for SPI-controled analog to digital converter.
+    /// Generic class for SPI-controlled analog to digital converter.
     /// The class is designed for ADCs with a resolution up to 16 bit signed (or 15 bit unsigned).
     /// </summary>
     abstract public class GenreicADCslave : RaspiMultiSlave
@@ -47,7 +47,7 @@
         /// <summary>
         /// Constructor for generic ADC
         /// </summary>
-        /// <param name="spiInterface"> Defines the SP-interface on Raspi board</param>
+        /// <param name="spiInterface"> Defines the SP-interface on RasPi board</param>
         /// <param name="spiAdr">Defines the CS-address combination for addressing the slave</param>
         /// <param name="givenConstrains">Restriction for using the respective device</param>
         /// <param name="givenSpecs">Specifications of given ADC-Slave</param>
@@ -79,12 +79,12 @@
     public struct GenericADCdefinitions
     {
         /// <summary>
-        /// Widt of ADC-values. Actual ADC values will be scaled.
+        /// Width of ADC-values. Actual ADC values will be scaled.
         /// </summary>
         public int ADCvalueWidt { get; set; }
 
         /// <summary>
-        /// Fullscale ADC value.
+        /// Full scale ADC value.
         /// </summary>
         public int MaxADCvalue { get; set; }
 
@@ -100,17 +100,17 @@
     }
 
     /// <summary>
-    /// Defeinitions for ADC-devices
+    /// Definitions for ADC-devices
     /// </summary>
     public struct ADCspecificDefinitions
     {
         /// <summary>
-        /// Number of ADC-inputs whitch are implemented in the SPI-decice
+        /// Number of ADC-inputs which are implemented in the SPI-device
         /// </summary>
         public int NumOfADCchannels { get; set; }
 
         /// <summary>
-        /// Defines the ADC-resolution (which can be useful to determin minimum voltage steps and errors)
+        /// Defines the ADC-resolution (which can be useful to determine minimum voltage steps and errors)
         /// </summary>
         public int ADCResolution { get; set; }
 
@@ -139,14 +139,14 @@
         /// </summary>
         public enum eFullConversionMode
         {
-            /// It is possible to poll only one value per trasmision
+            /// It is possible to poll only one value per transmission
             OnePortPerTraceiveCycle,
             /// It is possible to poll all values at ones (during one transmission, without CS-idle-states)
             AllPortsAtONce
         }
 
         /// <summary>
-        /// Defines whether conversion referece modes
+        /// Defines whether conversion reference modes
         /// </summary>
         public enum eChannelConversionMode
         {
@@ -158,16 +158,16 @@
     }
 
     /// <summary>
-    /// Helper methodes for ADC-devices and DAC-devices
+    /// Helper methods for ADC-devices and DAC-devices
     /// </summary>
     public class GenericADnumerics
     {
         /// <summary>
-        /// Calculates the corresponting physical value to smapled integer code
+        /// Calculates the corresponding physical value to sampled integer code
         /// </summary>
-        /// <param name="sampleValue">Smpled integer value</param>
-        /// <param name="chConfig">Exerne port wirieing</param>
-        /// <param name="sourceADC">Specificatoin of sourceADC </param>
+        /// <param name="sampleValue">sampled integer value</param>
+        /// <param name="chConfig">Extern port wiring</param>
+        /// <param name="sourceADC">Specification of sourceADC </param>
         /// <returns></returns>
         public static float CalcValue(int sampleValue, AnaChConfig chConfig, GenericADCdefinitions sourceADC)
         {
@@ -183,7 +183,7 @@
     }
 
     /// <summary>
-    /// Generic class for SPI-controled digital to analog converter 
+    /// Generic class for SPI-controlled digital to analog converter 
     /// The class is designed for DACs with a resolution up to 16 bit signed (or 15 bit unsigned).
     /// </summary>
     abstract public class GenreicDACslave : RaspiMultiSlave
@@ -217,7 +217,7 @@
         /// <summary>
         /// Constructor for generic DAC
         /// </summary>
-        /// <param name="spiInterface"> Defines the SP-interface on Raspi board</param>
+        /// <param name="spiInterface"> Defines the SP-interface on RasPi board</param>
         /// <param name="spiAdr">Defines the CS-address combination for addressing the slave</param>
         /// <param name="givenConstrains">Restriction for using the respective device</param>
         /// <param name="givenSpecs">Specifications of given DAC-Slave</param>
@@ -251,12 +251,12 @@
     public struct GenericDACdefinitions
     {
         /// <summary>
-        /// Widt of DAC-values. Actual DAC Values will be scaled.
+        /// Width of DAC-values. Actual DAC Values will be scaled.
         /// </summary>
         public int ADCvalueWidt { get; set; }
 
         /// <summary>
-        /// Fullscale DAC value.
+        /// Full scale DAC value.
         /// </summary>
         public int MaxADCvalue { get; set; }
 
@@ -272,17 +272,17 @@
     }
 
     /// <summary>
-    /// Defeinitions for DAC-Devices
+    /// Definitions for DAC-Devices
     /// </summary>
     public struct DACspecificDefinitions
     {
         /// <summary>
-        /// Number of ADC-Inputs whitch are implemented in the SPI-Decice
+        /// Number of ADC-Inputs which are implemented in the SPI-Device
         /// </summary>
         public int NumOfDACchannels { get; set; }
 
         /// <summary>
-        /// Defines the ADC-Resolution (which can be usefull to determin minimum Voltage steps and errors)
+        /// Defines the ADC-Resolution (which can be useful to determine minimum Voltage steps and errors)
         /// </summary>
         public int DACResolution { get; set; }
 
@@ -292,14 +292,14 @@
         public int SingleTransmissionLength { get; set; }
 
         /// <summary>
-        /// Property defines the the minimum count of bytes to set all analog values
+        /// Property defines the minimum count of bytes to set all analog values
         /// </summary>
         public int FullTransmissionLength { get; set; }
     }
 
 
     /// <summary>
-    /// Generic class for SPI-controled general-purpose-IO-expander 
+    /// Generic class for SPI-controlled general-purpose-IO-expander 
     /// The class is designed for GPIOs with 8-bit-port-cluster.
     /// </summary>
     abstract public class GenreicGPIOslave : RaspiMultiSlave
@@ -351,7 +351,7 @@
         /// <summary>
         /// Constructor for generic GPIO
         /// </summary>
-        /// <param name="spiInterface"> Defines the SP-interface on Raspi board</param>
+        /// <param name="spiInterface"> Defines the SP-interface on RasPi board</param>
         /// <param name="spiAdr">Defines the CS-address combination for addressing the slave</param>
         /// <param name="givenConstrains">Restriction for using the respective device</param>
         /// <param name="givenSpecs">Specifications of given GPIO-slave</param>
@@ -388,20 +388,20 @@
         abstract protected void ExecuteConfigRun(eConfigRunMode mode);
 
         /// <summary>
-        /// Definition for configrun modes
+        /// Definition for configuration-run modes
         /// </summary>
         protected enum eConfigRunMode
         {
             /// Executes whole driver configuration
             //wholeConfiguration,
-            /// Ececutes only IO-configuration
+            /// Executes only IO-configuration
             IOconfigurationOnly,
-            /// Ececutes only general-device-configuration
+            /// Executes only general-device-configuration
             DeviceConfigOnly,
         }
 
         /// <summary>
-        /// Definition for messagetypes
+        /// Definition for message types
         /// </summary>
         protected enum eMessageMode
         {
@@ -420,18 +420,18 @@
     public struct GenericGPIOdefinitions
     {
         /// <summary>
-        /// Widt of GPIO-port.
+        /// Width of GPIO-port.
         /// </summary>
         public int PortWidt { get; set; }
     }
 
     /// <summary>
-    /// Defeinitions for ADC-Devices
+    /// Definitions for ADC-Devices
     /// </summary>
     public struct GPIOspecificDefinitions
     {
         /// <summary>
-        /// Number of digital Ports whitch are implemented on the SPI-Decice
+        /// Number of digital Ports which are implemented on the SPI-Device
         /// </summary>
         public int NumOfPorts { get; set; }
 
@@ -449,7 +449,7 @@
 
 
     /// <summary>
-    /// Generic class for SPI-controled LED-driver or integrated LEDs
+    /// Generic class for SPI-controlled LED-driver or integrated LEDs
     /// This class is designed for unsigned 16 bit values
     /// </summary>
     abstract public class GenreicLEDslave : RaspiMultiSlave
@@ -471,7 +471,7 @@
 
         private UInt16 commonGainVal;
         /// <summary>
-        /// Arrayglobal gain value
+        /// Global gain value
         /// </summary>
         public UInt16 CommonGainValue
         {
@@ -487,7 +487,7 @@
         /// <summary>
         /// Constructor for LED-driver
         /// </summary>
-        /// <param name="spiInterface"> Defines the SP-interface on Raspi board</param>
+        /// <param name="spiInterface"> Defines the SP-interface on RasPi board</param>
         /// <param name="spiAdr">Defines the CS-address combination for addressing the slave</param>
         /// <param name="givenConstrains">Restriction for using the respective device</param>
         /// <param name="givenSpecs">Specifications of given LED-Slave</param>
@@ -499,7 +499,7 @@
 
         private bool configRunDone = false;
         /// <summary>
-        /// Schows if LED-driver have already been configured
+        /// Shows if LED-driver have already been configured
         /// </summary>
         public bool ConfigRunDone
         {
@@ -522,7 +522,7 @@
                 //@todo ConfigRun immer Voraussetzen wenn neue LED hinzugefügt wird
             }
 
-            /// Generate send-stram
+            /// Generate send-stream
             GenLEDStram(out Send);
 
             /// send data
@@ -540,14 +540,14 @@
         }
 
         /// <summary>
-        /// Prepare send-bytearray for transmission
+        /// Prepare send-byte array for transmission
         /// </summary>
         /// <param name="Send"></param>
         abstract protected void GenLEDStram(out byte[] Send);
 
         //@todo Ggf. diese auf auf Delegates umstellen
         /// <summary>
-        /// Execute devicespecific operation to latch port data
+        /// Execute device-specific operation to latch port data
         /// </summary>
         virtual protected void LatchData() { }
 

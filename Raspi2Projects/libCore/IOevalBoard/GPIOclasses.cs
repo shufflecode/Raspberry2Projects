@@ -21,46 +21,46 @@
         // Protocol:
         // Pull CS-line
         // Send 8 bit command byte attach 8-bit register-address
-        // According to operation (Read or Write) eather attach further data or poll demandet data
+        // According to operation (Read or Write) either attach further data or poll demanded data
         // Release CS-line
 
         //	Control Byte Format
         //	Bit	Name    Description
-        //	7	0 	    Const
-        //	6	1       Const
-        //	5	0       Const
-        //	4	0       Const
-        //	3	A2      Addressbit A2
-        //	2	A1      Addressbit A1
-        //	1	A0      Addressbit A0
+        //	7	0 	    Constant
+        //	6	1       Constant
+        //	5	0       Constant
+        //	4	0       Constant
+        //	3	A2      Address bit A2
+        //	2	A1      Address bit A1
+        //	1	A0      Address bit A0
         //	0	R/W     Read/write-flag     Set 0 for write operation
         //                                  and 1 for read operation
         // Protocol
         // Single data unit [Byte]
-        // Send     ->   [Commeand] [Address] [Data] [Data] ...
+        // Send     ->   [Command]  [Address] [Data] [Data] ...
         // Receive  <-   [xx]       [xx]      [Data] [Data] ...
 
-        // The GPIO slave starts with folloing registeraddress assosiation*:
-        // *An alternative assosiation can be set (see Documention) but the table 
-        // below shows the configuratoin whitch comes in handy for continuous operation (with autoincrementing index).
+        // The GPIO slave starts with following register address association*:
+        // *An alternative association can be set (see documentation) but the table 
+        // below shows the configuration which comes in handy for continuous operation (with auto incrementing index).
 
             Register    Address     default     Description
-            IODIRA      00          1111 1111   Dircetion register port A: 
+            IODIRA      00          1111 1111   Direction register port A: 
             IODIRB      01          1111 1111   ... port B: 1=input, 0=output
             IPOLA       02          0000 0000   Input polarity register port A: 
-            IPOLB       03          0000 0000   ... port B: Set 1 for opposit logic
+            IPOLB       03          0000 0000   ... port B: Set 1 for opposite logic
             GPINTENA    04          0000 0000   Interrupt on change register port A: 
             GPINTENB    05          0000 0000   ... port B: Set=1 to enable pin for interrupt-on-change event 
             DEFVALA     06          0000 0000   Default compare register port A:
             DEFVALB     07          0000 0000   ... port B: for interrupt on change register
             INTCONA     08          0000 0000   Interrupt control register port A:
-            INTCONB     09          0000 0000   ... port B: Set 1 to compare with DefValx, set 0 for pinchange interrupt
+            INTCONB     09          0000 0000   ... port B: Set 1 to compare with DefValx, set 0 for pin change interrupt
             IOCON       0A          0000 0000   Configuration register (see below)
-            IOCON       0B          0000 0000   Same config register
-            GPPUA       0C          0000 0000   Pullup register port A
-            GPPUB       0D          0000 0000   ... port B: Set=1 to enable 100kR pullup on port
+            IOCON       0B          0000 0000   Same configuration register
+            GPPUA       0C          0000 0000   Pull-up register port A
+            GPPUB       0D          0000 0000   ... port B: Set=1 to enable 100kR pull-up on port
             INTFA       0E          0000 0000   Interrupt flag register on port A:
-            INTFB       0F          0000 0000   ... port B: If 1 the coresponding pin causend an interrupt
+            INTFB       0F          0000 0000   ... port B: If 1 the corresponding pin caused an interrupt
             INTCAPA     10          0000 0000   Interrupt capture register port A:
             INTCAPB     11          0000 0000   ... port B: Captures the IO-data at interrupt event
             GPIOA       12          0000 0000   Port register port A
@@ -70,16 +70,16 @@
 
             Configuration Register
             bit     Name    Description
-            bit 7   BANK    Address assosiation:    0=A/B-registers ar paired, 1=A/B registers a separated
-            bit 6   MIRROR  Interupt outputs:       Set=1 to connect IntA and IntB internally 
+            bit 7   BANK    Address association:    0=A/B-registers ar paired, 1=A/B registers a separated
+            bit 6   MIRROR  Interrupt outputs:       Set=1 to connect IntA and IntB internally 
             bit 5   SEQOP   Sequential operation mode:  Set=1 to increment address-pointer automatically
             bit 4   DISSLW  Slew rate control:      Set=1 to activate slew-rate on SDA-output
-            bit 3   HAEN    Hardware adress enable: Set=1 to enable hardware address pins
+            bit 3   HAEN    Hardware address enable: Set=1 to enable hardware address pins
             bit 2   ODR     Interrupt output:       Set=1 to change interrupt output from push-pull to open drain
             bit 1   INTPOL  Interrupt polarity:     1=active-high, 0=active-low
             bit 0   ---
 
-        // GPIO Modul supports also contiuous Write/Read 
+        // GPIO Module supports also continuous Write/Read 
         */
 
         /// <summary>
@@ -98,18 +98,18 @@
         GpioPin IntBpin;
 
         /// <summary>
-        /// Adress constants for bank Set = 0
-        /// Because the "sequential operation mode" is activated at first config run, only sequential writes are inplemented.
-        /// Hence there are only startadresses for Port A needed in the Dictionary (port B follows allways port a in this mode)
+        /// Address constants for bank Set = 0
+        /// Because the "sequential operation mode" is activated at first configuration run, only sequential writes are implemented.
+        /// Hence there are only start addresses for Port A needed in the Dictionary (port B follows always port a in this mode)
         /// </summary>
         readonly Dictionary<string, byte> AdrConstantsBank0 = new Dictionary<string, byte>
         {
             {"IODirA",0x00}, // Data direction
-            {"IPolA",0x02}, // Input polarisation
+            {"IPolA",0x02}, // Input polarization
             {"GPIntEnA",0x04}, // Interrupt on change register
             {"DefValA",0x06}, // Compare register
             {"IntConA",0x08}, // Interrupt control register
-            {"IOCon",0x0A}, // Conficuration register
+            {"IOCon",0x0A}, // Configuration register
             {"GPPUA",0x0C}, // Pull-up register
             {"IntFA",0x0E}, // Interrupt flag register 
             {"IntCapA",0x10}, // Interrupt capture register
@@ -118,14 +118,14 @@
         };
 
         /// <summary>
-        /// Byteconstant for default Slave configuration.
-        /// Sequential operation mode and hardware adress enable is set by default
+        /// Byte constant for default Slave configuration.
+        /// Sequential operation mode and hardware address enable is set by default
         /// </summary>
         const byte DefaultGPIOslaveConfig = 0x28;
 
         /// <summary>
         /// Command frame for GPIO access
-        /// First four bit are a constant value whitch are given in the documentation
+        /// First four bit are a constant value witch are given in the documentation
         /// </summary>
         const byte CommandFrame = 0x40;
         /// <summary>
@@ -156,11 +156,11 @@
         /// <summary>
         /// Constructor for DAC_MCP23S17
         /// </summary>
-        /// <param name="spiInterface"> Defines the SP-interface on Raspi board</param>
+        /// <param name="spiInterface"> Defines the SP-interface on RasPi board</param>
         /// <param name="spiAdr">Defines the CS-address combination for addressing the slave</param>
-        /// <param name="rstPin">Rest oin (optional) to reset device</param>
+        /// <param name="rstPin">Rest pin (optional) to reset device</param>
         /// <param name="intPin">Interrupt Input pins (optional) for interrupt handling</param>
-        /// <param name="spiBusAddress">Intrinsic SPI-adress whitch is to be send via SPI message</param>
+        /// <param name="spiBusAddress">Intrinsic SPI-address witch is to be send via SPI message</param>
         public GPIO_MCP23S17(SpiDevice spiInterface, SPIAddressObject spiAdr, GpioPin rstPin, GpioPin[] intPin, int spiBusAddress)
             : base(spiInterface, spiAdr, InterfaceConstrains, ConverterDefines)
         {
@@ -181,7 +181,7 @@
         }
 
         /// <summary>
-        /// Generates command frame for SPI bytestram
+        /// Generates command frame for SPI byte stream
         /// </summary>
         /// <param name="mode"></param>
         /// <returns></returns>
@@ -284,5 +284,47 @@
             }
         }
         //@todo Uptdate Values hinzufügen
+
+        /// <summary>
+        /// Set GPIO pull-ups for Port A and B
+        /// </summary>
+        /// <param name="data"></param>
+        public void SetPullUps(byte[] data)
+        {
+            byte[] send;
+            if (data.Length == 2)
+            {
+                //@todo Hier ggf. noch Auf Plausibilität mit Direction bringen
+
+                send = new byte[4];
+
+                send[0] = GenerateCommand(eMessageMode.write);
+                send[1] = AdrConstantsBank0["GPPUA"];
+                send[2] = data[0];
+                send[3] = data[1];
+
+                SendByteStram(send);
+            }
+        }
+        /// <summary>
+        /// Set GPIO input logic for Port A and B
+        /// </summary>
+        /// <param name="data">1 reverses the input logic</param>
+        public void SetInputLogic(byte[] data)
+        {
+            byte[] send;
+            if (data.Length == 2)
+            {
+                send = new byte[4];
+
+                send[0] = GenerateCommand(eMessageMode.write);
+                send[1] = AdrConstantsBank0["IPolA"];
+                send[2] = data[0];
+                send[3] = data[1];
+
+                SendByteStram(send);
+            }
+        }
+
     }
 }

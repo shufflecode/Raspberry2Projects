@@ -11,9 +11,9 @@
 
     /// <summary>
     /// Base-Class for SPI-addressed peripheral devices.
-    /// This base class is designed for the Raspi IO-module which has different SPI-controlled slaves populated.
+    /// This base class is designed for the RasPi IO-module which has different SPI-controlled slaves populated.
     /// All IO-Slaves are controlled by the the same SP-interface the chip selection is achieved either by 
-    /// a 3 bit CS-demux and/or dedicated control lines.
+    /// a 3 bit CS-demultiplexer and/or dedicated control lines.
     /// </summary>
     abstract public class RaspiMultiSlave
     {
@@ -36,7 +36,7 @@
 
         private SPIAddressObject _CSadr = null;
         /// <summary>
-        /// Assigned harrdware-address 
+        /// Assigned hardware-address 
         /// </summary>
         public SPIAddressObject CSadr
         {
@@ -53,7 +53,7 @@
 
         private int _SPIbusAddress = 0;
         /// <summary>
-        /// Intrinsic SPI-device address whitch has to be transmitted via SPI.
+        /// Intrinsic SPI-device address witch has to be transmitted via SPI.
         /// </summary>
         public int SPIbusAddress
         {
@@ -62,8 +62,8 @@
         }
 
         /// <summary>
-        /// Hardwareconstrains defines the restriction for using the respective device.
-        /// The given restrictions are verified with the actual SPI configuration of given SPI handle during initialisation.
+        /// Hardware constrains defines the restriction for using the respective device.
+        /// The given restrictions are verified with the actual SPI configuration of given SPI handle during initialization.
         /// </summary>
         protected SPIHardwareConstrains SPIconstrains = new SPIHardwareConstrains
         {
@@ -73,11 +73,11 @@
         };
 
         /// <summary>
-        /// Constructor for RaspiMultiSlave
+        /// Constructor for RasPiMultiSlave
         /// </summary>
-        /// <param name="spiInterface"> Defines the SP-interface on Raspi board</param>
+        /// <param name="spiInterface"> Defines the SP-interface on RasPi board</param>
         /// <param name="spiAdr">Defines the CS-address combination (optional) to address the slave during transmission of data,
-        /// can be null if no adress definition needed</param>
+        /// can be null if no address definition needed</param>
         /// <param name="givenConstrains">Restriction for the respective device</param>
         public RaspiMultiSlave(SpiDevice spiInterface, SPIAddressObject spiAdr, SPIHardwareConstrains givenConstrains)
         {
@@ -87,7 +87,7 @@
                 SpiConnectionSettings tempSet = spiInterface.ConnectionSettings;
                 SPIconstrains = givenConstrains;
 
-                /// Check wheter the SPI-configuration meets demandet Configurationy
+                /// Check whether the SPI-configuration meets demanded configuration
                 //@todo Prüfen ob die Abfrage so überhaupt funktioniert
                 if (tempSet.ClockFrequency < SPIconstrains.MinSPIclock)
                 {
@@ -206,7 +206,7 @@
         }
 
         /// <summary>
-        /// Resets CS-configuratoin
+        /// Resets CS-configuration
         /// </summary>
         public void resetCSsignal()
         {
@@ -257,10 +257,10 @@
         {
             if (SPIhandle != null)
             {
-                /// Activate CS-signal and CS-address, if neccessary
+                /// Activate CS-signal and CS-address, if necessary
                 setCSsignal();
                 SPIhandle.Write(sendData);
-                // Resest CS-signal and CS-address
+                // Resets CS-signal and CS-address
                 resetCSsignal();
             }
         }
@@ -273,16 +273,16 @@
         {
             if (SPIhandle != null)
             {
-                // Activate CS-signal and CS-address, if neccessary
+                // Activate CS-signal and CS-address, if necessary
                 setCSsignal();
                 SPIhandle.Read(recData);
-                // Resest CS-signal and CS-address
+                // Resets CS-signal and CS-address
                 resetCSsignal();
             }
         }
 
         /// <summary>
-        /// Transive data to/from SPI-slave
+        /// Transceive data to/from SPI-slave
         /// </summary>
         /// <param name="sendData">Byte-Array for data transmission</param>
         /// <param name="recData">ByteArray for polled data</param>
@@ -290,10 +290,10 @@
         {
             if (SPIhandle != null)
             {
-                // Activate CS-signal and CS-address, if neccessary
+                // Activate CS-signal and CS-address, if necessary
                 setCSsignal();
                 SPIhandle.TransferFullDuplex(sendData, recData);
-                // Resest CS-signal and CS-address
+                // Resets CS-signal and CS-address
                 resetCSsignal();
             }
         }
@@ -301,21 +301,21 @@
 
     /// <summary>
     /// Address definition Class.
-    /// The IO Slave can be adressed in several differen ways.
+    /// The IO Slave can be addressed in several different ways.
     /// 1. The slave needs no CS-signal (chip-select-signal):
     ///     In that case all Pin-References and the CS-adress can be Null
     /// 2. The slave needs only a CS-signal, while a SP-interface dedicated CS-port can be used:
-    ///     In that case all Pin-References and the CS-adress can be Null
+    ///     In that case all Pin-References and the CS-address can be Null
     /// 3. The slave needs only a CS-Signal but the CS-port has to be one of the GPIO-ports:
     ///     In that case the csPin has to be defined with a valid port object
-    /// 4. The slave needs only a CS-Signal whitch is provided by a CS-demux 
+    /// 4. The slave needs only a CS-Signal witch is provided by a CS-demultiplexer
     ///     In that case the respective AdrPins and the csAdr have to be provided
     ///     The csPin can also be provided if a GPIO pin shall be used for chip selection
     /// </summary>
     public class SPIAddressObject
     {
         /// <summary>
-        /// Default CS-adresse
+        /// Default CS-address
         /// </summary>
         public const int defaultCSAdress = 0;
 
@@ -325,13 +325,13 @@
         public GpioPin GpioCSpin = null;
 
         /// <summary>
-        /// PinArray for adressselection pins on CS-demultiplexer
+        /// PinArray for address selection pins on CS-demultiplexer
         /// </summary>
         public GpioPin[] CSadrPins = null;
 
         private int _CSdemuxAdr = defaultCSAdress;
         /// <summary>
-        /// Numiric definition of CS-demux-adresse for SPIwithCSdemux-mode
+        /// Numeric definition of CS-demultiplexer-address for SPIwithCSdemux-mode
         /// </summary>
         public int CSdemuxAdr
         {
@@ -351,8 +351,8 @@
         /// </summary>
         /// <param name="mode">Chip selection mode</param>
         /// <param name="csPin">GPIO (depending on mode/ optional) pin for chip selection</param>
-        /// <param name="AdrPins">GPIO (depending on mode) pin for adress selection on CS-demux</param>
-        /// <param name="csAdr">CS-demux address for slave</param>
+        /// <param name="AdrPins">GPIO (depending on mode) pin for address selection on CS-demultiplexer</param>
+        /// <param name="csAdr">CS-demultiplexer address for slave</param>
         public SPIAddressObject(eCSadrMode mode, GpioPin csPin, GpioPin[] AdrPins, int csAdr)
         {
             switch (mode)
@@ -413,23 +413,23 @@
         }
 
         /// <summary>
-        /// Enum for chip-select-mode definitions
+        /// Enumerator for chip-select-mode definitions
         /// </summary>
         public enum eCSadrMode
         {
             /// If there is no CS-port definition necessary
             NoCSPort,
-            /// Use the chip-select pin whitch is assigned to SP-interface as dedicated harware-pin
+            /// Use the chip-select pin witch is assigned to SP-interface as dedicated hardware-pin
             SPIdedicated,
             /// Use chip-select pin from GPIO pins
             SPIwithGPIO,
-            /// Use SPI-Port wirth dedicated chip-select pin and several GPIO pins for addressing the demultiplexer
+            /// Use SPI-Port with dedicated chip-select pin and several GPIO pins for addressing the demultiplexer
             SPIwithCSdemux,
         }
     }
 
     /// <summary>
-    /// Hardwareconstrains SPI-Slaves
+    /// Hardware constrains SPI-Slaves
     /// </summary>
     public struct SPIHardwareConstrains
     {

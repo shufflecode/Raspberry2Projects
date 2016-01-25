@@ -19,31 +19,31 @@
 
         // Protocol:
         // Pull CS-line
-        // Send 4 bit command byte and attach 12-bit outputvalue
+        // Send 4 bit command byte and attach 12-bit output value
         // Release CS-line
 
         //	Control byte format
         //	Bit	Name    Description
         //	7	Adr0 	Channel selection bit, 0= write channel0, 1= write channel1    
-        //	6	Buf     Input-buffer control (for RefInput), 1=buffered, 0=unbuffered 
+        //	6	Buff    Input-buffer control (for RefInput), 1=buffered, 0=unbuffered 
         //	5	Gain    Input-GainSelection 1=1xgain 0=2xgain
         //	4	SHDN    Output shutDown control. Set to 0 to shut down the DAC
-        //	3	x       Output Databit 11
-        //	2	x       Output Databit 10
-        //	1	x       Output Databit 9
-        //	0	x       Output Databit 8 ...
+        //	3	x       Output Data bit 11
+        //	2	x       Output Data bit 10
+        //	1	x       Output Data bit 9
+        //	0	x       Output Data bit 8 ...
 
         // Protocol
         // SingleDataUnit [Byte]
-        // Send -> [Commeand, MSBitsData] [LSBData]
-        // Receive dont care
+        // Send -> [Command, MSBitsData] [LSBData]
+        // Receive don't care
 
-        // ADC modul supports only one set-operation per cycle
-        // The nexet set-operation can only be started after release of the CS-line
+        // ADC module supports only one set-operation per cycle
+        // The next set-operation can only be started after release of the CS-line
         */
 
         /// <summary>
-        /// Synchronisation input
+        /// Synchronization input
         /// </summary>
         GpioPin LDACpin;
 
@@ -53,7 +53,7 @@
         GpioPin SHDNpin;
 
         /// <summary>
-        /// Command frame for DA-converision
+        /// Command frame for DA-conversion
         /// DAC is set with enabled buffer, 1x gain and is active by default
         /// </summary>
         const byte CommandFrame = 0x70;
@@ -61,17 +61,17 @@
         //@todo Konfiguraiton in die Klasse umziehen
 
         /// <summary>
-        /// Byteconstant to enable the input buffer
+        /// Byte constant to enable the input buffer
         /// </summary>
         const byte InputBufferEnable = 0x40;
 
         /// <summary>
-        /// Byteconstant to set 1x gain
+        /// Byte constant to set 1x gain
         /// </summary>
         const byte GainSelection = 0x20;
 
         /// <summary>
-        /// Byteconstant to set DAC active
+        /// Byte constant to set DAC active
         /// </summary>
         const byte ShutdonwnDAC = 0x10;
 
@@ -100,7 +100,7 @@
         /// <summary>
         /// Constructor for DAC_MCP4922
         /// </summary>
-        /// <param name="spiInterface"> Defines the SP-interface on Raspi board</param>
+        /// <param name="spiInterface"> Defines the SP-interface on RasPi board</param>
         /// <param name="spiAdr">Defines the CS-address combination for addressing the slave</param>
         /// <param name="syncPin">Sync pin definition to (optional) sync both DAC ports together</param>
         /// <param name="shdownPin">Shutdown pin (optional) to shutdown DAC-slave </param>
