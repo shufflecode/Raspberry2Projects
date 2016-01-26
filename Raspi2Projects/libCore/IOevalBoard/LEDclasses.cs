@@ -416,6 +416,7 @@
             ModePin.Write(GpioPinValue.Low);
             BlankPin.Write(GpioPinValue.Low);
 
+            LatchData();
         }
 
         /// <summary>
