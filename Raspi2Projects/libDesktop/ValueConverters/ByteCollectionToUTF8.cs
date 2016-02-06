@@ -9,7 +9,7 @@ using System.Windows.Data;
 
 namespace libDesktop.ValueConverters
 {
-    class ByteCollectionToUTF8 : IValueConverter
+    public class ByteCollectionToUTF8 : IValueConverter
     {
         System.Text.Encoding defaultEncoder = System.Text.Encoding.GetEncoding(1252);
         System.Text.ASCIIEncoding asciiEncoder = new System.Text.ASCIIEncoding();
