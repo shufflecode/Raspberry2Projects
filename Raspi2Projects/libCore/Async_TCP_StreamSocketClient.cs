@@ -21,6 +21,7 @@ namespace libCore
         public event NotifyTextDelegate NotifyTextEvent;
         public event NotifyexceptionDelegate NotifyexceptionEvent;
         public event NotifyMessageReceivedDelegate NotifyMessageReceivedEvent;
+        public event NotifyConnectionClosed NotifyConnectionClosedEvent;
 
         string ip;
         string port;
@@ -50,6 +51,19 @@ namespace libCore
             set { port = value; }
         }
 
+        public StreamSocket Socket
+        {
+            get
+            {
+                return socket;
+            }
+
+            internal set
+            {
+                socket = value;
+            }
+        }
+
         StreamSocket socket;
 
         public Async_TCP_StreamSocketClient()
@@ -57,8 +71,11 @@ namespace libCore
         }
 
         public Async_TCP_StreamSocketClient(StreamSocket _socket)
-        {
-            this.socket = _socket;
+        {            
+            this.Socket = _socket;
+            this.HostNameOrIp = this.Socket.Information.RemoteHostName.DisplayName;
+            this.Port = this.Socket.Information.RemotePort;
+                 
             this.IsConnected = true;
         }
 
@@ -71,18 +88,25 @@ namespace libCore
         /// <returns>Response from server</returns>
         public async Task Start()
         {
+            if (IsConnected)
+            {
+                this.NotifyTextEvent(this, string.Format("could not start: client connected"));
+                return;
+            }
+
             HostName hostName = new HostName(HostNameOrIp);
-            socket = new StreamSocket();
+            Socket = new StreamSocket();
 
             // Set NoDelay to false so that the Nagle algorithm is not disabled
-            socket.Control.NoDelay = false;
+            Socket.Control.NoDelay = false;
 
             try
             {
                 // Connect to the server
-                await socket.ConnectAsync(hostName, Port);
-                ////// Send the message
-                //this.SendText("Hallo Server (gesendet von Clinet)");
+                await Socket.ConnectAsync(hostName, Port);
+                this.IsConnected = true;
+
+                // Start Reading
                 ReadAsync();
             }
             catch (Exception ex)
@@ -95,10 +119,24 @@ namespace libCore
         {
             try
             {
-                if (socket != null)
+                if (IsConnected == false)
                 {
-                    await socket.CancelIOAsync();
+                    this.NotifyTextEvent(this, string.Format("could not stop: client not connected"));
+                    return;
                 }
+
+                this.IsConnected = false;
+
+                if (Socket != null)
+                {
+                    await Socket.CancelIOAsync();
+                    Socket.Dispose();
+                }
+
+                if (NotifyConnectionClosedEvent != null)
+                {
+                    NotifyConnectionClosedEvent(this);
+                }                               
             }
             catch (Exception ex)
             {
@@ -112,7 +150,12 @@ namespace libCore
         {
             try
             {
-                using (DataReader reader = new DataReader(socket.InputStream))
+                //if (socket.Control.KeepAlive == false)
+                //{
+                //    return;
+                //}
+
+                using (DataReader reader = new DataReader(Socket.InputStream))
                 {
                     // Set the DataReader to only wait for available data (so that we don't have to know the data size)
                     reader.InputStreamOptions = Windows.Storage.Streams.InputStreamOptions.Partial;
@@ -122,17 +165,27 @@ namespace libCore
 
                     // Send the contents of the writer to the backing stream. 
                     // Get the size of the buffer that has not been read.
-                    await reader.LoadAsync(256);
+                    var readOperation = reader.LoadAsync(256);
+                    var result = await readOperation;
 
-                    byte[] newData = new byte[reader.UnconsumedBufferLength];
-                    reader.ReadBytes(newData);
-
-                    reader.DetachStream();
-
-                    if (this.NotifyMessageReceivedEvent != null)
+                    if (result <= 0 || readOperation.Status != Windows.Foundation.AsyncStatus.Completed)
                     {
-                        this.NotifyMessageReceivedEvent(this, newData);
-                        await ReadAsync();
+                        await this.Stop();
+                        //cts.Cancel(); // never gets called, status is always Completed, result always > 0
+                    }
+                    else
+                    {
+
+                        byte[] newData = new byte[reader.UnconsumedBufferLength];
+                        reader.ReadBytes(newData);
+
+                        reader.DetachStream();
+
+                        if (this.NotifyMessageReceivedEvent != null)
+                        {
+                            this.NotifyMessageReceivedEvent(this, newData);
+                            await ReadAsync();
+                        }
                     }
                 }
             }
@@ -140,7 +193,7 @@ namespace libCore
             {
                 System.Exception exNew = new System.Exception(string.Format("Exception In: {0}", CallerName()), ex);
                 this.Notifyexception(exNew);
-                throw exNew;
+                await this.Stop();
             }
         }
 
@@ -158,6 +211,12 @@ namespace libCore
         {
             try
             {
+                if (IsConnected == false)
+                {
+                    this.NotifyTextEvent(this, string.Format("could not send: client not connected"));
+                    return;
+                }
+
                 if (data == null || data.Length == 0)
                 {
                     throw new Exception("Send value null or empty or lengt 0");
@@ -165,7 +224,7 @@ namespace libCore
                 else
                 {
                     // Create the data writer object backed by the in-memory stream. 
-                    using (DataWriter writer = new DataWriter(socket.OutputStream))
+                    using (DataWriter writer = new DataWriter(Socket.OutputStream))
                     {
                         writer.ByteOrder = ByteOrder.LittleEndian;
 
