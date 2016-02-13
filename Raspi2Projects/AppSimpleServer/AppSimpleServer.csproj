@@ -140,10 +140,6 @@
       <Project>{338154bb-0c23-4663-bd6b-d7c72dd15038}</Project>
       <Name>libShared</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SmartHomeController\SmartHomeController.csproj">
-      <Project>{0106470c-88b5-4de3-8f4d-add749b6575a}</Project>
-      <Name>SmartHomeController</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="WindowsIoT, Version=10.0.10240.0">
