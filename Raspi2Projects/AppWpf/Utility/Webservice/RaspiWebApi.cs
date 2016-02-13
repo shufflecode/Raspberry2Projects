@@ -23,7 +23,7 @@ namespace AppWpf.Webservice
         {
             string sMethodeName;
 
-            var baseUrl = "http://192.168.0.11/";
+            var baseUrl = "http://192.168.0.28/";
            
             switch (methodName)
             {
