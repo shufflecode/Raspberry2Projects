@@ -16,8 +16,9 @@ namespace libDesktop
         public event NotifyTextDelegate NotifyTextEvent;
         public event NotifyexceptionDelegate NotifyexceptionEvent;
         public event NotifyMessageReceivedDelegate NotifyMessageReceivedEvent;
+        public event NotifyConnectionClosed NotifyConnectionClosedEvent;
 
-        private bool isConnected = false;
+        //private bool isConnected = false;
 
         private string remoteIP = Dns.GetHostEntry(Dns.GetHostName()).AddressList.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork).ToString();
         private string remotePort = "27200";
@@ -102,9 +103,23 @@ namespace libDesktop
 
         public void Start()
         {
+            if (IsConnected)
+            {
+                this.NotifyTextEvent(this, string.Format("could not start: client connected"));
+                return;
+            }
+
             if (this.NotifyTextEvent != null)
             {
                 this.NotifyTextEvent(this, string.Format("start connection"));
+            }
+
+            if (this.Client == null)
+            {
+                this.Client = new TcpClient(AddressFamily.InterNetwork);
+
+                //// Empfangs Buffer anlegen
+                buffer = new byte[Client.ReceiveBufferSize];
             }
 
             shouldStop = false;
@@ -113,19 +128,34 @@ namespace libDesktop
 
         public void Stop()
         {
+            if (IsConnected == false)
+            {
+                this.NotifyTextEvent(this, string.Format("could not stop: client not connected"));
+                return;
+            }
+
             if (this.NotifyTextEvent != null)
             {
                 this.NotifyTextEvent(this, string.Format("stop connection"));
             }
 
+            if (NotifyConnectionClosedEvent != null)
+            {
+                NotifyConnectionClosedEvent(this);
+            }
+
             shouldStop = true;
-            this.Client.Close();
+            this.Dispose();
+            this.Client = null;
         }
 
         public void Dispose()
         {
-            this.Client.Close();
-            this.Client.Client.Dispose();
+            if (this.Client != null)
+            {
+                this.Client.Close();
+                this.Client.Client.Dispose();
+            }
         }
 
         byte[] buffer;
@@ -134,15 +164,23 @@ namespace libDesktop
         {
             if (shouldStop) return;
 
-            if (this.NotifyTextEvent != null)
+            try
             {
-                this.NotifyTextEvent(this, string.Format("TCP Server Connected", Client.Client.LocalEndPoint));
-                this.NotifyTextEvent(this, string.Format("Local  Endpoint: {0}", Client.Client.LocalEndPoint));
-                this.NotifyTextEvent(this, string.Format("Remote Endpoint: {0}", Client.Client.RemoteEndPoint));
-            }
+                if (this.NotifyTextEvent != null)
+                {
+                    this.NotifyTextEvent(this, string.Format("TCP Server Connected", Client.Client.LocalEndPoint));
+                    this.NotifyTextEvent(this, string.Format("Local  Endpoint: {0}", Client.Client.LocalEndPoint));
+                    this.NotifyTextEvent(this, string.Format("Remote Endpoint: {0}", Client.Client.RemoteEndPoint));
+                }
 
-            NetworkStream objStream = this.Client.GetStream();
-            objStream.BeginRead(buffer, 0, buffer.Length, ReadCallback, objStream);
+                NetworkStream objStream = this.Client.GetStream();
+                objStream.BeginRead(buffer, 0, buffer.Length, ReadCallback, objStream);
+            }
+            catch (Exception ex)
+            {
+                System.Exception exNew = new System.Exception(string.Format("Exception In: {0}", System.Reflection.MethodBase.GetCurrentMethod().Name), ex);
+                this.Notifyexception(exNew);
+            }
         }
 
         /// Callback for Read operation
@@ -150,7 +188,7 @@ namespace libDesktop
         {
             try
             {
-                if (result.AsyncState != null)
+                if (result.AsyncState != null && this.Client.Connected)
                 {
                     NetworkStream objStream = this.Client.GetStream();
                     int length = objStream.EndRead(result);
@@ -165,16 +203,16 @@ namespace libDesktop
 
                     objStream.BeginRead(buffer, 0, buffer.Length, ReadCallback, buffer);
                 }
-                else
-                {
-                    throw new Exception("Error result.AsyncState = 0");
-                }
+                //else
+                //{
+                //    throw new Exception("Error result.AsyncState = 0");
+                //}
             }
             catch (Exception ex)
             {
                 System.Exception exNew = new System.Exception(string.Format("Exception In: {0}", System.Reflection.MethodBase.GetCurrentMethod().Name), ex);
                 this.Notifyexception(exNew);
-                throw exNew;
+                this.Stop();
             }
         }
 
@@ -182,6 +220,12 @@ namespace libDesktop
         {
             try
             {
+                if (IsConnected == false)
+                {
+                    this.NotifyTextEvent(this, string.Format("could not send: client not connected"));
+                    return;
+                }
+
                 if (string.IsNullOrEmpty(text))
                 {
                     throw new Exception("Send value null or empty or lengt 0");
@@ -204,6 +248,12 @@ namespace libDesktop
         {
             try
             {
+                if (IsConnected == false)
+                {
+                    this.NotifyTextEvent(this, string.Format("could not send: client not connected"));
+                    return;
+                }
+
                 if (data == null || data.Length == 0)
                 {
                     throw new Exception("Send value null or empty or lengt 0");
