@@ -104,6 +104,7 @@
             hostName = new HostName(this.HostNameOrIp);
 
             listener.ConnectionReceived += OnConnection;
+            
 
             // If necessary, tweak the listener's control options before carrying out the bind operation.
             // These options will be automatically applied to the connected StreamSockets resulting from
@@ -133,6 +134,8 @@
                 {
                     await listener.CancelIOAsync();
                 }
+
+                this.IsConnected = false;
             }
             catch (Exception ex)
             {
@@ -158,14 +161,31 @@
             }
 
             Async_TCP_StreamSocketClient client = new Async_TCP_StreamSocketClient(args.Socket);
+
             client.NotifyTextEvent += Client_NotifyTextEvent;
             client.NotifyexceptionEvent += Client_NotifyexceptionEvent;
             client.NotifyMessageReceivedEvent += Client_NotifyMessageReceivedEvent;
+            client.NotifyConnectionClosedEvent += Client_NotifyConnectionClosedEvent;
             serverClients.Add(client);
             client.ReadAsync();
         }
 
+        private void Client_NotifyConnectionClosedEvent(object sender)
+        {
+            var client = sender as Async_TCP_StreamSocketClient;
 
+            if (this.NotifyTextEvent != null)
+            {
+                this.NotifyTextEvent(this, string.Format("Client connection closed {0}", client.HostNameOrIp));
+            }
+
+            if (serverClients.Contains(client))
+            {
+                serverClients.Remove(client);
+            }
+
+            
+        }
 
         string CallerName([CallerMemberName]string caller = "")
         {
@@ -209,7 +229,7 @@
                 }
                 else
                 {
-                    foreach (var item in this.serverClients)
+                    foreach (var item in this.serverClients.Where(x => x.IsConnected))
                     {
                         await item.SendText(text);
                     }
@@ -237,7 +257,7 @@
                 }
                 else
                 {
-                    foreach (var item in this.serverClients)
+                    foreach (var item in this.serverClients.Where(x => x.IsConnected))
                     {
                         await item.SendData(data);
                     }
