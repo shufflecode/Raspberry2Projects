@@ -5,16 +5,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AppWpfSimpleClient"
         xmlns:ValueConverters="clr-namespace:libDesktop.ValueConverters;assembly=libDesktop"
-        
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
+        xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="650" Width="825">
     <Window.Resources>
         <ValueConverters:ByteCollectionToUTF8 x:Key="VcObservableByteCollectionToWindows1252String"></ValueConverters:ByteCollectionToUTF8>
         <ValueConverters:ByteCollectionToHexString x:Key="VcObservableByteCollectionToHexString"></ValueConverters:ByteCollectionToHexString>
         <ValueConverters:IPAddressToString x:Key="VcIPAddressToString"></ValueConverters:IPAddressToString>
     </Window.Resources>
-    <DockPanel>
-        <Menu DockPanel.Dock="Top">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+        </Grid.ColumnDefinitions>
+
+        <Menu Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem  Header="Open" Command="{Binding Command}" CommandParameter="File Open"></MenuItem>
+                <MenuItem  Header="Save" Command="{Binding Command}" CommandParameter="File Save"></MenuItem>
+                <MenuItem  Header="Save As" Command="{Binding Command}" CommandParameter="File SaveAs"></MenuItem>
+            </MenuItem>
             <MenuItem Header="Client">
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
@@ -64,13 +79,95 @@
 
                     <Button Grid.Row="1" Grid.Column="2" Content="Send Data" Command="{Binding Command}" CommandParameter="Send Data"></Button>
                 </Grid>
+            </MenuItem>
+        </Menu>
 
-            </MenuItem>            
-        </Menu>   
+        <xcad:DockingManager Grid.Row="1" 
+                           AllowMixedOrientation="True"
+                           BorderBrush="Black"
+                           BorderThickness="1">
+            <xcad:LayoutRoot>
+                <xcad:LayoutPanel Orientation="Horizontal">
+                    <xcad:LayoutDocumentPane DockWidth="200">
+                        <xcad:LayoutAnchorable Title="Properties">
+                            <xctk:PropertyGrid SelectedObject="{Binding SelectedCmd}">
+                            </xctk:PropertyGrid>
+                        </xcad:LayoutAnchorable>
+                    </xcad:LayoutDocumentPane>
 
-        <ScrollViewer DockPanel.Dock="Bottom" ScrollChanged="ScrollViewer_ScrollChanged" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
-            <ListBox ItemsSource="{Binding InfoTextList}" BorderThickness="0"/>
-        </ScrollViewer>
+                    <xcad:LayoutDocumentPaneGroup Orientation="Vertical">
+                        <xcad:LayoutDocumentPane>
+                            <xcad:LayoutAnchorable Title="Commands" CanHide="False" >
+                                <Grid>
+                                    <ScrollViewer ScrollChanged="ScrollViewer_ScrollChanged" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                        <ListBox ItemsSource="{Binding CommandList}" SelectionChanged="ListBox_SelectionChanged" MouseDoubleClick="ListBox_MouseDoubleClick">
+                                            <ListBox.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="Send Selected" Command="{Binding Command}" CommandParameter="Send Selected Command"/>
+                                                    <MenuItem Header="Send All" Command="{Binding Command}" CommandParameter="Send All Selected Commands"/>
+                                                    <MenuItem Header="Clear" Command="{Binding Command}" CommandParameter="Clear Selected Commands"/>
+                                                </ContextMenu>
+                                            </ListBox.ContextMenu>
+                                        </ListBox>
+                                    </ScrollViewer>                                   
+                                </Grid>
+                            </xcad:LayoutAnchorable>
+                        </xcad:LayoutDocumentPane>
+                        <xcad:LayoutDocumentPane>
+                            <xcad:LayoutAnchorable Title="Send">
+                                <Grid>
+                                    <ScrollViewer ScrollChanged="ScrollViewer_ScrollChanged" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                        <ListBox ItemsSource="{Binding SendList}"  SelectionChanged="ListBox_SelectionChanged">
+                                            <ListBox.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="Send Selected" Command="{Binding Command}" CommandParameter="Send Selected Send"/>
+                                                    <MenuItem Header="Clear" Command="{Binding Command}" CommandParameter="Clear Send Commands"/>
+                                                </ContextMenu>
+                                            </ListBox.ContextMenu>
+                                        </ListBox>
+                                    </ScrollViewer>
 
-    </DockPanel>
+
+                                </Grid>
+                            </xcad:LayoutAnchorable>
+                        </xcad:LayoutDocumentPane>
+                        <xcad:LayoutDocumentPane>
+                            <xcad:LayoutAnchorable Title="Receive">
+                                <Grid>
+                                    <ScrollViewer ScrollChanged="ScrollViewer_ScrollChanged" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                        <ListBox ItemsSource="{Binding ReceiveList}" SelectionChanged="ListBox_SelectionChanged">
+                                            <ListBox.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="Send Selected" Command="{Binding Command}" CommandParameter="Send Selected Receive"/>
+                                                    <MenuItem Header="Clear" Command="{Binding Command}" CommandParameter="Clear Receive Commands"/>
+                                                </ContextMenu>
+                                            </ListBox.ContextMenu>
+                                        </ListBox>
+                                    </ScrollViewer>
+                                </Grid>
+                            </xcad:LayoutAnchorable>
+                        </xcad:LayoutDocumentPane>
+                    </xcad:LayoutDocumentPaneGroup>
+                </xcad:LayoutPanel>
+
+                <xcad:LayoutRoot.BottomSide>
+                    <xcad:LayoutAnchorSide>
+                        <xcad:LayoutAnchorGroup>
+                            <xcad:LayoutAnchorable Title="Log" ContentId="agenda">
+                                <ScrollViewer ScrollChanged="ScrollViewer_ScrollChanged" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                    <ListBox ItemsSource="{Binding InfoTextList}" BorderThickness="0"/>
+                                </ScrollViewer>
+                            </xcad:LayoutAnchorable>
+                        </xcad:LayoutAnchorGroup>
+                    </xcad:LayoutAnchorSide>
+                </xcad:LayoutRoot.BottomSide>
+
+            </xcad:LayoutRoot>
+
+        </xcad:DockingManager>
+
+        <!--<StatusBar Grid.Row="2">
+            <StatusBarItem Content="AvalonDock 1.3 Sample Project"/>
+        </StatusBar>-->
+    </Grid>
 </Window>

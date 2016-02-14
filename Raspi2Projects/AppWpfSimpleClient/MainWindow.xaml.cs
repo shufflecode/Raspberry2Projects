@@ -63,6 +63,32 @@ namespace AppWpfSimpleClient
             }
         }
 
+        private ConfigFile config = new ConfigFile();
+
+        public ConfigFile ConfigFile
+        {
+            get { return config; }
+            set { config = value; }
+        }
+
+
+        public ObservableCollection<object> CommandList { get; internal set; } = new ObservableCollection<object>();
+        public ObservableCollection<object> SendList { get; internal set; } = new ObservableCollection<object>();
+        public ObservableCollection<object> ReceiveList { get; internal set; } = new ObservableCollection<object>();
+
+        private object selectedCmd;
+
+        public object SelectedCmd
+        {
+            get { return selectedCmd; }
+            set
+            {
+                selectedCmd = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         #region Client
 
         IEthernetSync client = null;
@@ -143,31 +169,27 @@ namespace AppWpfSimpleClient
             Client.NotifyexceptionEvent += Client_NotifyexceptionEvent;
             Client.NotifyTextEvent += Client_NotifyTextEvent;
             Client.NotifyMessageReceivedEvent += Client_NotifyMessageReceivedEvent;
-
-            ////// Zeichenfolgenarray mit den Befehlszeilenargumenten für das Programm
-            //string[] commandLineArgs = Environment.GetCommandLineArgs();
-
-            ////// Programm Version Ermitteln
-            //Version softwareVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-
-            ////// Benutzer Name ermitteln
-            //string userName = Environment.UserName;
-
-            ////// Programm Name ermitteln
-            //string softwareName = string.Format("{0}", System.Windows.Application.ResourceAssembly.GetName().Name);
-
-            ////// Datei Version Ermitteln
-            //System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
-            //System.Diagnostics.FileVersionInfo fileVersionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
-            //string softwareDateiVersion = fileVersionInfo.ProductVersion;
-
-            ////// Das aktuelle Arbeitsverzeichnisses ermitteln
-            //string currentDirectory = Environment.CurrentDirectory;
-
-            ////
+            
             string machineName = Environment.MachineName;
 
             this.AddInfoTextLine("Hallo Welt");
+
+            for (int i = 0; i < 5; i++)
+            {
+                CommandList.Add(new TestCmd() { Name = "Comands", Zahl = i });
+            }
+
+            for (int i = 0; i < 5; i++)
+            {
+                SendList.Add(new TestCmd() { Name = "Send", Zahl = i });
+            }
+
+            for (int i = 0; i < 5; i++)
+            {
+                ReceiveList.Add(new TestCmd() { Name = "Receive", Zahl = i });
+            }
+
+
         }
 
         private void Client_NotifyMessageReceivedEvent(object sender, byte[] data)
@@ -196,6 +218,92 @@ namespace AppWpfSimpleClient
 
                 switch (param as string)
                 {
+                    case "File Open":
+                        //DataContractSerializer
+                        Microsoft.Win32.OpenFileDialog openFileDialog1 = new Microsoft.Win32.OpenFileDialog();
+
+                        //if (this.TypeFileDirectory != string.Empty)
+                        //{
+                        //    openFileDialog1.InitialDirectory = System.IO.Path.Combine(this.TypeFileDirectory, "NMEA");
+                        //}
+
+                        openFileDialog1.Filter = "xml files (*.xml)|*.xml";
+
+                        if (openFileDialog1.ShowDialog() == true)
+                        {
+                            string file = openFileDialog1.FileName;
+
+                            var temp = ConfigFile.Deserialize(file);
+
+                            //this.SelectedCmd = null;
+                            //this.CommandList.Clear();
+                            //this.SendList.Clear();
+                            //this.ReceiveList.Clear();
+
+                            foreach (var item in temp.CommandList)
+                            {
+                                this.CommandList.Add(item);
+                            }
+
+                            foreach (var item in temp.SendList)
+                            {
+                                SendList.Add(item);
+                            }
+
+                            foreach (var item in temp.ReceiveList)
+                            {
+                                ReceiveList.Add(item);
+                            }
+                        }
+
+                        break;
+
+                    case "File Save":
+                        if (string.IsNullOrEmpty(this.ConfigFile.FileName))
+                        {
+                            this.CommandReceived("File SaveAs");
+                        }
+                        else
+                        {
+                            this.ConfigFile.CommandList = this.CommandList;
+                            this.ConfigFile.SendList = this.SendList;
+                            this.ConfigFile.ReceiveList = this.ReceiveList;
+
+                            this.ConfigFile.Serialize(this.ConfigFile.FileName);
+                        }
+                        break;
+
+                    case "File SaveAs":
+                        try
+                        {
+                            Microsoft.Win32.SaveFileDialog saveFileDialog1 = new Microsoft.Win32.SaveFileDialog();
+
+                            //if (this.TypeFileDirectory != string.Empty)
+                            //{
+                            //    saveFileDialog1.InitialDirectory = System.IO.Path.Combine(this.TypeFileDirectory, "NMEA");
+                            //}
+
+                            //DataContractSerializer
+                            saveFileDialog1.Filter = "xml files (*.xml)|*.xml";
+
+                            if (saveFileDialog1.ShowDialog() == true)
+                            {
+                                string file = saveFileDialog1.FileName;
+
+                                this.ConfigFile.CommandList = this.CommandList;
+                                this.ConfigFile.SendList = this.SendList;
+                                this.ConfigFile.ReceiveList = this.ReceiveList;
+
+                                this.ConfigFile.Serialize(file);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
+
+                        break;
+
                     case "Start TCP Client":
 
                         this.Client.HostNameOrIp = this.Host;
@@ -219,6 +327,39 @@ namespace AppWpfSimpleClient
                         this.SendData(this.ValueSendData.ToArray());
                         break;
 
+                    case "Send Selected Command":
+                        await this.SendObj(this.SelectedCmd);
+                        break;
+
+                    case "Clear Selected Commands":
+                        this.CommandList.Clear();
+                        break;
+
+                    case "Send All Selected Commands":
+
+                        foreach (var item in this.CommandList)
+                        {
+                            await this.SendObj(item);
+                        }
+
+                        break;
+
+                    case "Send Selected Send":
+                        await this.SendObj(this.SelectedCmd);
+                        break;
+
+                    case "Clear Send  Commands":
+                        this.SendList.Clear();
+                        break;
+
+                    case "Send Selected Receive":
+                        await this.SendObj(this.SelectedCmd);
+                        break;
+
+                    case "Clear Receive Commands":
+                        this.ReceiveList.Clear();
+                        break;
+
                     default:
                         this.AddInfoTextLine(string.Format("Command {0} not Implemented", param.ToString()));
                         break;
@@ -230,6 +371,12 @@ namespace AppWpfSimpleClient
                 MessageBox.Show(ExceptionHandling.GetExceptionText(new System.Exception(string.Format("Exception In: {0}", CallerName()), ex)));
             }
         }
+
+        public async Task SendObj(object obj)
+        {
+            this.SendList.Add(obj);
+        }
+
 
         public void SendText(string text)
         {
@@ -370,6 +517,53 @@ namespace AppWpfSimpleClient
         }
 
         #endregion
+
+        private void ListBox_Selected(object sender, RoutedEventArgs e)
+        {
+           
+        }
+
+        private void ListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var l = sender as ListBox;
+
+            if (l.SelectedItem != null)
+            {
+                SendObj(l.SelectedItem);
+            }            
+        }
+
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e != null && e.AddedItems != null && e.AddedItems.Count > 0)
+            {
+                this.SelectedCmd = e.AddedItems[0];
+            }           
+        }
+    }
+
+    public class TestCmd
+    {
+        private int zahl;
+
+        public int Zahl
+        {
+            get { return zahl; }
+            set { zahl = value; }
+        }
+
+        private string name;
+
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Name: {0}; Zahl: {1}", Name, Zahl);
+        }
 
     }
 }
