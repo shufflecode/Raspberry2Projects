@@ -90,8 +90,18 @@
                 <xcad:LayoutPanel Orientation="Horizontal">
                     <xcad:LayoutDocumentPane DockWidth="200">
                         <xcad:LayoutAnchorable Title="Properties">
-                            <xctk:PropertyGrid SelectedObject="{Binding SelectedCmd}">
-                            </xctk:PropertyGrid>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                 <xctk:PropertyGrid Grid.Row="0" SelectedObject="{Binding SelectedCmd}">
+                                </xctk:PropertyGrid>
+                                <StackPanel Orientation="Horizontal" Grid.Row="1">
+                                    <Button Content="Send" Command="{Binding Command}" CommandParameter="Send SelectedObject"></Button>
+                                </StackPanel>
+                            </Grid>
+                           
                         </xcad:LayoutAnchorable>
                     </xcad:LayoutDocumentPane>
 
@@ -153,7 +163,7 @@
                 <xcad:LayoutRoot.BottomSide>
                     <xcad:LayoutAnchorSide>
                         <xcad:LayoutAnchorGroup>
-                            <xcad:LayoutAnchorable Title="Log" ContentId="agenda">
+                            <xcad:LayoutAnchorable Title="Log">
                                 <ScrollViewer ScrollChanged="ScrollViewer_ScrollChanged" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
                                     <ListBox ItemsSource="{Binding InfoTextList}" BorderThickness="0"/>
                                 </ScrollViewer>

@@ -10,6 +10,7 @@ using System.Xml;
 
 namespace AppWpfSimpleClient
 {
+    //[KnownType(typeof(libShared.ProtolV1Commands.TestCmd))]
     [KnownType(typeof(TestCmd))]
     [DataContract]
     public class ConfigFile

@@ -103,7 +103,7 @@ namespace AppWpfSimpleClient
             internal set
             {
                 client = value;
-               
+
             }
         }
 
@@ -169,32 +169,52 @@ namespace AppWpfSimpleClient
             Client.NotifyexceptionEvent += Client_NotifyexceptionEvent;
             Client.NotifyTextEvent += Client_NotifyTextEvent;
             Client.NotifyMessageReceivedEvent += Client_NotifyMessageReceivedEvent;
-            
+
             string machineName = Environment.MachineName;
 
             this.AddInfoTextLine("Hallo Welt");
 
             for (int i = 0; i < 5; i++)
             {
-                CommandList.Add(new TestCmd() { Name = "Comands", Zahl = i });
+                //CommandList.Add(new libShared.ProtolV1Commands.TestCmd() { Title = "Comand " + i.ToString() });
+                CommandList.Add(new TestCmd() { Title = "Comand " + i.ToString() });
             }
 
-            for (int i = 0; i < 5; i++)
-            {
-                SendList.Add(new TestCmd() { Name = "Send", Zahl = i });
-            }
+            //for (int i = 0; i < 5; i++)
+            //{
+            //    SendList.Add(new TestCmd() { Title = "Send " + i.ToString() });
+            //}
 
-            for (int i = 0; i < 5; i++)
-            {
-                ReceiveList.Add(new TestCmd() { Name = "Receive", Zahl = i });
-            }
+            //for (int i = 0; i < 5; i++)
+            //{
+            //    ReceiveList.Add(new TestCmd() { Title = "Comand " + i.ToString() });
+            //}
 
 
         }
 
         private void Client_NotifyMessageReceivedEvent(object sender, byte[] data)
         {
-            this.AddInfoTextLine("Text:" + System.Text.Encoding.UTF8.GetString(data) + " Data:" + Converters.ConvertByteArrayToHexString(data, " "));
+            try
+            {
+                string ret = Encoding.UTF8.GetString(data);
+
+                var obj = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(ret);
+
+                if (obj.GetValue("MyType").ToString() == "TestCmd")
+                {
+                    TestCmd dfdf = (TestCmd)obj.ToObject(typeof(TestCmd));
+                    this.ReceiveList.Add(dfdf);
+                }
+                else
+                {
+                    this.AddInfoTextLine("Text:" + ret + " Data:" + Converters.ConvertByteArrayToHexString(data, " "));
+                }    
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ExceptionHandling.GetExceptionText(new System.Exception(string.Format("Exception In: {0}", CallerName()), ex)));
+            }
         }
 
         private void Client_NotifyTextEvent(object sender, string text)
@@ -360,6 +380,10 @@ namespace AppWpfSimpleClient
                         this.ReceiveList.Clear();
                         break;
 
+                    case "Send SelectedObject":
+                        await this.SendObj(this.SelectedCmd);
+                        break;
+
                     default:
                         this.AddInfoTextLine(string.Format("Command {0} not Implemented", param.ToString()));
                         break;
@@ -374,9 +398,19 @@ namespace AppWpfSimpleClient
 
         public async Task SendObj(object obj)
         {
-            this.SendList.Add(obj);
-        }
+            try
+            {
+                string json = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+                this.SendText(json);                
 
+                this.AddInfoTextLine(json);
+                this.SendList.Add(obj);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ExceptionHandling.GetExceptionText(new System.Exception(string.Format("Exception In: {0}", CallerName()), ex)));
+            }
+        }
 
         public void SendText(string text)
         {
@@ -520,7 +554,7 @@ namespace AppWpfSimpleClient
 
         private void ListBox_Selected(object sender, RoutedEventArgs e)
         {
-           
+
         }
 
         private void ListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -530,7 +564,7 @@ namespace AppWpfSimpleClient
             if (l.SelectedItem != null)
             {
                 SendObj(l.SelectedItem);
-            }            
+            }
         }
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -538,32 +572,9 @@ namespace AppWpfSimpleClient
             if (e != null && e.AddedItems != null && e.AddedItems.Count > 0)
             {
                 this.SelectedCmd = e.AddedItems[0];
-            }           
+            }
         }
     }
 
-    public class TestCmd
-    {
-        private int zahl;
 
-        public int Zahl
-        {
-            get { return zahl; }
-            set { zahl = value; }
-        }
-
-        private string name;
-
-        public string Name
-        {
-            get { return name; }
-            set { name = value; }
-        }
-
-        public override string ToString()
-        {
-            return string.Format("Name: {0}; Zahl: {1}", Name, Zahl);
-        }
-
-    }
 }
