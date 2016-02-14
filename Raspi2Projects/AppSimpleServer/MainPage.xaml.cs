@@ -25,7 +25,7 @@ using System.Threading;
 
 namespace AppSimpleServer
 {
-    
+
 
     /// <summary>
     /// Eine leere Seite, die eigenständig verwendet werden kann oder auf die innerhalb eines Rahmens navigiert werden kann.
@@ -147,7 +147,7 @@ namespace AppSimpleServer
             }
         }
 
-        
+
 
         public void SendText(string text)
         {
@@ -198,7 +198,7 @@ namespace AppSimpleServer
 
             cylictimer = new Timer(new TimerCallback(TimerProc), autoEvent, 0, 0);
 
-            
+
 
             var h = NetworkInformation.GetHostNames().Where(x => x.IPInformation != null && (x.IPInformation.NetworkAdapter.IanaInterfaceType == 71 || x.IPInformation.NetworkAdapter.IanaInterfaceType == 6));
 
@@ -217,23 +217,74 @@ namespace AppSimpleServer
             //for (int i = 0; i < 20; i++)
             //{
             //    this.AddInfoTextLine(i.ToString());
-            //}
-            
-           
+            //}           
+
         }
+
+        private Windows.UI.Color logBackground;
+
+        public Windows.UI.Color LogBackground
+        {
+            get { return logBackground; }
+            set
+            {
+                logBackground = value;
+                this.OnPropertyChanged();
+            }
+        }
+
 
         private void Server_NotifyMessageReceivedEvent(object sender, byte[] data)
         {
-            this.AddInfoTextLine("Text:" + System.Text.Encoding.UTF8.GetString(data) + " Data:" + Converters.ConvertByteArrayToHexString(data, " "));
+            try
+            {
+                //string text = System.Text.Encoding.UTF8.GetString(data);                
 
-            if (data.Length == 1 && data[0] == 1)
-            {
-                StartTimer();
+                //var m2 = Newtonsoft.Json.JsonConvert.DeserializeObject(text);
+                ////this.ReceiveList.Add(m2);
+
+                //if (m2 == null)
+                //{
+                //    this.AddInfoTextLine("Text:" + text + " Data:" + Converters.ConvertByteArrayToHexString(data, " "));
+
+                //    //if (data.Length == 1 && data[0] == 1)
+                //    //{
+                //    //    StartTimer();
+                //    //}
+                //    //else
+                //    //{
+                //    //    StopTimer();
+                //    //}
+                //}
+                //else
+                //{
+                //    libShared.ProtolV1Commands.TestCmd m = m2 as libShared.ProtolV1Commands.TestCmd;
+                //    if (m != null)
+                //    {
+                //        LogBackground = Windows.UI.Color.FromArgb(m.Color.A, m.Color.R, m.Color.G, m.Color.B);
+                //    }
+                //}   
+
+                string ret = System.Text.Encoding.UTF8.GetString(data);
+
+                var obj = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(ret);
+
+                if (obj.GetValue("MyType").ToString() == "TestCmd")
+                {
+                    TestCmd dfdf = (TestCmd)obj.ToObject(typeof(TestCmd));
+                    LogBackground = Windows.UI.Color.FromArgb(dfdf.MediaColor.A, dfdf.MediaColor.R, dfdf.MediaColor.G, dfdf.MediaColor.B);
+                    //this.ReceiveList.Add(dfdf);
+                }
+                else
+                {
+                    this.AddInfoTextLine("Text:" + ret + " Data:" + Converters.ConvertByteArrayToHexString(data, " "));
+                }
             }
-            else
+            catch (Exception ex)
             {
-                StopTimer();
+                ShowMessageBox(ExceptionHandling.GetExceptionText(new System.Exception(string.Format("Exception In: {0}", CallerName()), ex)));
             }
+
         }
 
         private void TimerProc(object state)
@@ -274,7 +325,7 @@ namespace AppSimpleServer
                 switch (param as string)
                 {
                     case "Start TCP Server":
-                        
+
                         this.Server.HostNameOrIp = this.Host;
                         this.Server.Port = this.Port;
                         this.AddInfoTextLine(string.Format("Server Start Beginn -> Host: {0}, Port: {1}", this.Server.HostNameOrIp, this.Server.Port));
@@ -358,7 +409,7 @@ namespace AppSimpleServer
         public async void AddInfoTextLine(object sender, string line)
         {
             try
-            {         
+            {
                 await this.dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     if (this.InfoText.Length > 1000)

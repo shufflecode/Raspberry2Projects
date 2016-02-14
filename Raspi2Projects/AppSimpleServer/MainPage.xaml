@@ -99,8 +99,8 @@
             </Button>
         </StackPanel>
 
-        <ScrollViewer x:Name="Scoll1" Grid.Row="3" Grid.Column="0" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" VerticalScrollMode="Enabled">
-            <TextBlock Text="{Binding InfoText}" FontSize="8" FontFamily="Consolas"></TextBlock>
+        <ScrollViewer Background="{Binding LogBackground}" x:Name="Scoll1" Grid.Row="3" Grid.Column="0" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" VerticalScrollMode="Enabled">
+            <TextBlock Text="{Binding InfoText}"  FontSize="8" FontFamily="Consolas"></TextBlock>
             <!--<ListBox ItemsSource="{Binding InfoTextList}" FontSize="8" FontFamily="Consolas">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
