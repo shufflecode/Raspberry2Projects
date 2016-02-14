@@ -232,7 +232,7 @@ namespace libDesktop
                 }
                 else
                 {
-                    this.Client.Client.Send(Encoding.ASCII.GetBytes(text));
+                    this.Client.Client.Send(Encoding.UTF8.GetBytes(text));
                 }
 
             }
