@@ -86,7 +86,7 @@ namespace libShared
             }
         }
 
-        public uint PackedValue
+        private uint PackedValue
         {
             get
             {

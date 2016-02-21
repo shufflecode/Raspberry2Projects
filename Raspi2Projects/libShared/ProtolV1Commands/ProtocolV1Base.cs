@@ -12,5 +12,7 @@ namespace libShared.ProtolV1Commands
         {
             get { return this.GetType().Name; }
         }
+
+        //public string Title { get; set; } = "CMD";
     }
 }
