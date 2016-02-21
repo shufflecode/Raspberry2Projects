@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Reflection;
 
 namespace AppWpfSimpleClient
 {
@@ -87,7 +88,7 @@ namespace AppWpfSimpleClient
                 OnPropertyChanged();
             }
         }
-
+        libShared.ProtolV1Commands.ProtocolV1Base fd = new libShared.ProtolV1Commands.ProtocolV1Base();
 
         #region Client
 
@@ -174,11 +175,11 @@ namespace AppWpfSimpleClient
 
             this.AddInfoTextLine("Hallo Welt");
 
-            for (int i = 0; i < 5; i++)
-            {
-                //CommandList.Add(new libShared.ProtolV1Commands.TestCmd() { Title = "Comand " + i.ToString() });
-                CommandList.Add(new TestCmd() { Title = "Comand " + i.ToString() });
-            }
+            //for (int i = 0; i < 5; i++)
+            //{
+            //    //CommandList.Add(new libShared.ProtolV1Commands.TestCmd() { Title = "Comand " + i.ToString() });
+            //    CommandList.Add(new TestCmd());// { Title = "Comand " + i.ToString() });
+            //}
 
             //for (int i = 0; i < 5; i++)
             //{
@@ -190,8 +191,25 @@ namespace AppWpfSimpleClient
             //    ReceiveList.Add(new TestCmd() { Title = "Comand " + i.ToString() });
             //}
 
+           
 
-        }
+            Assembly asem = fd.GetType().Assembly;
+            Type[] types = asem.GetTypes(); //Assembly.GetExecutingAssembly().GetTypes();
+
+            foreach (Type t in types)
+            {
+                if (t.BaseType != null && t.BaseType.Equals(typeof(libShared.ProtolV1Commands.ProtocolV1Base)))
+                {
+                    AddInfoTextLine(t.Name);
+                    object ob = Activator.CreateInstance(t);
+                    CommandList.Add(ob);
+                    //int x = 0;
+                }                    
+            }
+
+          
+
+        }       
 
         private void Client_NotifyMessageReceivedEvent(object sender, byte[] data)
         {
@@ -201,9 +219,9 @@ namespace AppWpfSimpleClient
 
                 var obj = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(ret);
 
-                if (obj.GetValue("MyType").ToString() == "TestCmd")
+                if (obj.GetValue("MyType").ToString() == nameof(libShared.ProtolV1Commands.TestCmd))
                 {
-                    TestCmd dfdf = (TestCmd)obj.ToObject(typeof(TestCmd));
+                    libShared.ProtolV1Commands.TestCmd dfdf = (libShared.ProtolV1Commands.TestCmd)obj.ToObject(typeof(libShared.ProtolV1Commands.TestCmd));
                     this.ReceiveList.Add(dfdf);
                 }
                 else
@@ -573,6 +591,58 @@ namespace AppWpfSimpleClient
             {
                 this.SelectedCmd = e.AddedItems[0];
             }
+        }
+
+        // PropertyValueChangedEventHandler
+
+   
+
+
+        private void PropertyGrid_SelectedPropertyItemChanged(object sender, RoutedPropertyChangedEventArgs<Xceed.Wpf.Toolkit.PropertyGrid.PropertyItemBase> e)
+        {     
+            if (e != null && e.NewValue != null)
+            {
+                bool isExpandable = e.NewValue.IsExpandable;
+                object editor = e.NewValue.Editor;
+                string cat = ((Xceed.Wpf.Toolkit.PropertyGrid.CustomPropertyItem)e.NewValue).Category;
+
+                object instance = ((Xceed.Wpf.Toolkit.PropertyGrid.PropertyItem)e.NewValue).Instance;
+                string name = e.NewValue.DisplayName;
+                object value = ((Xceed.Wpf.Toolkit.PropertyGrid.CustomPropertyItem)e.NewValue).Value;
+
+                Type valueType = value.GetType();
+
+                bool isClass = valueType.IsClass;
+                bool isValueType = valueType.IsValueType;
+                bool isPrimitive = valueType.IsPrimitive;
+                string names = valueType.Namespace;
+
+                bool isStruct = value.GetType().IsValueType && !value.GetType().IsEnum;
+
+                if (isStruct && string.IsNullOrEmpty(names) == false && names.StartsWith("System") == false)
+                {
+                    //// eigenes struct
+                    if (e.NewValue.IsExpandable == false)
+                    {
+                        e.NewValue.IsExpandable = true;                       
+                    }
+                }
+
+                
+            }            
+        }
+
+        private void PropertyGrid_PropertyValueChanged(object sender, Xceed.Wpf.Toolkit.PropertyGrid.PropertyValueChangedEventArgs e)
+        {
+            
+            Xceed.Wpf.Toolkit.PropertyGrid.PropertyGrid grid = sender as Xceed.Wpf.Toolkit.PropertyGrid.PropertyGrid;
+
+            //grid.SelectedPropertyItem.Name;
+            //grid.Focus();
+
+
+            OnPropertyChanged(((Xceed.Wpf.Toolkit.PropertyGrid.PropertyItemBase)e.OriginalSource).DisplayName);
+            
         }
     }
 

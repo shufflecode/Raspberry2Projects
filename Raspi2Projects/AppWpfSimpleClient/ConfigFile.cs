@@ -10,8 +10,8 @@ using System.Xml;
 
 namespace AppWpfSimpleClient
 {
-    //[KnownType(typeof(libShared.ProtolV1Commands.TestCmd))]
-    [KnownType(typeof(TestCmd))]
+    [KnownType(typeof(libShared.ProtolV1Commands.ProtocolV1Base))]
+    [KnownType(typeof(libShared.ProtolV1Commands.TestCmd))]
     [DataContract]
     public class ConfigFile
     {

@@ -95,7 +95,7 @@
                                     <RowDefinition Height="*"></RowDefinition>
                                     <RowDefinition Height="Auto"></RowDefinition>
                                 </Grid.RowDefinitions>
-                                 <xctk:PropertyGrid Grid.Row="0" SelectedObject="{Binding SelectedCmd}">
+                                <xctk:PropertyGrid Grid.Row="0" SelectedObject="{Binding SelectedCmd}" SelectedPropertyItemChanged="PropertyGrid_SelectedPropertyItemChanged" ShowTitle="False" ShowSummary="False" ShowSortOptions="False" ShowSearchBox="False" PropertyValueChanged="PropertyGrid_PropertyValueChanged" >
                                 </xctk:PropertyGrid>
                                 <StackPanel Orientation="Horizontal" Grid.Row="1">
                                     <Button Content="Send" Command="{Binding Command}" CommandParameter="Send SelectedObject"></Button>
@@ -111,6 +111,14 @@
                                 <Grid>
                                     <ScrollViewer ScrollChanged="ScrollViewer_ScrollChanged" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
                                         <ListBox ItemsSource="{Binding CommandList}" SelectionChanged="ListBox_SelectionChanged" MouseDoubleClick="ListBox_MouseDoubleClick">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Label Content="{Binding MyType}"></Label>
+                                                        <Label Content="{Binding Title}"></Label>
+                                                    </StackPanel>                                                    
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
                                             <ListBox.ContextMenu>
                                                 <ContextMenu>
                                                     <MenuItem Header="Send Selected" Command="{Binding Command}" CommandParameter="Send Selected Command"/>
