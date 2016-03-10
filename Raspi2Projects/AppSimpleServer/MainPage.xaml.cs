@@ -20,6 +20,7 @@ using Windows.UI.Xaml.Navigation;
 using libShared.Interfaces;
 using Windows.Networking.Connectivity;
 using System.Threading;
+using libSharedProject.ProtolV1Commands;
 
 // Die Vorlage "Leere Seite" ist unter http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 dokumentiert.
 
@@ -198,7 +199,8 @@ namespace AppSimpleServer
 
             cylictimer = new Timer(new TimerCallback(TimerProc), autoEvent, 0, 0);
 
-
+            libSharedProject.ProtolV1Commands.TestCmd c = new libSharedProject.ProtolV1Commands.TestCmd();
+            c.Title += "sws";
 
             var h = NetworkInformation.GetHostNames().Where(x => x.IPInformation != null && (x.IPInformation.NetworkAdapter.IanaInterfaceType == 71 || x.IPInformation.NetworkAdapter.IanaInterfaceType == 6));
 
@@ -269,10 +271,15 @@ namespace AppSimpleServer
 
                 var obj = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(ret);
 
-                if (obj.GetValue("MyType").ToString() == "TestCmd")
+                //obj.GetType().get
+
+                var b = new libSharedProject.ProtolV1Commands.ProtocolV1Base();
+                string  n = this.GetPropertyName(() => b.MyType);
+
+                if (obj.GetValue(n).ToString() == nameof(TestCmd))
                 {
                     TestCmd dfdf = (TestCmd)obj.ToObject(typeof(TestCmd));
-                    LogBackground = Windows.UI.Color.FromArgb(dfdf.MediaColor.A, dfdf.MediaColor.R, dfdf.MediaColor.G, dfdf.MediaColor.B);
+                    LogBackground = Windows.UI.Color.FromArgb(dfdf.Col1.A, dfdf.Col1.R, dfdf.Col1.G, dfdf.Col1.B);
                     //this.ReceiveList.Add(dfdf);
                 }
                 else
@@ -285,6 +292,24 @@ namespace AppSimpleServer
                 ShowMessageBox(ExceptionHandling.GetExceptionText(new System.Exception(string.Format("Exception In: {0}", CallerName()), ex)));
             }
 
+        }
+
+        /// <summary>
+        /// Get the name of a static or instance property from a property access lambda.
+        /// </summary>
+        /// <typeparam name="T">Type of the property</typeparam>
+        /// <param name="propertyLambda">lambda expression of the form: '() => Class.Property' or '() => object.Property'</param>
+        /// <returns>The name of the property</returns>
+        private string GetPropertyName<T>(System.Linq.Expressions.Expression<Func<T>> propertyLambda)
+        {
+            var me = propertyLambda.Body as System.Linq.Expressions.MemberExpression;
+
+            if (me == null)
+            {
+                throw new ArgumentException("You must pass a lambda of the form: '() => Class.Property' or '() => object.Property'");
+            }
+
+            return me.Member.Name;
         }
 
         private void TimerProc(object state)
