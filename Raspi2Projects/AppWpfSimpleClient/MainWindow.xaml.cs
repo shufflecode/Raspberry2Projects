@@ -72,10 +72,17 @@ namespace AppWpfSimpleClient
             set { config = value; }
         }
 
+        //public System.Data.DataView CommandView { get; private set; }
+        //public System.Data.DataView SendView { get; private set; }
+        //public System.Data.DataView ReceiveView { get; private set; }
 
-        public ObservableCollection<object> CommandList { get; internal set; } = new ObservableCollection<object>();
-        public ObservableCollection<object> SendList { get; internal set; } = new ObservableCollection<object>();
-        public ObservableCollection<object> ReceiveList { get; internal set; } = new ObservableCollection<object>();
+        //public DataSet1.DataTableCmdDataTable CommandTable { get; internal set; } = new DataSet1.DataTableCmdDataTable();
+        //public DataSet1.DataTableCmdDataTable SendTable { get; internal set; } = new DataSet1.DataTableCmdDataTable();
+        //public DataSet1.DataTableCmdDataTable ReceiveTable { get; internal set; } = new DataSet1.DataTableCmdDataTable();
+
+        public ObservableCollection<KeyValuePair<string, object>> CommandList { get; internal set; } = new ObservableCollection<KeyValuePair<string, object>>();
+        public ObservableCollection<KeyValuePair<string, object>> SendList { get; internal set; } = new ObservableCollection<KeyValuePair<string, object>>();
+        public ObservableCollection<KeyValuePair<string, object>> ReceiveList { get; internal set; } = new ObservableCollection<KeyValuePair<string, object>>();
 
         private object selectedCmd;
 
@@ -88,7 +95,7 @@ namespace AppWpfSimpleClient
                 OnPropertyChanged();
             }
         }
-        libShared.ProtolV1Commands.ProtocolV1Base fd = new libShared.ProtolV1Commands.ProtocolV1Base();
+        libSharedProject.ProtolV1Commands.ProtocolV1Base fd = new libSharedProject.ProtolV1Commands.ProtocolV1Base();
 
         #region Client
 
@@ -156,6 +163,8 @@ namespace AppWpfSimpleClient
             }
         }
 
+
+
         #endregion
 
         public MainWindow()
@@ -175,6 +184,10 @@ namespace AppWpfSimpleClient
 
             this.AddInfoTextLine("Hallo Welt");
 
+
+            libSharedProject.ProtolV1Commands.TestCmd c = new libSharedProject.ProtolV1Commands.TestCmd();
+
+            c.Title += "dsf";
             //for (int i = 0; i < 5; i++)
             //{
             //    //CommandList.Add(new libShared.ProtolV1Commands.TestCmd() { Title = "Comand " + i.ToString() });
@@ -191,25 +204,50 @@ namespace AppWpfSimpleClient
             //    ReceiveList.Add(new TestCmd() { Title = "Comand " + i.ToString() });
             //}
 
-           
+            //this.CommandView = this.CommandTable.DefaultView;
+            //this.SendView = this.SendTable.DefaultView;
+            //this.ReceiveView = this.ReceiveTable.DefaultView;
+
 
             Assembly asem = fd.GetType().Assembly;
             Type[] types = asem.GetTypes(); //Assembly.GetExecutingAssembly().GetTypes();
 
             foreach (Type t in types)
             {
-                if (t.BaseType != null && t.BaseType.Equals(typeof(libShared.ProtolV1Commands.ProtocolV1Base)))
+                if (t.BaseType != null && t.BaseType.Equals(typeof(libSharedProject.ProtolV1Commands.ProtocolV1Base)))
                 {
                     AddInfoTextLine(t.Name);
                     object ob = Activator.CreateInstance(t);
-                    CommandList.Add(ob);
+                    CommandList.Add(new KeyValuePair<string, object>("CMD", ob));
+                    //CommandList2.Add(new KeyValuePair<string, object>("CMD", ob));
                     //int x = 0;
-                }                    
+
+
+                    //var nr = this.CommandTable.NewDataTableCmdRow();
+                    //nr.Info = "CMD";
+                    //nr.Comand = ob;
+                    //this.CommandTable.AddDataTableCmdRow(nr);
+                }
             }
 
-          
+            //ConfigFile
 
-        }       
+
+            //var a = ConfigFile.GetType().GetCustomAttributes();
+
+            //foreach (var item in a)
+            //{
+            //    a.ToString();
+            //}
+
+
+
+
+
+
+
+
+        }
 
         private void Client_NotifyMessageReceivedEvent(object sender, byte[] data)
         {
@@ -219,15 +257,21 @@ namespace AppWpfSimpleClient
 
                 var obj = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(ret);
 
-                if (obj.GetValue("MyType").ToString() == nameof(libShared.ProtolV1Commands.TestCmd))
+                if (obj.GetValue("MyType").ToString() == nameof(libSharedProject.ProtolV1Commands.TestCmd))
                 {
-                    libShared.ProtolV1Commands.TestCmd dfdf = (libShared.ProtolV1Commands.TestCmd)obj.ToObject(typeof(libShared.ProtolV1Commands.TestCmd));
-                    this.ReceiveList.Add(dfdf);
+                    libSharedProject.ProtolV1Commands.TestCmd dfdf = (libSharedProject.ProtolV1Commands.TestCmd)obj.ToObject(typeof(libSharedProject.ProtolV1Commands.TestCmd));
+
+                    //var newRow = this.ReceiveTable.NewDataTableCmdRow();
+                    //newRow.Date = DateTime.Now;
+                    //newRow.Comand = dfdf;
+                    //this.ReceiveTable.AddDataTableCmdRow(newRow);
+
+                    this.ReceiveList.Add(new KeyValuePair<string, object>(string.Format("RX: {0}", System.DateTime.Now), dfdf));
                 }
                 else
                 {
                     this.AddInfoTextLine("Text:" + ret + " Data:" + Converters.ConvertByteArrayToHexString(data, " "));
-                }    
+                }
             }
             catch (Exception ex)
             {
@@ -265,7 +309,7 @@ namespace AppWpfSimpleClient
                         //    openFileDialog1.InitialDirectory = System.IO.Path.Combine(this.TypeFileDirectory, "NMEA");
                         //}
 
-                        openFileDialog1.Filter = "xml files (*.xml)|*.xml";
+                        openFileDialog1.Filter = "xml files (*.xml)|*.xml";//  "json files (*.json)|*.json";//;
 
                         if (openFileDialog1.ShowDialog() == true)
                         {
@@ -277,6 +321,11 @@ namespace AppWpfSimpleClient
                             //this.CommandList.Clear();
                             //this.SendList.Clear();
                             //this.ReceiveList.Clear();
+
+                            //foreach (var item in temp.CommandList2)
+                            //{
+                            //    this.CommandList2.Add(item);
+                            //}
 
                             foreach (var item in temp.CommandList)
                             {
@@ -292,6 +341,13 @@ namespace AppWpfSimpleClient
                             {
                                 ReceiveList.Add(item);
                             }
+
+                            //foreach (var item in temp.CommandTable.Rows)
+                            //{
+                            //    var newRow = this.CommandTable.NewDataTableCmdRow();
+                            //    newRow.ItemArray = (object[])((System.Data.DataRow)item).ItemArray.Clone();
+                            //    this.CommandTable.AddDataTableCmdRow(newRow);
+                            //}
                         }
 
                         break;
@@ -303,6 +359,10 @@ namespace AppWpfSimpleClient
                         }
                         else
                         {
+                            //this.ConfigFile.CommandTable = this.CommandTable;
+                            //this.ConfigFile.SendTable = this.SendTable;
+                            //this.ConfigFile.ReceiveTable = this.ReceiveTable;
+
                             this.ConfigFile.CommandList = this.CommandList;
                             this.ConfigFile.SendList = this.SendList;
                             this.ConfigFile.ReceiveList = this.ReceiveList;
@@ -322,11 +382,15 @@ namespace AppWpfSimpleClient
                             //}
 
                             //DataContractSerializer
-                            saveFileDialog1.Filter = "xml files (*.xml)|*.xml";
+                            //saveFileDialog1.Filter = "xml files (*.xml)|*.xml";// "json files (*.json)|*.json";// ;
 
                             if (saveFileDialog1.ShowDialog() == true)
                             {
                                 string file = saveFileDialog1.FileName;
+
+                                //this.ConfigFile.CommandTable = this.CommandTable;
+                                //this.ConfigFile.SendTable = this.SendTable;
+                                //this.ConfigFile.ReceiveTable = this.ReceiveTable;
 
                                 this.ConfigFile.CommandList = this.CommandList;
                                 this.ConfigFile.SendList = this.SendList;
@@ -369,16 +433,34 @@ namespace AppWpfSimpleClient
                         await this.SendObj(this.SelectedCmd);
                         break;
 
+                    case "Create Json":
+                        string json = CreateJsonString(this.SelectedCmd);
+
+
+
+                        this.AddInfoTextLine(json);
+                        break;
+
                     case "Clear Selected Commands":
+                        //this.CommandTable.Rows.Clear();
                         this.CommandList.Clear();
                         break;
 
                     case "Send All Selected Commands":
 
+                        //foreach (var item in this.CommandTable.Rows)
+                        //{
+                        //    DataSet1.DataTableCmdRow row = (DataSet1.DataTableCmdRow)item;
+                        //    await this.SendObj(row.Comand);
+
+                        //}
+
                         foreach (var item in this.CommandList)
                         {
-                            await this.SendObj(item);
+                            await this.SendObj(item.Value);
                         }
+
+
 
                         break;
 
@@ -388,6 +470,7 @@ namespace AppWpfSimpleClient
 
                     case "Clear Send  Commands":
                         this.SendList.Clear();
+                        //this.SendTable.Rows.Clear();
                         break;
 
                     case "Send Selected Receive":
@@ -396,6 +479,7 @@ namespace AppWpfSimpleClient
 
                     case "Clear Receive Commands":
                         this.ReceiveList.Clear();
+                        //this.ReceiveTable.Rows.Clear();
                         break;
 
                     case "Send SelectedObject":
@@ -414,15 +498,34 @@ namespace AppWpfSimpleClient
             }
         }
 
+        public string CreateJsonString(object obj)
+        {
+            try
+            {
+                return Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ExceptionHandling.GetExceptionText(new System.Exception(string.Format("Exception In: {0}", CallerName()), ex)));
+                return string.Empty;
+            }
+        }
+
         public async Task SendObj(object obj)
         {
             try
             {
-                string json = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
-                this.SendText(json);                
+                string json = CreateJsonString(obj);
+                this.SendText(json);
 
                 this.AddInfoTextLine(json);
-                this.SendList.Add(obj);
+
+                //var newRow = this.SendTable.NewDataTableCmdRow();
+                //newRow.Date = DateTime.Now;
+                //newRow.Comand = obj;
+                //this.SendTable.AddDataTableCmdRow(newRow);
+
+                this.SendList.Add(new KeyValuePair<string, object>(string.Format("TX: {0}", System.DateTime.Now),  obj));
             }
             catch (Exception ex)
             {
@@ -581,7 +684,7 @@ namespace AppWpfSimpleClient
 
             if (l.SelectedItem != null)
             {
-                SendObj(l.SelectedItem);
+                SendObj(((KeyValuePair<string, object>)l.SelectedItem).Value);
             }
         }
 
@@ -589,52 +692,61 @@ namespace AppWpfSimpleClient
         {
             if (e != null && e.AddedItems != null && e.AddedItems.Count > 0)
             {
-                this.SelectedCmd = e.AddedItems[0];
+                this.SelectedCmd = ((KeyValuePair<string, object>)e.AddedItems[0]).Value;
             }
         }
 
+        //private void ListBox_SelectionChangedCmd(object sender, SelectionChangedEventArgs e)
+        //{
+        //    if (e != null && e.AddedItems != null && e.AddedItems.Count > 0)
+        //    {
+        //        this.SelectedCmd = e.AddedItems[0];
+        //    }
+        //}
+
         // PropertyValueChangedEventHandler
 
-   
+
 
 
         private void PropertyGrid_SelectedPropertyItemChanged(object sender, RoutedPropertyChangedEventArgs<Xceed.Wpf.Toolkit.PropertyGrid.PropertyItemBase> e)
-        {     
-            if (e != null && e.NewValue != null)
-            {
-                bool isExpandable = e.NewValue.IsExpandable;
-                object editor = e.NewValue.Editor;
-                string cat = ((Xceed.Wpf.Toolkit.PropertyGrid.CustomPropertyItem)e.NewValue).Category;
+        {
+            //if (e != null && e.NewValue != null)
+            //{
+            //    bool isExpandable = e.NewValue.IsExpandable;
+            //    object editor = e.NewValue.Editor;
+            //    string cat = ((Xceed.Wpf.Toolkit.PropertyGrid.CustomPropertyItem)e.NewValue).Category;
 
-                object instance = ((Xceed.Wpf.Toolkit.PropertyGrid.PropertyItem)e.NewValue).Instance;
-                string name = e.NewValue.DisplayName;
-                object value = ((Xceed.Wpf.Toolkit.PropertyGrid.CustomPropertyItem)e.NewValue).Value;
+            //    object instance = ((Xceed.Wpf.Toolkit.PropertyGrid.PropertyItem)e.NewValue).Instance;
+            //    string name = e.NewValue.DisplayName;
+            //    object value = ((Xceed.Wpf.Toolkit.PropertyGrid.CustomPropertyItem)e.NewValue).Value;
 
-                Type valueType = value.GetType();
+            //    if (value != null)
+            //    {
+            //        Type valueType = value.GetType();
 
-                bool isClass = valueType.IsClass;
-                bool isValueType = valueType.IsValueType;
-                bool isPrimitive = valueType.IsPrimitive;
-                string names = valueType.Namespace;
+            //        bool isClass = valueType.IsClass;
+            //        bool isValueType = valueType.IsValueType;
+            //        bool isPrimitive = valueType.IsPrimitive;
+            //        string names = valueType.Namespace;
 
-                bool isStruct = value.GetType().IsValueType && !value.GetType().IsEnum;
+            //        bool isStruct = value.GetType().IsValueType && !value.GetType().IsEnum;
 
-                if (isStruct && string.IsNullOrEmpty(names) == false && names.StartsWith("System") == false)
-                {
-                    //// eigenes struct
-                    if (e.NewValue.IsExpandable == false)
-                    {
-                        e.NewValue.IsExpandable = true;                       
-                    }
-                }
-
-                
-            }            
+            //        if (isStruct && string.IsNullOrEmpty(names) == false && names.StartsWith("System") == false)
+            //        {
+            //            //// eigenes struct
+            //            if (e.NewValue.IsExpandable == false)
+            //            {
+            //                e.NewValue.IsExpandable = true;
+            //            }
+            //        }
+            //    }
+            //}
         }
 
         private void PropertyGrid_PropertyValueChanged(object sender, Xceed.Wpf.Toolkit.PropertyGrid.PropertyValueChangedEventArgs e)
         {
-            
+
             Xceed.Wpf.Toolkit.PropertyGrid.PropertyGrid grid = sender as Xceed.Wpf.Toolkit.PropertyGrid.PropertyGrid;
 
             //grid.SelectedPropertyItem.Name;
@@ -642,8 +754,26 @@ namespace AppWpfSimpleClient
 
 
             OnPropertyChanged(((Xceed.Wpf.Toolkit.PropertyGrid.PropertyItemBase)e.OriginalSource).DisplayName);
-            
+
         }
+
+        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DataSet1.DataTableCmdRow r = (DataSet1.DataTableCmdRow)((System.Data.DataRowView)e.AddedItems[0]).Row;
+            this.SelectedCmd = r.Comand;
+        }
+
+        //private void Window_Loaded(object sender, RoutedEventArgs e)
+        //{
+
+        //    AppWpfSimpleClient.DataSet1 dataSet1 = ((AppWpfSimpleClient.DataSet1)(this.FindResource("dataSet1")));
+        //}
+
+        //private void Window_Loaded_1(object sender, RoutedEventArgs e)
+        //{
+
+        //    AppWpfSimpleClient.DataSet1 dataSet1 = ((AppWpfSimpleClient.DataSet1)(this.FindResource("dataSet1")));
+        //}
     }
 
 

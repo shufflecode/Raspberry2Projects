@@ -10,24 +10,38 @@ using System.Xml;
 
 namespace AppWpfSimpleClient
 {
-    [KnownType(typeof(libShared.ProtolV1Commands.ProtocolV1Base))]
-    [KnownType(typeof(libShared.ProtolV1Commands.TestCmd))]
+    //[KnownType(typeof(libShared.ProtolV1Commands.ProtocolV1Base))]
+    //[KnownType(typeof(libShared.ProtolV1Commands.TestCmd))]
+    [KnownType(typeof(libSharedProject.ProtolV1Commands.ProtocolV1Base))]
+    [KnownType(typeof(libSharedProject.ProtolV1Commands.TestCmd))]    
     [DataContract]
     public class ConfigFile
     {
         public string FileName { get; set; }
 
         [DataMember]
-        public ObservableCollection<object> CommandList { get; internal set; } = new ObservableCollection<object>();
+        public ObservableCollection<KeyValuePair<string, object>> CommandList { get; internal set; } = new ObservableCollection<KeyValuePair<string, object>>();
+          
+        [DataMember]
+        public ObservableCollection<KeyValuePair<string, object>> SendList { get; internal set; } = new ObservableCollection<KeyValuePair<string, object>>();
 
         [DataMember]
-        public ObservableCollection<object> SendList { get; internal set; } = new ObservableCollection<object>();
+        public ObservableCollection<KeyValuePair<string, object>> ReceiveList { get; internal set; } = new ObservableCollection<KeyValuePair<string, object>>();
 
-        [DataMember]
-        public ObservableCollection<object> ReceiveList { get; internal set; } = new ObservableCollection<object>();
+        //[DataMember]
+        //public System.Data.DataTable CommandTable { get; internal set; } = new DataSet1.DataTableCmdDataTable();
+
+        //[DataMember]
+        //public System.Data.DataTable SendTable { get; internal set; } = new DataSet1.DataTableCmdDataTable();
+
+        //[DataMember]
+        //public System.Data.DataTable ReceiveTable { get; internal set; } = new DataSet1.DataTableCmdDataTable();
 
         public static ConfigFile Deserialize(string filename)
         {
+
+            //ConfigFile theclass = Newtonsoft.Json.JsonConvert.DeserializeObject<ConfigFile>(File.ReadAllText(filename));
+
             DataContractSerializer serializer = new DataContractSerializer(typeof(ConfigFile));
 
             if (!File.Exists(filename))
@@ -51,13 +65,15 @@ namespace AppWpfSimpleClient
 
         public void Serialize(string filename)
         {
+            //File.WriteAllText(filename, Newtonsoft.Json.JsonConvert.SerializeObject(this));
+
             DataContractSerializer serializer = new DataContractSerializer(typeof(ConfigFile));
 
             if (!Directory.Exists(System.IO.Path.GetDirectoryName(filename)))
             {
                 throw new DirectoryNotFoundException(string.Format("Directory \"{0}\" not found", filename));
             }
-            
+
             using (XmlWriter stream = XmlWriter.Create(filename))
             {
                 serializer.WriteObject(stream, this);
