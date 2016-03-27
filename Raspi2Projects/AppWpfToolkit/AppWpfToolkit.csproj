@@ -87,6 +87,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="UcColorEditor.xaml.cs">
+      <DependentUpon>UcColorEditor.xaml</DependentUpon>
+    </Compile>
     <Page Include="LastNameUserControlEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -106,6 +109,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UcColorEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -134,6 +141,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libDesktop\libDesktop.csproj">
+      <Project>{b80ce52b-2fbd-4f84-aeb7-88f4e9473846}</Project>
+      <Name>libDesktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\libShared\libShared.csproj">
+      <Project>{338154bb-0c23-4663-bd6b-d7c72dd15038}</Project>
+      <Name>libShared</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

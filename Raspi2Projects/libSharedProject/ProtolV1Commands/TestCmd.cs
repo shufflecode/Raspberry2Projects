@@ -61,7 +61,7 @@ namespace libSharedProject.ProtolV1Commands
 #endif
         //public libShared.HardwareNah.RGBValue Col1 { get; set; }
         //[Xceed.Wpf.Toolkit.PropertyGrid.Attributes.ExpandableObject]
-        //[System.ComponentModel.Editor(typeof(libDesktop.XceedWpfToolkit.UcColorConverter), typeof(libDesktop.XceedWpfToolkit.UcColorConverter))]
+        [System.ComponentModel.Editor(typeof(AppWpfToolkit.UcColorEditor), typeof(AppWpfToolkit.UcColorEditor))]
         public libShared.SharedColor MyCol { get; set; } = new libShared.SharedColor();
 
         //[System.ComponentModel.Editor(typeof(libDesktop.XceedWpfToolkit.ReadOnlyCollectionEditor), typeof(libDesktop.XceedWpfToolkit.ReadOnlyCollectionEditor))]

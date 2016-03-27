@@ -815,19 +815,13 @@ namespace AppWpfSimpleClient
 
         private void PropertyGrid_PropertyValueChanged(object sender, Xceed.Wpf.Toolkit.PropertyGrid.PropertyValueChangedEventArgs e)
         {
-
             Xceed.Wpf.Toolkit.PropertyGrid.PropertyGrid grid = sender as Xceed.Wpf.Toolkit.PropertyGrid.PropertyGrid;
-
-            //grid.SelectedPropertyItem.Name;
-            //grid.Focus();
-
             OnPropertyChanged(((Xceed.Wpf.Toolkit.PropertyGrid.PropertyItemBase)e.OriginalSource).DisplayName);
 
             if (this.SelectedRow != null)
             {
                 this.SelectedRow.JSON = Newtonsoft.Json.JsonConvert.SerializeObject(this.SelectedCmd);
             }
-
         }
 
         private ObservableCollection<object> cmdMenuItems = new ObservableCollection<object>();
@@ -882,6 +876,8 @@ namespace AppWpfSimpleClient
             }
 
         }
+
+       
 
         //private void Window_Loaded(object sender, RoutedEventArgs e)
         //{

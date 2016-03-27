@@ -102,7 +102,7 @@
                            BorderThickness="1">
             <xcad:LayoutRoot>
                 <xcad:LayoutPanel Orientation="Horizontal">
-                    <xcad:LayoutDocumentPane DockWidth="200">
+                    <xcad:LayoutDocumentPane DockWidth="150">
                         <xcad:LayoutAnchorable Title="Properties">
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -114,17 +114,17 @@
                                     <Label Content="Beschreibung (Key)"></Label>
                                     <TextBox Text="{Binding SelectedKey}"></TextBox>
                                 </StackPanel>
-                                <xctk:PropertyGrid Grid.Row="1" SelectedObject="{Binding SelectedCmd}" PropertyValueChanged="PropertyGrid_PropertyValueChanged">
-                                </xctk:PropertyGrid>
-                                <!--<xctk:PropertyGrid x:Name="propGrid" Grid.Row="1" SelectedObject="{Binding SelectedCmd}" SelectedPropertyItemChanged="PropertyGrid_SelectedPropertyItemChanged"   PropertyValueChanged="PropertyGrid_PropertyValueChanged" ShowSummary="True"
+                                <!--<xctk:PropertyGrid Grid.Row="1" SelectedObject="{Binding SelectedCmd}" PropertyValueChanged="PropertyGrid_PropertyValueChanged">
+                                </xctk:PropertyGrid>-->
+                                <xctk:PropertyGrid x:Name="propGrid" Grid.Row="1" SelectedObject="{Binding SelectedCmd}" SelectedPropertyItemChanged="PropertyGrid_SelectedPropertyItemChanged"   PropertyValueChanged="PropertyGrid_PropertyValueChanged" ShowSummary="True"
                                Filter=""
                                IsCategorized="True"
                                ShowAdvancedOptions="True"
                                IsReadOnly="False"
                                UpdateTextBoxSourceOnEnterKey="True"
-                               IsMiscCategoryLabelHidden="False"
+                               IsMiscCategoryLabelHidden="True"
                                ShowPreview="True">
-                                </xctk:PropertyGrid>-->
+                                </xctk:PropertyGrid>
                                 <StackPanel Orientation="Horizontal" Grid.Row="2">
                                     <!--<Button Content="Create Json" Command="{Binding Command}" CommandParameter="Create Json"></Button>-->
                                     <Button Content="Send" Command="{Binding Command}" CommandParameter="Send Selected Command"></Button>
