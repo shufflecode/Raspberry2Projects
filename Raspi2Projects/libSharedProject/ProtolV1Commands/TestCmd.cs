@@ -46,7 +46,6 @@ namespace libSharedProject.ProtolV1Commands
         //#endif
 
 #if WINDOWS_UWP
-        [System.ComponentModel.Description("ProtocolV1 Kennung")]
 #else
         //[System.ComponentModel.Description("ProtocolV1 Kennung")]
         //[System.ComponentModel.Category("ProtocolV1")]
@@ -76,7 +75,10 @@ namespace libSharedProject.ProtolV1Commands
         public double MyDouble { get; set; } = 99.99;
         public DateTime MyDateTime { get; set; } = DateTime.Now;
 
+#if WINDOWS_UWP
+#else
         [Xceed.Wpf.Toolkit.PropertyGrid.Attributes.ExpandableObject]
+#endif
         public Person Besitzer { get; set; } = new Person() { Alter = 50, FirstName = "Oli", LastName = "d" };
 
 
@@ -89,10 +91,13 @@ namespace libSharedProject.ProtolV1Commands
         //[Editor(typeof(FirstNameEditor), typeof(FirstNameEditor))]
         public string FirstName { get; set; }
 
+#if WINDOWS_UWP
+#else
         [System.ComponentModel.Editor(typeof(AppWpfToolkit.LastNameUserControlEditor), typeof(AppWpfToolkit.LastNameUserControlEditor))]
         [System.ComponentModel.Category("Information")]
         [System.ComponentModel.DisplayName("Last Name")]
         [System.ComponentModel.Description("This property uses a TextBox as the default editor.")]
+#endif
         public string LastName { get; set; } = "f";
 
 
