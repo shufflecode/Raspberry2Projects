@@ -14,8 +14,9 @@
         <ValueConverters:ByteCollectionToUTF8 x:Key="VcObservableByteCollectionToWindows1252String"></ValueConverters:ByteCollectionToUTF8>
         <ValueConverters:ByteCollectionToHexString x:Key="VcObservableByteCollectionToHexString"></ValueConverters:ByteCollectionToHexString>
         <ValueConverters:IPAddressToString x:Key="VcIPAddressToString"></ValueConverters:IPAddressToString>
-        <local:DataSet1 x:Key="dataSet1"/>
+        <!--<local:DataSet1 x:Key="dataSet1"/>-->
         <!--<CollectionViewSource x:Key="dataTableCmdViewSource" Source="{Binding DataTableCmd, Source={StaticResource dataSet1}}"/>-->
+        <CollectionViewSource Source="{Binding CmdMenuItems}" x:Key="YourMenuItems"/>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -82,6 +83,17 @@
                     <Button Grid.Row="1" Grid.Column="2" Content="Send Data" Command="{Binding Command}" CommandParameter="Send Data"></Button>
                 </Grid>
             </MenuItem>
+            <MenuItem Header="Add Comands">
+                <MenuItem.ItemsSource>
+                    <CompositeCollection>
+                        <CollectionContainer Collection="{Binding Source={StaticResource YourMenuItems}}" />
+                        <!--<MenuItem Header="Menu Item 1" />
+                        <MenuItem Header="Menu Item 2" />
+                        <MenuItem Header="Menu Item 3" />-->
+                    </CompositeCollection>
+                </MenuItem.ItemsSource>
+
+            </MenuItem>
         </Menu>
 
         <xcad:DockingManager Grid.Row="1" 
@@ -102,11 +114,20 @@
                                     <Label Content="Beschreibung (Key)"></Label>
                                     <TextBox Text="{Binding SelectedKey}"></TextBox>
                                 </StackPanel>
-                                <xctk:PropertyGrid Grid.Row="1" SelectedObject="{Binding SelectedCmd}" SelectedPropertyItemChanged="PropertyGrid_SelectedPropertyItemChanged" ShowTitle="False" ShowSummary="False" ShowSortOptions="False" ShowSearchBox="False" PropertyValueChanged="PropertyGrid_PropertyValueChanged" >
+                                <xctk:PropertyGrid Grid.Row="1" SelectedObject="{Binding SelectedCmd}" PropertyValueChanged="PropertyGrid_PropertyValueChanged">
                                 </xctk:PropertyGrid>
+                                <!--<xctk:PropertyGrid x:Name="propGrid" Grid.Row="1" SelectedObject="{Binding SelectedCmd}" SelectedPropertyItemChanged="PropertyGrid_SelectedPropertyItemChanged"   PropertyValueChanged="PropertyGrid_PropertyValueChanged" ShowSummary="True"
+                               Filter=""
+                               IsCategorized="True"
+                               ShowAdvancedOptions="True"
+                               IsReadOnly="False"
+                               UpdateTextBoxSourceOnEnterKey="True"
+                               IsMiscCategoryLabelHidden="False"
+                               ShowPreview="True">
+                                </xctk:PropertyGrid>-->
                                 <StackPanel Orientation="Horizontal" Grid.Row="2">
-                                    <Button Content="Create Json" Command="{Binding Command}" CommandParameter="Create Json"></Button>
-                                    <Button Content="Send" Command="{Binding Command}" CommandParameter="Send SelectedObject"></Button>
+                                    <!--<Button Content="Create Json" Command="{Binding Command}" CommandParameter="Create Json"></Button>-->
+                                    <Button Content="Send" Command="{Binding Command}" CommandParameter="Send Selected Command"></Button>
                                 </StackPanel>
                             </Grid>
 
@@ -115,16 +136,16 @@
 
                     <xcad:LayoutDocumentPaneGroup Orientation="Vertical">
                         <xcad:LayoutDocumentPane>
-                            <xcad:LayoutAnchorable Title="Commands" CanHide="False" >
+                            <xcad:LayoutAnchorable Title="Commands" CanHide="False">
                                 <Grid>
                                     <ScrollViewer ScrollChanged="ScrollViewer_ScrollChanged" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                        <!--<DataGrid ItemsSource="{Binding  CommandView}" IsSynchronizedWithCurrentItem="True" AutoGenerateColumns="False" SelectionChanged="DataGrid_SelectionChanged">
+                                        <DataGrid ItemsSource="{Binding  CommandView}" IsSynchronizedWithCurrentItem="True" AutoGenerateColumns="False" SelectionChanged="DataGrid_SelectionChanged">
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Header="Info" Binding="{Binding Info}"></DataGridTextColumn>
-                                                <DataGridTextColumn Header="Type" Binding="{Binding Comand}"></DataGridTextColumn>
+                                                <DataGridTextColumn Header="JSON" Binding="{Binding JSON}"></DataGridTextColumn>                                                
                                             </DataGrid.Columns>
-                                        </DataGrid>-->
-                                        <ListBox ItemsSource="{Binding CommandList}" SelectionChanged="ListBox_SelectionChanged" MouseDoubleClick="ListBox_MouseDoubleClick">
+                                        </DataGrid>
+                                        <!--<ListBox ItemsSource="{Binding CommandList}" SelectionChanged="ListBox_SelectionChanged" MouseDoubleClick="ListBox_MouseDoubleClick">
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal">
@@ -140,7 +161,7 @@
                                                     <MenuItem Header="Clear" Command="{Binding Command}" CommandParameter="Clear Selected Commands"/>
                                                 </ContextMenu>
                                             </ListBox.ContextMenu>
-                                        </ListBox>
+                                        </ListBox>-->
                                     </ScrollViewer>
                                 </Grid>
                             </xcad:LayoutAnchorable>
@@ -149,14 +170,14 @@
                             <xcad:LayoutAnchorable Title="Send">
                                 <Grid>
                                     <ScrollViewer ScrollChanged="ScrollViewer_ScrollChanged" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                        <!--<DataGrid ItemsSource="{Binding  SendView}" IsSynchronizedWithCurrentItem="True" AutoGenerateColumns="False" SelectionChanged="DataGrid_SelectionChanged">
+                                        <DataGrid ItemsSource="{Binding  SendView}" IsSynchronizedWithCurrentItem="True" AutoGenerateColumns="False" SelectionChanged="DataGrid_SelectionChanged">
                                             <DataGrid.Columns>
+                                                <DataGridTextColumn Header="TimeStamp" Binding="{Binding TimeStamp}"></DataGridTextColumn>
                                                 <DataGridTextColumn Header="Info" Binding="{Binding Info}"></DataGridTextColumn>
-                                                <DataGridTextColumn Header="Type" Binding="{Binding Comand}"></DataGridTextColumn>
-                                                <DataGridTextColumn Header="Time" Binding="{Binding Date}"></DataGridTextColumn>
+                                                <DataGridTextColumn Header="JSON" Binding="{Binding JSON}"></DataGridTextColumn>                                                
                                             </DataGrid.Columns>
-                                        </DataGrid>-->
-                                        <ListBox ItemsSource="{Binding SendList}"  SelectionChanged="ListBox_SelectionChanged">
+                                        </DataGrid>
+                                        <!--<ListBox ItemsSource="{Binding SendList}"  SelectionChanged="ListBox_SelectionChanged">
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal">
@@ -171,7 +192,7 @@
                                                     <MenuItem Header="Clear" Command="{Binding Command}" CommandParameter="Clear Send Commands"/>
                                                 </ContextMenu>
                                             </ListBox.ContextMenu>
-                                        </ListBox>
+                                        </ListBox>-->
                                     </ScrollViewer>
 
 
@@ -182,14 +203,14 @@
                             <xcad:LayoutAnchorable Title="Receive">
                                 <Grid>
                                     <ScrollViewer ScrollChanged="ScrollViewer_ScrollChanged" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                        <!--<DataGrid ItemsSource="{Binding  ReceiveView}" IsSynchronizedWithCurrentItem="True" AutoGenerateColumns="False" SelectionChanged="DataGrid_SelectionChanged">
+                                        <DataGrid ItemsSource="{Binding  ReceiveView}" IsSynchronizedWithCurrentItem="True" AutoGenerateColumns="False" SelectionChanged="DataGrid_SelectionChanged">
                                             <DataGrid.Columns>
+                                                <DataGridTextColumn Header="TimeStamp" Binding="{Binding TimeStamp}"></DataGridTextColumn>
                                                 <DataGridTextColumn Header="Info" Binding="{Binding Info}"></DataGridTextColumn>
-                                                <DataGridTextColumn Header="Type" Binding="{Binding Comand}"></DataGridTextColumn>
-                                                <DataGridTextColumn Header="Time" Binding="{Binding Date}"></DataGridTextColumn>
+                                                <DataGridTextColumn Header="JSON" Binding="{Binding JSON}"></DataGridTextColumn>                                                
                                             </DataGrid.Columns>
-                                        </DataGrid>-->
-                                        <ListBox ItemsSource="{Binding ReceiveList}" SelectionChanged="ListBox_SelectionChanged">
+                                        </DataGrid>
+                                        <!--<ListBox ItemsSource="{Binding ReceiveList}" SelectionChanged="ListBox_SelectionChanged">
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal">
@@ -204,7 +225,7 @@
                                                     <MenuItem Header="Clear" Command="{Binding Command}" CommandParameter="Clear Receive Commands"/>
                                                 </ContextMenu>
                                             </ListBox.ContextMenu>
-                                        </ListBox>
+                                        </ListBox>-->
                                     </ScrollViewer>
                                 </Grid>
                             </xcad:LayoutAnchorable>

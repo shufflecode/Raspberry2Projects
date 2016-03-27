@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppWpfSimpleClient", "AppWp
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "libSharedProject", "libSharedProject\libSharedProject.shproj", "{4BBFCC8B-5DDC-4D8D-A998-4D67C343C309}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppWpfToolkit", "AppWpfToolkit\AppWpfToolkit.csproj", "{67B3DB3E-9F49-4CC5-A54F-F88C8738A1F7}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		libSharedProject\libSharedProject.projitems*{f8a07aeb-0b43-4274-80ff-3917cbe6c48c}*SharedItemsImports = 4
@@ -264,6 +266,22 @@ Global
 		{F8A07AEB-0B43-4274-80FF-3917CBE6C48C}.Release|x64.Build.0 = Release|Any CPU
 		{F8A07AEB-0B43-4274-80FF-3917CBE6C48C}.Release|x86.ActiveCfg = Release|Any CPU
 		{F8A07AEB-0B43-4274-80FF-3917CBE6C48C}.Release|x86.Build.0 = Release|Any CPU
+		{67B3DB3E-9F49-4CC5-A54F-F88C8738A1F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67B3DB3E-9F49-4CC5-A54F-F88C8738A1F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67B3DB3E-9F49-4CC5-A54F-F88C8738A1F7}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{67B3DB3E-9F49-4CC5-A54F-F88C8738A1F7}.Debug|ARM.Build.0 = Debug|Any CPU
+		{67B3DB3E-9F49-4CC5-A54F-F88C8738A1F7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{67B3DB3E-9F49-4CC5-A54F-F88C8738A1F7}.Debug|x64.Build.0 = Debug|Any CPU
+		{67B3DB3E-9F49-4CC5-A54F-F88C8738A1F7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{67B3DB3E-9F49-4CC5-A54F-F88C8738A1F7}.Debug|x86.Build.0 = Debug|Any CPU
+		{67B3DB3E-9F49-4CC5-A54F-F88C8738A1F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67B3DB3E-9F49-4CC5-A54F-F88C8738A1F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67B3DB3E-9F49-4CC5-A54F-F88C8738A1F7}.Release|ARM.ActiveCfg = Release|Any CPU
+		{67B3DB3E-9F49-4CC5-A54F-F88C8738A1F7}.Release|ARM.Build.0 = Release|Any CPU
+		{67B3DB3E-9F49-4CC5-A54F-F88C8738A1F7}.Release|x64.ActiveCfg = Release|Any CPU
+		{67B3DB3E-9F49-4CC5-A54F-F88C8738A1F7}.Release|x64.Build.0 = Release|Any CPU
+		{67B3DB3E-9F49-4CC5-A54F-F88C8738A1F7}.Release|x86.ActiveCfg = Release|Any CPU
+		{67B3DB3E-9F49-4CC5-A54F-F88C8738A1F7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -275,7 +293,7 @@ Global
 		{F8A07AEB-0B43-4274-80FF-3917CBE6C48C} = {942FB9B0-E3A0-454F-B24E-1006DA4E1E3A}
 	EndGlobalSection
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 15
+		SccNumberOfProjects = 16
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://raspi2.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -326,5 +344,8 @@ Global
 		SccProjectTopLevelParentUniqueName14 = libSharedProject\\libSharedProject.shproj
 		SccProjectName14 = libSharedProject
 		SccLocalPath14 = libSharedProject
+		SccProjectUniqueName15 = AppWpfToolkit\\AppWpfToolkit.csproj
+		SccProjectName15 = AppWpfToolkit
+		SccLocalPath15 = AppWpfToolkit
 	EndGlobalSection
 EndGlobal

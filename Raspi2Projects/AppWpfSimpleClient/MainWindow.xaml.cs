@@ -52,6 +52,7 @@ namespace AppWpfSimpleClient
         /// </summary>
         private ObservableCollection<object> infoTextList = new ObservableCollection<object>();
 
+        string protocolV1Kennung;
 
         /// <summary>
         /// View: String Collection in der Informationen Angezeigt werden können.
@@ -72,17 +73,17 @@ namespace AppWpfSimpleClient
             set { config = value; }
         }
 
-        //public System.Data.DataView CommandView { get; private set; }
-        //public System.Data.DataView SendView { get; private set; }
-        //public System.Data.DataView ReceiveView { get; private set; }
+        public System.Data.DataView CommandView { get; private set; }
+        public System.Data.DataView SendView { get; private set; }
+        public System.Data.DataView ReceiveView { get; private set; }
 
-        //public DataSet1.DataTableCmdDataTable CommandTable { get; internal set; } = new DataSet1.DataTableCmdDataTable();
-        //public DataSet1.DataTableCmdDataTable SendTable { get; internal set; } = new DataSet1.DataTableCmdDataTable();
-        //public DataSet1.DataTableCmdDataTable ReceiveTable { get; internal set; } = new DataSet1.DataTableCmdDataTable();
+        public DataSet1.DataTableCmdDataTable CommandTable { get; internal set; } = new DataSet1.DataTableCmdDataTable();
+        public DataSet1.DataTableCmdDataTable SendTable { get; internal set; } = new DataSet1.DataTableCmdDataTable();
+        public DataSet1.DataTableCmdDataTable ReceiveTable { get; internal set; } = new DataSet1.DataTableCmdDataTable();
 
-        public ObservableCollection<KeyValuePair<string, object>> CommandList { get; internal set; } = new ObservableCollection<KeyValuePair<string, object>>();
-        public ObservableCollection<KeyValuePair<string, object>> SendList { get; internal set; } = new ObservableCollection<KeyValuePair<string, object>>();
-        public ObservableCollection<KeyValuePair<string, object>> ReceiveList { get; internal set; } = new ObservableCollection<KeyValuePair<string, object>>();
+        //public ObservableCollection<KeyValuePair<string, object>> CommandList { get; internal set; } = new ObservableCollection<KeyValuePair<string, object>>();
+        //public ObservableCollection<KeyValuePair<string, object>> SendList { get; internal set; } = new ObservableCollection<KeyValuePair<string, object>>();
+        //public ObservableCollection<KeyValuePair<string, object>> ReceiveList { get; internal set; } = new ObservableCollection<KeyValuePair<string, object>>();
 
         private object selectedCmd;
 
@@ -163,6 +164,8 @@ namespace AppWpfSimpleClient
             }
         }
 
+       
+
 
 
         #endregion
@@ -175,6 +178,9 @@ namespace AppWpfSimpleClient
             this.DispatcherObject = System.Windows.Threading.Dispatcher.CurrentDispatcher;
             this.Command = new RelayCommand(this.CommandReceived);
 
+            var b = new libSharedProject.ProtolV1Commands.ProtocolV1Base();
+            protocolV1Kennung = this.GetPropertyName(() => b.MyType);
+
             client = new libDesktop.TcpClientV1();
             Client.NotifyexceptionEvent += Client_NotifyexceptionEvent;
             Client.NotifyTextEvent += Client_NotifyTextEvent;
@@ -185,9 +191,10 @@ namespace AppWpfSimpleClient
             this.AddInfoTextLine("Hallo Welt");
 
 
-            libSharedProject.ProtolV1Commands.TestCmd c = new libSharedProject.ProtolV1Commands.TestCmd();
+            libSharedProject.ProtolV1Commands.TestClass c = new libSharedProject.ProtolV1Commands.TestClass();
+            this.SelectedCmd = c;
 
-            c.Title += "dsf";
+            //c.Title += "dsf";
             //for (int i = 0; i < 5; i++)
             //{
             //    //CommandList.Add(new libShared.ProtolV1Commands.TestCmd() { Title = "Comand " + i.ToString() });
@@ -204,9 +211,9 @@ namespace AppWpfSimpleClient
             //    ReceiveList.Add(new TestCmd() { Title = "Comand " + i.ToString() });
             //}
 
-            //this.CommandView = this.CommandTable.DefaultView;
-            //this.SendView = this.SendTable.DefaultView;
-            //this.ReceiveView = this.ReceiveTable.DefaultView;
+            this.CommandView = this.CommandTable.DefaultView;
+            this.SendView = this.SendTable.DefaultView;
+            this.ReceiveView = this.ReceiveTable.DefaultView;
 
 
             Assembly asem = fd.GetType().Assembly;
@@ -216,37 +223,87 @@ namespace AppWpfSimpleClient
             {
                 if (t.BaseType != null && t.BaseType.Equals(typeof(libSharedProject.ProtolV1Commands.ProtocolV1Base)))
                 {
-                    AddInfoTextLine(t.Name);
-                    object ob = Activator.CreateInstance(t);
-                    CommandList.Add(new KeyValuePair<string, object>("CMD", ob));
-                    //CommandList2.Add(new KeyValuePair<string, object>("CMD", ob));
-                    //int x = 0;
-
+                    //AddInfoTextLine(t.Name);
+                    //object ob = Activator.CreateInstance(t);
+                    //CommandList.Add(new KeyValuePair<string, object>("CMD", ob));
+                    ////CommandList2.Add(new KeyValuePair<string, object>("CMD", ob));
+                    ////int x = 0;
 
                     //var nr = this.CommandTable.NewDataTableCmdRow();
-                    //nr.Info = "CMD";
-                    //nr.Comand = ob;
-                    //this.CommandTable.AddDataTableCmdRow(nr);
+                    //nr.Info = t.Name;
+                    //nr.JSON = Newtonsoft.Json.JsonConvert.SerializeObject(ob);
+                    ////nr.Comand = ob;
+                    //this.CommandTable.AddDataTableCmdRow(nr);                  
+
+
+                    RunActionMenuItem btn = new RunActionMenuItem(t.Name, () => AddCmd(t));
+                    this.CmdMenuItems.Add(btn);
                 }
             }
+        }
 
-            //ConfigFile
+        public void AddCmd(Type t)
+        {
+            object obx = Activator.CreateInstance(t);
+            var newRow = this.CommandTable.NewDataTableCmdRow();
+            newRow.Info = t.Name;
+            newRow.JSON = Newtonsoft.Json.JsonConvert.SerializeObject(obx);
+            this.CommandTable.AddDataTableCmdRow(newRow);
+        }
+
+        /// <summary>
+        /// Erweiterter Button der eine im übergebene Methode ohne Returnwert (inklusive Parameter) ausführt.
+        /// </summary>
+        public class RunActionMenuItem : System.Windows.Controls.MenuItem
+        {
+            private Action actionToRun;
+
+            /// <summary>
+            /// Konstruktor der Klasse
+            /// </summary>
+            /// <param name="text">Beschrifftung des Buttons</param>
+            /// <param name="methodToRun">Action (Methode ohne Returnwert inklusive Parameter) welche bei Button Click ausgeführt werden soll</param>
+            /// RunActionButton btn = new RunActionButton("Test Achse Nr.:X", () => MethodenName(Parameter,...));
+            public RunActionMenuItem(string text, Action methodToRun)
+            {
+                this.actionToRun = methodToRun;
+                this.Click += RunActionButton_Click;
+                this.Header = text;
+                //this.Content = text;
+            }
+
+            private void RunActionButton_Click(object sender, System.Windows.RoutedEventArgs e)
+            {
+                this.actionToRun();
+            }
+        }
 
 
-            //var a = ConfigFile.GetType().GetCustomAttributes();
+        public System.Windows.Controls.MenuItem CreateMenuItem(string content, string commandParameter)
+        {
+            System.Windows.Controls.MenuItem btn = new System.Windows.Controls.MenuItem();
+            btn.Command = this.Command;
+            btn.Header = content;
+            btn.CommandParameter = commandParameter;
+            return btn;
+        }
 
-            //foreach (var item in a)
-            //{
-            //    a.ToString();
-            //}
+        /// <summary>
+        /// Get the name of a static or instance property from a property access lambda.
+        /// </summary>
+        /// <typeparam name="T">Type of the property</typeparam>
+        /// <param name="propertyLambda">lambda expression of the form: '() => Class.Property' or '() => object.Property'</param>
+        /// <returns>The name of the property</returns>
+        private string GetPropertyName<T>(System.Linq.Expressions.Expression<Func<T>> propertyLambda)
+        {
+            var me = propertyLambda.Body as System.Linq.Expressions.MemberExpression;
 
+            if (me == null)
+            {
+                throw new ArgumentException("You must pass a lambda of the form: '() => Class.Property' or '() => object.Property'");
+            }
 
-
-
-
-
-
-
+            return me.Member.Name;
         }
 
         private void Client_NotifyMessageReceivedEvent(object sender, byte[] data)
@@ -261,12 +318,13 @@ namespace AppWpfSimpleClient
                 {
                     libSharedProject.ProtolV1Commands.TestCmd dfdf = (libSharedProject.ProtolV1Commands.TestCmd)obj.ToObject(typeof(libSharedProject.ProtolV1Commands.TestCmd));
 
-                    //var newRow = this.ReceiveTable.NewDataTableCmdRow();
-                    //newRow.Date = DateTime.Now;
-                    //newRow.Comand = dfdf;
-                    //this.ReceiveTable.AddDataTableCmdRow(newRow);
+                    var newRow = this.ReceiveTable.NewDataTableCmdRow();
+                    newRow.Info = obj.GetValue("MyType").ToString();
+                    newRow.TimeStamp = DateTime.Now;
+                    newRow.JSON = ret;
+                    this.ReceiveTable.AddDataTableCmdRow(newRow);
 
-                    this.ReceiveList.Add(new KeyValuePair<string, object>(string.Format("RX: {0}", System.DateTime.Now), dfdf));
+                    //this.ReceiveList.Add(new KeyValuePair<string, object>(string.Format("RX: {0}", System.DateTime.Now), dfdf));
                 }
                 else
                 {
@@ -327,27 +385,27 @@ namespace AppWpfSimpleClient
                             //    this.CommandList2.Add(item);
                             //}
 
-                            foreach (var item in temp.CommandList)
-                            {
-                                this.CommandList.Add(item);
-                            }
-
-                            foreach (var item in temp.SendList)
-                            {
-                                SendList.Add(item);
-                            }
-
-                            foreach (var item in temp.ReceiveList)
-                            {
-                                ReceiveList.Add(item);
-                            }
-
-                            //foreach (var item in temp.CommandTable.Rows)
+                            //foreach (var item in temp.CommandList)
                             //{
-                            //    var newRow = this.CommandTable.NewDataTableCmdRow();
-                            //    newRow.ItemArray = (object[])((System.Data.DataRow)item).ItemArray.Clone();
-                            //    this.CommandTable.AddDataTableCmdRow(newRow);
+                            //    this.CommandList.Add(item);
                             //}
+
+                            //foreach (var item in temp.SendList)
+                            //{
+                            //    SendList.Add(item);
+                            //}
+
+                            //foreach (var item in temp.ReceiveList)
+                            //{
+                            //    ReceiveList.Add(item);
+                            //}
+
+                            foreach (var item in temp.CommandTable.Rows)
+                            {
+                                var newRow = this.CommandTable.NewDataTableCmdRow();
+                                newRow.ItemArray = (object[])((System.Data.DataRow)item).ItemArray.Clone();
+                                this.CommandTable.AddDataTableCmdRow(newRow);
+                            }
                         }
 
                         break;
@@ -359,13 +417,13 @@ namespace AppWpfSimpleClient
                         }
                         else
                         {
-                            //this.ConfigFile.CommandTable = this.CommandTable;
-                            //this.ConfigFile.SendTable = this.SendTable;
-                            //this.ConfigFile.ReceiveTable = this.ReceiveTable;
+                            this.ConfigFile.CommandTable = this.CommandTable;
+                            this.ConfigFile.SendTable = this.SendTable;
+                            this.ConfigFile.ReceiveTable = this.ReceiveTable;
 
-                            this.ConfigFile.CommandList = this.CommandList;
-                            this.ConfigFile.SendList = this.SendList;
-                            this.ConfigFile.ReceiveList = this.ReceiveList;
+                            //this.ConfigFile.CommandList = this.CommandList;
+                            //this.ConfigFile.SendList = this.SendList;
+                            //this.ConfigFile.ReceiveList = this.ReceiveList;
 
                             this.ConfigFile.Serialize(this.ConfigFile.FileName);
                         }
@@ -388,13 +446,13 @@ namespace AppWpfSimpleClient
                             {
                                 string file = saveFileDialog1.FileName;
 
-                                //this.ConfigFile.CommandTable = this.CommandTable;
-                                //this.ConfigFile.SendTable = this.SendTable;
-                                //this.ConfigFile.ReceiveTable = this.ReceiveTable;
+                                this.ConfigFile.CommandTable = this.CommandTable;
+                                this.ConfigFile.SendTable = this.SendTable;
+                                this.ConfigFile.ReceiveTable = this.ReceiveTable;
 
-                                this.ConfigFile.CommandList = this.CommandList;
-                                this.ConfigFile.SendList = this.SendList;
-                                this.ConfigFile.ReceiveList = this.ReceiveList;
+                                //this.ConfigFile.CommandList = this.CommandList;
+                                //this.ConfigFile.SendList = this.SendList;
+                                //this.ConfigFile.ReceiveList = this.ReceiveList;
 
                                 this.ConfigFile.Serialize(file);
                             }
@@ -430,7 +488,7 @@ namespace AppWpfSimpleClient
                         break;
 
                     case "Send Selected Command":
-                        await this.SendObj(this.SelectedCmd);
+                        await this.SendCmd(this.SelectedRow);
                         break;
 
                     case "Create Json":
@@ -442,49 +500,50 @@ namespace AppWpfSimpleClient
                         break;
 
                     case "Clear Selected Commands":
-                        //this.CommandTable.Rows.Clear();
-                        this.CommandList.Clear();
+                        this.CommandTable.Rows.Clear();
+                        //this.CommandList.Clear();
                         break;
 
                     case "Send All Selected Commands":
 
-                        //foreach (var item in this.CommandTable.Rows)
-                        //{
-                        //    DataSet1.DataTableCmdRow row = (DataSet1.DataTableCmdRow)item;
-                        //    await this.SendObj(row.Comand);
-
-                        //}
-
-                        foreach (var item in this.CommandList)
+                        foreach (var item in this.CommandTable.Rows)
                         {
-                            await this.SendObj(item.Value);
+                            DataSet1.DataTableCmdRow row = (DataSet1.DataTableCmdRow)item;
+                            await this.SendCmd(row);
+
                         }
 
+                        //foreach (var item in this.CommandList)
+                        //{
+                        //    await this.SendObj(item.Value);
+                        //}
+
 
 
                         break;
 
-                    case "Send Selected Send":
-                        await this.SendObj(this.SelectedCmd);
-                        break;
+                    //case "Send Selected Send":
+                    //    //await this.SendObj(this.SelectedCmd);
+                    //    await this.SendCmd(this.SelectedRow);
+                    //    break;
 
-                    case "Clear Send  Commands":
-                        this.SendList.Clear();
-                        //this.SendTable.Rows.Clear();
-                        break;
+                    //case "Clear Send  Commands":
+                    //    //this.SendList.Clear();
+                    //    this.SendTable.Rows.Clear();
+                    //    break;
 
-                    case "Send Selected Receive":
-                        await this.SendObj(this.SelectedCmd);
-                        break;
+                    //case "Send Selected Receive":
+                    //    await this.SendObj(this.SelectedCmd);
+                    //    break;
 
-                    case "Clear Receive Commands":
-                        this.ReceiveList.Clear();
-                        //this.ReceiveTable.Rows.Clear();
-                        break;
+                    //case "Clear Receive Commands":
+                    //    //this.ReceiveList.Clear();
+                    //    this.ReceiveTable.Rows.Clear();
+                    //    break;
 
-                    case "Send SelectedObject":
-                        await this.SendObj(this.SelectedCmd);
-                        break;
+                    //case "Send SelectedObject":
+                    //    await this.SendObj(this.SelectedCmd);
+                    //    break;
 
                     default:
                         this.AddInfoTextLine(string.Format("Command {0} not Implemented", param.ToString()));
@@ -511,27 +570,38 @@ namespace AppWpfSimpleClient
             }
         }
 
-        public async Task SendObj(object obj)
+        public async Task SendCmd(DataSet1.DataTableCmdRow row)
         {
-            try
-            {
-                string json = CreateJsonString(obj);
-                this.SendText(json);
+            var newSendRow = this.SendTable.NewDataTableCmdRow();
+            newSendRow.ItemArray = (object[])(row.ItemArray.Clone());
+            newSendRow.TimeStamp = DateTime.Now;
+            this.SendTable.AddDataTableCmdRow(newSendRow);
 
-                this.AddInfoTextLine(json);
-
-                //var newRow = this.SendTable.NewDataTableCmdRow();
-                //newRow.Date = DateTime.Now;
-                //newRow.Comand = obj;
-                //this.SendTable.AddDataTableCmdRow(newRow);
-
-                this.SendList.Add(new KeyValuePair<string, object>(string.Format("TX: {0}", System.DateTime.Now),  obj));
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ExceptionHandling.GetExceptionText(new System.Exception(string.Format("Exception In: {0}", CallerName()), ex)));
-            }
+            this.SendText(row.JSON);
         }
+
+        //public async Task SendObj(object obj)
+        //{
+        //    try
+        //    {
+        //        string json = CreateJsonString(obj);
+        //        this.SendText(json);
+
+        //        this.AddInfoTextLine(json);
+
+        //        var newRow = this.SendTable.NewDataTableCmdRow();
+                
+        //        newRow.TimeStamp = DateTime.Now;
+        //        newRow.JSON = json;
+        //        this.SendTable.AddDataTableCmdRow(newRow);
+
+        //        //this.SendList.Add(new KeyValuePair<string, object>(string.Format("TX: {0}", System.DateTime.Now), obj));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(ExceptionHandling.GetExceptionText(new System.Exception(string.Format("Exception In: {0}", CallerName()), ex)));
+        //    }
+        //}        
 
         public void SendText(string text)
         {
@@ -678,15 +748,15 @@ namespace AppWpfSimpleClient
 
         }
 
-        private void ListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            var l = sender as ListBox;
+        //private void ListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        //{
+        //    var l = sender as ListBox;
 
-            if (l.SelectedItem != null)
-            {
-                SendObj(((KeyValuePair<string, object>)l.SelectedItem).Value);
-            }
-        }
+        //    if (l.SelectedItem != null)
+        //    {
+        //        SendObj(((KeyValuePair<string, object>)l.SelectedItem).Value);
+        //    }
+        //}
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -705,7 +775,6 @@ namespace AppWpfSimpleClient
         //}
 
         // PropertyValueChangedEventHandler
-
 
 
 
@@ -752,15 +821,66 @@ namespace AppWpfSimpleClient
             //grid.SelectedPropertyItem.Name;
             //grid.Focus();
 
-
             OnPropertyChanged(((Xceed.Wpf.Toolkit.PropertyGrid.PropertyItemBase)e.OriginalSource).DisplayName);
+
+            if (this.SelectedRow != null)
+            {
+                this.SelectedRow.JSON = Newtonsoft.Json.JsonConvert.SerializeObject(this.SelectedCmd);
+            }
 
         }
 
+        private ObservableCollection<object> cmdMenuItems = new ObservableCollection<object>();
+
+        public ObservableCollection<object> CmdMenuItems
+        {
+            get
+            {
+                return cmdMenuItems;
+            }            
+        }
+
+
+        DataSet1.DataTableCmdRow selectedRow;
+
+        public DataSet1.DataTableCmdRow SelectedRow
+        {
+            get
+            {
+                return selectedRow;
+            }
+
+            internal set
+            {
+                selectedRow = value;
+                this.OnPropertyChanged();
+            }
+        }
+
+        
+
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            DataSet1.DataTableCmdRow r = (DataSet1.DataTableCmdRow)((System.Data.DataRowView)e.AddedItems[0]).Row;
-            this.SelectedCmd = r.Comand;
+            try
+            {
+                this.SelectedRow = (DataSet1.DataTableCmdRow)((System.Data.DataRowView)e.AddedItems[0]).Row;
+
+                var obj = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(this.SelectedRow.JSON);
+
+                if (obj.GetValue(this.protocolV1Kennung).ToString() == nameof(libSharedProject.ProtolV1Commands.TestCmd))
+                {
+                    this.SelectedCmd = (libSharedProject.ProtolV1Commands.TestCmd)obj.ToObject(typeof(libSharedProject.ProtolV1Commands.TestCmd));
+                }
+                else
+                {
+                    this.SelectedCmd = obj;
+                }
+            }
+            catch (Exception ex)
+            {
+                this.AddInfoTextLine(ex.Message);
+            }
+
         }
 
         //private void Window_Loaded(object sender, RoutedEventArgs e)

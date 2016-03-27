@@ -279,13 +279,11 @@ namespace AppWpfSimpleClient {
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
         public partial class DataTableCmdDataTable : global::System.Data.TypedTableBase<DataTableCmdRow> {
             
-            private global::System.Data.DataColumn columnId;
-            
-            private global::System.Data.DataColumn columnComand;
-            
             private global::System.Data.DataColumn columnInfo;
             
-            private global::System.Data.DataColumn columnDate;
+            private global::System.Data.DataColumn columnJSON;
+            
+            private global::System.Data.DataColumn columnTimeStamp;
             
             private global::System.Data.DataColumn columnSleep;
             
@@ -324,22 +322,6 @@ namespace AppWpfSimpleClient {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn IdColumn {
-                get {
-                    return this.columnId;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn ComandColumn {
-                get {
-                    return this.columnComand;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public global::System.Data.DataColumn InfoColumn {
                 get {
                     return this.columnInfo;
@@ -348,9 +330,17 @@ namespace AppWpfSimpleClient {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn DateColumn {
+            public global::System.Data.DataColumn JSONColumn {
                 get {
-                    return this.columnDate;
+                    return this.columnJSON;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn TimeStampColumn {
+                get {
+                    return this.columnTimeStamp;
                 }
             }
             
@@ -399,13 +389,12 @@ namespace AppWpfSimpleClient {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public DataTableCmdRow AddDataTableCmdRow(int Id, object Comand, string Info, System.DateTime Date, int Sleep) {
+            public DataTableCmdRow AddDataTableCmdRow(string Info, string JSON, System.DateTime TimeStamp, int Sleep) {
                 DataTableCmdRow rowDataTableCmdRow = ((DataTableCmdRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
-                        Id,
-                        Comand,
                         Info,
-                        Date,
+                        JSON,
+                        TimeStamp,
                         Sleep};
                 rowDataTableCmdRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowDataTableCmdRow);
@@ -429,24 +418,21 @@ namespace AppWpfSimpleClient {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             internal void InitVars() {
-                this.columnId = base.Columns["Id"];
-                this.columnComand = base.Columns["Comand"];
                 this.columnInfo = base.Columns["Info"];
-                this.columnDate = base.Columns["Date"];
+                this.columnJSON = base.Columns["JSON"];
+                this.columnTimeStamp = base.Columns["TimeStamp"];
                 this.columnSleep = base.Columns["Sleep"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             private void InitClass() {
-                this.columnId = new global::System.Data.DataColumn("Id", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnId);
-                this.columnComand = new global::System.Data.DataColumn("Comand", typeof(object), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnComand);
                 this.columnInfo = new global::System.Data.DataColumn("Info", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnInfo);
-                this.columnDate = new global::System.Data.DataColumn("Date", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnDate);
+                this.columnJSON = new global::System.Data.DataColumn("JSON", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnJSON);
+                this.columnTimeStamp = new global::System.Data.DataColumn("TimeStamp", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTimeStamp);
                 this.columnSleep = new global::System.Data.DataColumn("Sleep", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnSleep);
             }
@@ -591,38 +577,6 @@ namespace AppWpfSimpleClient {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int Id {
-                get {
-                    try {
-                        return ((int)(this[this.tableDataTableCmd.IdColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Id in Tabelle DataTableCmd ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableDataTableCmd.IdColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public object Comand {
-                get {
-                    try {
-                        return ((object)(this[this.tableDataTableCmd.ComandColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Comand in Tabelle DataTableCmd ist DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableDataTableCmd.ComandColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public string Info {
                 get {
                     try {
@@ -639,17 +593,33 @@ namespace AppWpfSimpleClient {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public System.DateTime Date {
+            public string JSON {
                 get {
                     try {
-                        return ((global::System.DateTime)(this[this.tableDataTableCmd.DateColumn]));
+                        return ((string)(this[this.tableDataTableCmd.JSONColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte Date in Tabelle DataTableCmd ist DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte JSON in Tabelle DataTableCmd ist DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableDataTableCmd.DateColumn] = value;
+                    this[this.tableDataTableCmd.JSONColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public System.DateTime TimeStamp {
+                get {
+                    try {
+                        return ((global::System.DateTime)(this[this.tableDataTableCmd.TimeStampColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("Der Wert für Spalte TimeStamp in Tabelle DataTableCmd ist DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTableCmd.TimeStampColumn] = value;
                 }
             }
             
@@ -671,30 +641,6 @@ namespace AppWpfSimpleClient {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsIdNull() {
-                return this.IsNull(this.tableDataTableCmd.IdColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetIdNull() {
-                this[this.tableDataTableCmd.IdColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsComandNull() {
-                return this.IsNull(this.tableDataTableCmd.ComandColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetComandNull() {
-                this[this.tableDataTableCmd.ComandColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsInfoNull() {
                 return this.IsNull(this.tableDataTableCmd.InfoColumn);
             }
@@ -707,14 +653,26 @@ namespace AppWpfSimpleClient {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsDateNull() {
-                return this.IsNull(this.tableDataTableCmd.DateColumn);
+            public bool IsJSONNull() {
+                return this.IsNull(this.tableDataTableCmd.JSONColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetDateNull() {
-                this[this.tableDataTableCmd.DateColumn] = global::System.Convert.DBNull;
+            public void SetJSONNull() {
+                this[this.tableDataTableCmd.JSONColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsTimeStampNull() {
+                return this.IsNull(this.tableDataTableCmd.TimeStampColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetTimeStampNull() {
+                this[this.tableDataTableCmd.TimeStampColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

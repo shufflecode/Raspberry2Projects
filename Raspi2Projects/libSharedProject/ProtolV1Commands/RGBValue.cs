@@ -1,73 +1,69 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace libShared
+namespace libSharedProject.ProtolV1Commands
 {
-
-    //
-    // Zusammenfassung:
-    //    RGBA
-    public class SharedColor
+    /// <summary>
+    /// RGB-LED-Settings for color channels and drive current for one LED
+    /// </summary>
+    public class RGBValue : ProtocolV1Base
     {
-       
         /// <summary>
         /// Defines the Maximum Value that can be set
         /// </summary>
         public const int NormValueWidt = 16;
-        public const int MaxValue = byte.MaxValue;
+        public const int MaxValue = UInt16.MaxValue;
 
-        private byte red;
+        private UInt16 red;
         /// <summary>
         /// Red Value
         /// </summary>
-        public byte Red
+        public UInt16 Red
         {
             get { return red; }
             set { red = value; }
         }
 
-        private byte green;
+        private UInt16 green;
         /// <summary>
         /// Green Value
         /// </summary>
-        public byte Green
+        public UInt16 Green
         {
             get { return green; }
             set { green = value; }
         }
 
-        private byte blue;
+        private UInt16 blue;
         /// <summary>
         /// Blue Value
         /// </summary>
-        public byte Blue
+        public UInt16 Blue
         {
             get { return blue; }
             set { blue = value; }
         }
 
-        private byte intensity;
+        private UInt16 intensity;
         /// <summary>
         /// Intensity Value
         /// </summary>
-        public byte Intensity
+        public UInt16 Intensity
         {
             get { return intensity; }
             set { intensity = value; }
         }
 
-        public static SharedColor operator *(SharedColor value, float factor)
+        public static RGBValue operator *(RGBValue value, float factor)
         {
-            value.red = (byte)((float)value.red * factor);
-            value.green = (byte)((float)value.green * factor);
-            value.blue = (byte)((float)value.blue * factor);
+            value.red = (UInt16)((float)value.red * factor);
+            value.green = (UInt16)((float)value.green * factor);
+            value.blue = (UInt16)((float)value.blue * factor);
             return (value);
         }
 
-        public static SharedColor operator +(SharedColor value1, SharedColor value2)
+        public static RGBValue operator +(RGBValue value1, RGBValue value2)
         {
             value1.red += value2.red;
             value1.green += value2.green;
@@ -75,7 +71,7 @@ namespace libShared
             return (value1);
         }
 
-        public static SharedColor operator -(SharedColor value1, SharedColor value2)
+        public static RGBValue operator -(RGBValue value1, RGBValue value2)
         {
             value1.red -= value2.red;
             value1.green -= value2.green;
@@ -83,5 +79,4 @@ namespace libShared
             return (value1);
         }
     }
-
 }

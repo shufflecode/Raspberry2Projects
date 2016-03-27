@@ -236,51 +236,27 @@ namespace AppSimpleServer
         }
 
 
+        static libSharedProject.ProtolV1Commands.ProtocolV1Base ProtocolV1BaseObj = new libSharedProject.ProtolV1Commands.ProtocolV1Base();
+        static string ProtocolV1Marker = nameof(ProtocolV1BaseObj.MyType);
+
+
+
         private void Server_NotifyMessageReceivedEvent(object sender, byte[] data)
         {
             try
             {
-                //string text = System.Text.Encoding.UTF8.GetString(data);                
-
-                //var m2 = Newtonsoft.Json.JsonConvert.DeserializeObject(text);
-                ////this.ReceiveList.Add(m2);
-
-                //if (m2 == null)
-                //{
-                //    this.AddInfoTextLine("Text:" + text + " Data:" + Converters.ConvertByteArrayToHexString(data, " "));
-
-                //    //if (data.Length == 1 && data[0] == 1)
-                //    //{
-                //    //    StartTimer();
-                //    //}
-                //    //else
-                //    //{
-                //    //    StopTimer();
-                //    //}
-                //}
-                //else
-                //{
-                //    libShared.ProtolV1Commands.TestCmd m = m2 as libShared.ProtolV1Commands.TestCmd;
-                //    if (m != null)
-                //    {
-                //        LogBackground = Windows.UI.Color.FromArgb(m.Color.A, m.Color.R, m.Color.G, m.Color.B);
-                //    }
-                //}   
-
                 string ret = System.Text.Encoding.UTF8.GetString(data);
-
                 var obj = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(ret);
 
-                //obj.GetType().get
-
-                var b = new libSharedProject.ProtolV1Commands.ProtocolV1Base();
-                string  n = this.GetPropertyName(() => b.MyType);
-
-                if (obj.GetValue(n).ToString() == nameof(TestCmd))
+                if (obj.GetValue(ProtocolV1Marker).ToString() == nameof(TestCmd))
                 {
                     TestCmd dfdf = (TestCmd)obj.ToObject(typeof(TestCmd));
-                    LogBackground = Windows.UI.Color.FromArgb(dfdf.Col1.A, dfdf.Col1.R, dfdf.Col1.G, dfdf.Col1.B);
+                    //LogBackground = Windows.UI.Color.FromArgb(dfdf.Col1.A, dfdf.Col1.R, dfdf.Col1.G, dfdf.Col1.B);
                     //this.ReceiveList.Add(dfdf);
+                   
+                    this.AddInfoTextLine(ret);
+                    TestCmd c2 = new TestCmd();
+                    this.SendText(Newtonsoft.Json.JsonConvert.SerializeObject(c2));
                 }
                 else
                 {
@@ -291,7 +267,6 @@ namespace AppSimpleServer
             {
                 ShowMessageBox(ExceptionHandling.GetExceptionText(new System.Exception(string.Format("Exception In: {0}", CallerName()), ex)));
             }
-
         }
 
         /// <summary>

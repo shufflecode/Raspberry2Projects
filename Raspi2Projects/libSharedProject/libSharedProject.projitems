@@ -17,6 +17,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ProtolV1Commands\ProtocolV1Base.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProtolV1Commands\RGBValue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProtolV1Commands\TestCmd.cs" />
   </ItemGroup>
 </Project>
