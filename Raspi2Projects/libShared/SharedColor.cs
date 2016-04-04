@@ -19,7 +19,7 @@ namespace libShared
         public const int NormValueWidt = 16;
         public const int MaxValue = byte.MaxValue;
 
-        private byte red;
+        private byte red = 10;
         /// <summary>
         /// Red Value
         /// </summary>
@@ -29,7 +29,7 @@ namespace libShared
             set { red = value; }
         }
 
-        private byte green;
+        private byte green = 0;
         /// <summary>
         /// Green Value
         /// </summary>
@@ -39,7 +39,7 @@ namespace libShared
             set { green = value; }
         }
 
-        private byte blue;
+        private byte blue = 0;
         /// <summary>
         /// Blue Value
         /// </summary>
@@ -49,7 +49,7 @@ namespace libShared
             set { blue = value; }
         }
 
-        private byte intensity;
+        private byte intensity = 0;
         /// <summary>
         /// Intensity Value
         /// </summary>
@@ -59,29 +59,29 @@ namespace libShared
             set { intensity = value; }
         }
 
-        public static SharedColor operator *(SharedColor value, float factor)
-        {
-            value.red = (byte)((float)value.red * factor);
-            value.green = (byte)((float)value.green * factor);
-            value.blue = (byte)((float)value.blue * factor);
-            return (value);
-        }
+        //public static SharedColor operator *(SharedColor value, float factor)
+        //{
+        //    value.red = (byte)((float)value.red * factor);
+        //    value.green = (byte)((float)value.green * factor);
+        //    value.blue = (byte)((float)value.blue * factor);
+        //    return (value);
+        //}
 
-        public static SharedColor operator +(SharedColor value1, SharedColor value2)
-        {
-            value1.red += value2.red;
-            value1.green += value2.green;
-            value1.blue += value2.blue;
-            return (value1);
-        }
+        //public static SharedColor operator +(SharedColor value1, SharedColor value2)
+        //{
+        //    value1.red += value2.red;
+        //    value1.green += value2.green;
+        //    value1.blue += value2.blue;
+        //    return (value1);
+        //}
 
-        public static SharedColor operator -(SharedColor value1, SharedColor value2)
-        {
-            value1.red -= value2.red;
-            value1.green -= value2.green;
-            value1.blue -= value2.blue;
-            return (value1);
-        }
+        //public static SharedColor operator -(SharedColor value1, SharedColor value2)
+        //{
+        //    value1.red -= value2.red;
+        //    value1.green -= value2.green;
+        //    value1.blue -= value2.blue;
+        //    return (value1);
+        //}
     }
 
 }

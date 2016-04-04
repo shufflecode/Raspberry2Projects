@@ -191,8 +191,8 @@ namespace AppWpfSimpleClient
             this.AddInfoTextLine("Hallo Welt");
 
 
-            libSharedProject.ProtolV1Commands.TestClass c = new libSharedProject.ProtolV1Commands.TestClass();
-            this.SelectedCmd = c;
+            //libSharedProject.ProtolV1Commands.TestClass c = new libSharedProject.ProtolV1Commands.TestClass();
+            //this.SelectedCmd = c;
 
             //c.Title += "dsf";
             //for (int i = 0; i < 5; i++)
@@ -859,16 +859,20 @@ namespace AppWpfSimpleClient
             {
                 this.SelectedRow = (DataSet1.DataTableCmdRow)((System.Data.DataRowView)e.AddedItems[0]).Row;
 
-                var obj = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(this.SelectedRow.JSON);
+                var obj = libSharedProject.ProtolV1Commands.ProtocolV1Base.ConvertJsonStingToObj(this.SelectedRow.JSON);
 
-                if (obj.GetValue(this.protocolV1Kennung).ToString() == nameof(libSharedProject.ProtolV1Commands.TestCmd))
-                {
-                    this.SelectedCmd = (libSharedProject.ProtolV1Commands.TestCmd)obj.ToObject(typeof(libSharedProject.ProtolV1Commands.TestCmd));
-                }
-                else
-                {
-                    this.SelectedCmd = obj;
-                }
+                this.SelectedCmd = obj;
+
+                //var obj = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(this.SelectedRow.JSON);
+
+                //if (obj.GetValue(this.protocolV1Kennung).ToString() == nameof(libSharedProject.ProtolV1Commands.TestCmd))
+                //{
+                //    this.SelectedCmd = (libSharedProject.ProtolV1Commands.TestCmd)obj.ToObject(typeof(libSharedProject.ProtolV1Commands.TestCmd));
+                //}
+                //else
+                //{
+                //    this.SelectedCmd = obj;
+                //}
             }
             catch (Exception ex)
             {
