@@ -245,29 +245,53 @@ namespace AppSimpleServer
         {
             try
             {
-                string ret = System.Text.Encoding.UTF8.GetString(data);
-                var obj = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(ret);
+                string ret = System.Text.Encoding.UTF8.GetString(data);                
 
-                if (obj.GetValue(ProtocolV1Marker).ToString() == nameof(TestCmd))
+                var obj = libSharedProject.ProtolV1Commands.ProtocolV1Base.ConvertJsonStingToObj(ret);
+
+                if (obj != null)
                 {
-                    TestCmd dfdf = (TestCmd)obj.ToObject(typeof(TestCmd));
-                    //LogBackground = Windows.UI.Color.FromArgb(dfdf.Col1.A, dfdf.Col1.R, dfdf.Col1.G, dfdf.Col1.B);
-                    //this.ReceiveList.Add(dfdf);
-                   
-                    this.AddInfoTextLine(ret);
-                    TestCmd c2 = new TestCmd();
-                    this.SendText(Newtonsoft.Json.JsonConvert.SerializeObject(c2));
+
                 }
                 else
                 {
                     this.AddInfoTextLine("Text:" + ret + " Data:" + Converters.ConvertByteArrayToHexString(data, " "));
                 }
+
+                //if (obj.GetType().Equals(typeof(IoDemoRequest)))
+                //{
+                //    switch ((IoDemoRequest)obj)
+                //    {
+                //        default:
+                //            break;
+                //    }
+                //}
+
+
+                //var obj = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(ret);
+
+                //if (obj.GetValue(ProtocolV1Marker).ToString() == nameof(TestCmd))
+                //{
+                //    TestCmd dfdf = (TestCmd)obj.ToObject(typeof(TestCmd));
+                //    //LogBackground = Windows.UI.Color.FromArgb(dfdf.Col1.A, dfdf.Col1.R, dfdf.Col1.G, dfdf.Col1.B);
+                //    //this.ReceiveList.Add(dfdf);
+
+                //    this.AddInfoTextLine(ret);
+                //    TestCmd c2 = new TestCmd();
+                //    this.SendText(Newtonsoft.Json.JsonConvert.SerializeObject(c2));
+                //}
+                //else
+                //{
+                //    this.AddInfoTextLine("Text:" + ret + " Data:" + Converters.ConvertByteArrayToHexString(data, " "));
+                //}
             }
             catch (Exception ex)
             {
                 ShowMessageBox(ExceptionHandling.GetExceptionText(new System.Exception(string.Format("Exception In: {0}", CallerName()), ex)));
             }
         }
+
+        
 
         /// <summary>
         /// Get the name of a static or instance property from a property access lambda.

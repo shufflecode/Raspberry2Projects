@@ -132,6 +132,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\App_IO_Demo\App_IO_Demo.csproj">
+      <Project>{64b18241-80f4-40ff-b544-b6887ee26a0b}</Project>
+      <Name>App_IO_Demo</Name>
+    </ProjectReference>
     <ProjectReference Include="..\libCore\libCore.csproj">
       <Project>{160c8752-82c8-48a5-9590-00ef55141a2b}</Project>
       <Name>libCore</Name>

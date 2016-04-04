@@ -37,6 +37,7 @@ Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		libSharedProject\libSharedProject.projitems*{f8a07aeb-0b43-4274-80ff-3917cbe6c48c}*SharedItemsImports = 4
 		libSharedProject\libSharedProject.projitems*{58acc36c-5f39-4f4f-b446-edeef6f5e08a}*SharedItemsImports = 4
+		libSharedProject\libSharedProject.projitems*{64b18241-80f4-40ff-b544-b6887ee26a0b}*SharedItemsImports = 4
 		libSharedProject\libSharedProject.projitems*{4bbfcc8b-5ddc-4d8d-a998-4d67c343c309}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
