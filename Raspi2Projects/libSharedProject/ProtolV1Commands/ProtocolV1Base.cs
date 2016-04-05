@@ -40,6 +40,10 @@ namespace libSharedProject.ProtolV1Commands
             {
                 return (IoDemoAdc)obj.ToObject(typeof(IoDemoAdc));
             }
+            else if (mdName == nameof(IoDemoGpio))
+            {
+                return (IoDemoGpio)obj.ToObject(typeof(IoDemoGpio));
+            }
             else if (mdName == nameof(IoDemoDac))
             {
                 return (IoDemoDac)obj.ToObject(typeof(IoDemoDac));
