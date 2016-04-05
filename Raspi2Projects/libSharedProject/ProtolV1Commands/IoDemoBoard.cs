@@ -108,6 +108,8 @@ namespace libSharedProject.ProtolV1Commands
         /// Inputs ignore output set
         /// </summary>
         public ushort GpioValue { get; set; }
+
+        public bool ModifyCOnfig { get; set; } = false;
     }
 
     // Power Outputs
