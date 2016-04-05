@@ -26,6 +26,13 @@ namespace libSharedProject.ProtolV1Commands
         public short Dac1 { get; set; }
     }
 
+    public class IoDemoState : ProtocolV1Base
+    {
+        //public ushort GpioDirection { get; set; }
+        //public ushort GpioValue { get; set; }
+    }
+
+
     public class IoDemoGpio : ProtocolV1Base
     {
         public ushort GpioDirection { get; set; }
@@ -47,7 +54,7 @@ namespace libSharedProject.ProtolV1Commands
         public libShared.SharedColor MyCol { get; set; } = new libShared.SharedColor();
     }
 
-    public class IoDemoRequest : ProtocolV1Base
+    public class IoDemoGetRequest : ProtocolV1Base
     {
         public enum CmdValue
         {
@@ -55,9 +62,12 @@ namespace libSharedProject.ProtolV1Commands
             Dac = 1,
             Gpio = 2,
             Powerstate = 3,
-            Rgb = 4
+            Rgb = 4,
+            State = 5,
         }
 
         public CmdValue Key { get; set; } = CmdValue.Adc;
     }
+
+   
 }

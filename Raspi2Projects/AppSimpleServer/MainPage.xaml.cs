@@ -21,6 +21,7 @@ using libShared.Interfaces;
 using Windows.Networking.Connectivity;
 using System.Threading;
 using libSharedProject.ProtolV1Commands;
+//using libSharedProject.ProtolV1Commands;
 
 // Die Vorlage "Leere Seite" ist unter http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 dokumentiert.
 
@@ -199,8 +200,8 @@ namespace AppSimpleServer
 
             cylictimer = new Timer(new TimerCallback(TimerProc), autoEvent, 0, 0);
 
-            libSharedProject.ProtolV1Commands.TestCmd c = new libSharedProject.ProtolV1Commands.TestCmd();
-            c.Title += "sws";
+            //libSharedProject.ProtolV1Commands.TestCmd c = new libSharedProject.ProtolV1Commands.TestCmd();
+            //c.Title += "sws";
 
             var h = NetworkInformation.GetHostNames().Where(x => x.IPInformation != null && (x.IPInformation.NetworkAdapter.IanaInterfaceType == 71 || x.IPInformation.NetworkAdapter.IanaInterfaceType == 6));
 
@@ -236,27 +237,56 @@ namespace AppSimpleServer
         }
 
 
-        static libSharedProject.ProtolV1Commands.ProtocolV1Base ProtocolV1BaseObj = new libSharedProject.ProtolV1Commands.ProtocolV1Base();
+        static ProtocolV1Base ProtocolV1BaseObj = new ProtocolV1Base();
         static string ProtocolV1Marker = nameof(ProtocolV1BaseObj.MyType);
 
-
+        App_IO_Demo.IoDemoBoard ioDemoBoard = new App_IO_Demo.IoDemoBoard();
 
         private void Server_NotifyMessageReceivedEvent(object sender, byte[] data)
         {
             try
             {
-                string ret = System.Text.Encoding.UTF8.GetString(data);                
+                string json = System.Text.Encoding.UTF8.GetString(data);
+                //var obj1 = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(json);
 
-                var obj = libSharedProject.ProtolV1Commands.ProtocolV1Base.ConvertJsonStingToObj(ret);
+                //string className = obj1.GetValue(nameof(libSharedProject.ProtolV1Commands.ProtocolV1Base.MyType)).ToString();
 
-                if (obj != null)
-                {
 
-                }
-                else
-                {
-                    this.AddInfoTextLine("Text:" + ret + " Data:" + Converters.ConvertByteArrayToHexString(data, " "));
-                }
+                //var obj = libSharedProject.ProtolV1Commands.ProtocolV1Base.ConvertJsonStingToObj(json);
+
+                //if (obj != null)
+                //{
+                //    if (obj.GetType().Equals(typeof(libSharedProject.ProtolV1Commands.IoDemoGetRequest)))
+                //    {
+                //        switch (((libSharedProject.ProtolV1Commands.IoDemoGetRequest)obj).Key)
+                //        {
+                //            case IoDemoGetRequest.CmdValue.Adc:
+
+                //                libSharedProject.ProtolV1Commands.IoDemoAdc adc = IoDemoBoardClasse.GetAdc();
+                //                this.SendText(Newtonsoft.Json.JsonConvert.SerializeObject(adc));
+
+                //                break;
+                //            case IoDemoGetRequest.CmdValue.Dac:
+                //                break;
+                //            case IoDemoGetRequest.CmdValue.Gpio:
+                //                break;
+                //            case IoDemoGetRequest.CmdValue.Powerstate:
+                //                break;
+                //            case IoDemoGetRequest.CmdValue.Rgb:
+                //                break;
+                //            default:
+                //                break;
+                //        }
+                //    }
+                //    else if (obj.GetType().Equals(typeof(libSharedProject.ProtolV1Commands.IoDemoDac)))
+                //    {
+                //        IoDemoboard.SetDac((libSharedProject.ProtolV1Commands.IoDemoDac)obj);
+                //    }
+                //}
+                //else
+                //{
+                //    this.AddInfoTextLine("Text:" + json + " Data:" + Converters.ConvertByteArrayToHexString(data, " "));
+                //}
 
                 //if (obj.GetType().Equals(typeof(IoDemoRequest)))
                 //{
@@ -268,17 +298,19 @@ namespace AppSimpleServer
                 //}
 
 
-                //var obj = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(ret);
+                //var obj = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(json);
 
-                //if (obj.GetValue(ProtocolV1Marker).ToString() == nameof(TestCmd))
+                //if (obj.GetValue(ProtocolV1Marker).ToString() == nameof(libSharedProject.ProtolV1Commands.IoDemoDac))
                 //{
-                //    TestCmd dfdf = (TestCmd)obj.ToObject(typeof(TestCmd));
-                //    //LogBackground = Windows.UI.Color.FromArgb(dfdf.Col1.A, dfdf.Col1.R, dfdf.Col1.G, dfdf.Col1.B);
-                //    //this.ReceiveList.Add(dfdf);
+                //    var adc = this.ioDemoBoard.SetDac((IoDemoDac)obj);
+                //    this.SendText(Newtonsoft.Json.JsonConvert.SerializeObject(adc));
+                    
+                //}
+                //esle if (obj.GetValue(ProtocolV1Marker).ToString() == nameof(IoDemoGetRequest))
+                //{
+                //    var adc = this.ioDemoBoard.SetDac((IoDemoDac)obj);
+                //    this.SendText(Newtonsoft.Json.JsonConvert.SerializeObject(adc));
 
-                //    this.AddInfoTextLine(ret);
-                //    TestCmd c2 = new TestCmd();
-                //    this.SendText(Newtonsoft.Json.JsonConvert.SerializeObject(c2));
                 //}
                 //else
                 //{

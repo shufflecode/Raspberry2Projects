@@ -12,6 +12,7 @@ using libShared.HardwareNah;
 using System.Text.RegularExpressions;
 using Windows.Devices.Enumeration;
 using Windows.UI.Xaml;
+using libSharedProject.ProtolV1Commands;
 
 namespace App_IO_Demo
 {
@@ -287,10 +288,12 @@ namespace App_IO_Demo
             //AnalogRefresh.Tick += AnalogRefresh_Tick;
 
 
-        }
+        }        
 
-        private libSharedProject.ProtolV1Commands.IoDemoAdc ReadADCvalues()
-        {
+        IoDemoAdc adc = new IoDemoAdc();
+
+        public IoDemoAdc GetAdc()
+        {           
             short[] tempResults = new short[8];
 
             libSharedProject.ProtolV1Commands.IoDemoAdc adc = new libSharedProject.ProtolV1Commands.IoDemoAdc();
@@ -302,17 +305,7 @@ namespace App_IO_Demo
             ADCslave.GetSingleChannel(4, out tempResults[4]);
             ADCslave.GetSingleChannel(5, out tempResults[5]);
             ADCslave.GetSingleChannel(6, out tempResults[6]);
-            ADCslave.GetSingleChannel(7, out tempResults[7]);
-            //@todo Alle Kanäle gleichzeitig
-
-            //ADC0Channel.Value = MaxSliderValue * tempResults[0] / ADC_MCP3208.ADCclassDefines.MaxADCvalue;
-            //ADC1Channel.Value = MaxSliderValue * tempResults[1] / ADC_MCP3208.ADCclassDefines.MaxADCvalue;
-            //ADC2Channel.Value = MaxSliderValue * tempResults[2] / ADC_MCP3208.ADCclassDefines.MaxADCvalue;
-            //ADC3Channel.Value = MaxSliderValue * tempResults[3] / ADC_MCP3208.ADCclassDefines.MaxADCvalue;
-            //ADC4Channel.Value = MaxSliderValue * tempResults[4] / ADC_MCP3208.ADCclassDefines.MaxADCvalue;
-            //ADC5Channel.Value = MaxSliderValue * tempResults[5] / ADC_MCP3208.ADCclassDefines.MaxADCvalue;
-            //ADC6Channel.Value = MaxSliderValue * tempResults[6] / ADC_MCP3208.ADCclassDefines.MaxADCvalue;
-            //ADC7Channel.Value = MaxSliderValue * tempResults[7] / ADC_MCP3208.ADCclassDefines.MaxADCvalue;
+            ADCslave.GetSingleChannel(7, out tempResults[7]);           
 
             adc.Adc0 = tempResults[0];
             adc.Adc1 = tempResults[1];
@@ -322,21 +315,76 @@ namespace App_IO_Demo
             adc.Adc5 = tempResults[5];
             adc.Adc6 = tempResults[6];
             adc.Adc7 = tempResults[7];
-
-            return adc;
+           
+            return this.adc;
         }
 
-        private void SetDACvalues(libSharedProject.ProtolV1Commands.IoDemoDac values)
+        IoDemoDac dac = new IoDemoDac();
+
+        public void SetDac(IoDemoDac _dac)
         {
-            //int tempCh0 = (int)DAC_MCP4922.DACclassDefines.MaxADCvalue * (int)DAC0Channel.Value / MaxSliderValue;
-            //int tempCh1 = (int)DAC_MCP4922.DACclassDefines.MaxADCvalue * (int)DAC1Channel.Value / MaxSliderValue;
+            dac.Dac0 = _dac.Dac0;
+            dac.Dac1 = _dac.Dac1;
 
-            //DACslave.SetSingleChannel(0, (short)tempCh0);
-            //DACslave.SetSingleChannel(1, (short)tempCh1);
-            //@todo Alle Kanäle gleichzeitig
+            DACslave.SetSingleChannel(0, _dac.Dac0);
+            DACslave.SetSingleChannel(1, _dac.Dac1);
+        }
 
-            DACslave.SetSingleChannel(0, values.Dac0);
-            DACslave.SetSingleChannel(1, values.Dac1);
+        public IoDemoDac GetDac()
+        {
+            return this.dac;
+        }
+
+        IoDemoPowerState powerState = new IoDemoPowerState();
+
+        public void SetPowerState(IoDemoPowerState _powerState)
+        {
+            powerState.Power1State = _powerState.Power1State;
+            powerState.Power1State = _powerState.Power1State;
+
+            // Powerstate setzen
+        }
+
+        public IoDemoPowerState GetPowerState()
+        {
+            return this.powerState;
+        }
+
+        IoDemoGpio gpio = new IoDemoGpio();
+
+        public void SetGpio(IoDemoGpio _gpio)
+        {
+            gpio.GpioDirection = _gpio.GpioDirection;
+            gpio.GpioValue = _gpio.GpioValue;
+        }
+
+        public IoDemoGpio GetGpio()
+        {
+            return this.gpio;
+        }
+
+        IoDemoRgb rgb = new IoDemoRgb();
+
+        public void SetRgb(IoDemoRgb _rgb)
+        {
+            this.rgb.MyCol = _rgb.MyCol;
+        }
+
+        public IoDemoRgb GetRgb()
+        {
+            return this.rgb;
+        }
+
+        IoDemoState state = new IoDemoState();
+
+        public void SetState(IoDemoState _state)
+        {
+            //state.x = _state.x
+        }
+
+        public IoDemoState GetState()
+        {
+            return this.state;
         }
 
 

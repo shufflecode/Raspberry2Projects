@@ -119,6 +119,7 @@
     <Compile Include="IOevalBoard\DACclasses.cs" />
     <Compile Include="IOevalBoard\GenericSlaveClasses.cs" />
     <Compile Include="IOevalBoard\GPIOclasses.cs" />
+    <Compile Include="IOevalBoard\IOevalBoard.cs" />
     <Compile Include="IOevalBoard\LEDclasses.cs" />
     <Compile Include="IOevalBoard\RaspiSlaveEssentials.cs" />
     <Compile Include="Pages\PageEthernet.xaml.cs">
