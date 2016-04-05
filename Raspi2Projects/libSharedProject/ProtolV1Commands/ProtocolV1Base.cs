@@ -7,7 +7,7 @@ namespace libSharedProject.ProtolV1Commands
     public class ProtocolV1Base
     {
 
-#if WINDOWS_UWP
+#if WINDOWS_UWP  || LIBSHARED
 #else
         [System.ComponentModel.Browsable(false)]
 #endif

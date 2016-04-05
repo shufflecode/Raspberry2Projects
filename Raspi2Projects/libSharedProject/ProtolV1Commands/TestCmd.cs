@@ -47,7 +47,7 @@ namespace libSharedProject.ProtolV1Commands
         //        public System.Windows.Media.Color Color1 { get; set; } = System.Windows.Media.Colors.Blue;
         //#endif
 
-#if WINDOWS_UWP
+#if WINDOWS_UWP  || LIBSHARED
 #else
         //[System.ComponentModel.Description("ProtocolV1 Kennung")]
         //[System.ComponentModel.Category("ProtocolV1")]
@@ -77,7 +77,7 @@ namespace libSharedProject.ProtolV1Commands
         public double MyDouble { get; set; } = 99.99;
         public DateTime MyDateTime { get; set; } = DateTime.Now;
 
-#if WINDOWS_UWP
+#if WINDOWS_UWP  || LIBSHARED
 #else
         [Xceed.Wpf.Toolkit.PropertyGrid.Attributes.ExpandableObject]
 #endif
@@ -93,7 +93,7 @@ namespace libSharedProject.ProtolV1Commands
         //[Editor(typeof(FirstNameEditor), typeof(FirstNameEditor))]
         public string FirstName { get; set; }
 
-#if WINDOWS_UWP
+#if WINDOWS_UWP  || LIBSHARED
 #else
         [System.ComponentModel.Editor(typeof(AppWpfToolkit.LastNameUserControlEditor), typeof(AppWpfToolkit.LastNameUserControlEditor))]
         [System.ComponentModel.Category("Information")]

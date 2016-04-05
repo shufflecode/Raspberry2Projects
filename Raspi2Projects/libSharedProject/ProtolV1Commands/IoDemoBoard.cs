@@ -47,7 +47,7 @@ namespace libSharedProject.ProtolV1Commands
 
     public class IoDemoRgb : ProtocolV1Base
     {
-#if WINDOWS_UWP
+#if WINDOWS_UWP || LIBSHARED
 #else        
         [System.ComponentModel.Editor(typeof(AppWpfToolkit.UcColorEditor), typeof(AppWpfToolkit.UcColorEditor))]
 #endif       
