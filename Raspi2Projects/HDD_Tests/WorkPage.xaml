@@ -1,0 +1,56 @@
+﻿<Page
+    x:Class="HDD_Tests.WorkPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HDD_Tests"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Width="800" Height="400"
+    >
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Name="border_StatusInfo" Grid.Row="2" BorderThickness="15" BorderBrush="{Binding BorderColor}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBox IsReadOnly="True" Grid.Row="0" Margin="0,0,0,20" Text="Status" />
+        <TextBox IsReadOnly="True" Name="txt_HDDStatus" Grid.Row="0" Grid.Column="1" Text="{Binding Txt_HDDstatus}" />
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <TextBox IsReadOnly="True" Name="txt_Out1Visu" Grid.Column="0" Text="Out 1" Background="{Binding ColorOut1Text}"/>
+            <TextBox IsReadOnly="True" Name="txt_Out2Visu" Grid.Column="1" Text="Out 2" Background="{Binding ColorOut2Text}"/>
+        </Grid>
+
+        <TextBox IsReadOnly="True" Grid.Row="2" Margin="0,20,0,0" Text="Output Configuration" />
+        <TextBox IsReadOnly="True" Grid.Row="3" Text="Output Count" />
+        <TextBox IsReadOnly="True" Grid.Row="4" Text="Output Current" />
+        <TextBox IsReadOnly="True" Grid.Row="5" Text="Output switch offset (press/release)" />
+        <TextBox IsReadOnly="True" Grid.Row="3" Grid.Column="1" Text="{Binding Txt_outCount}" />
+        <TextBox IsReadOnly="True" Grid.Row="4" Grid.Column="1" Text="{Binding Txt_outCurrent}" />
+        <TextBox IsReadOnly="True" Grid.Row="5" Grid.Column="1" Text="{Binding Txt_switchDifference}" />
+
+
+        <TextBox IsReadOnly="True" Grid.Row="6" Margin="0,20,0,0" Text="LED Configuration" />
+        <TextBox IsReadOnly="True" Grid.Row="7" Text="LED Count" />
+        <TextBox IsReadOnly="True" Grid.Row="8" Text="LED Logic" />
+        <TextBox IsReadOnly="True" Grid.Row="7" Grid.Column="1" Text="{Binding Txt_LED_Count}" />
+        <TextBox IsReadOnly="True" Grid.Row="8" Grid.Column="1" Text="{Binding Txt_LEDdirection}" />
+    </Grid>
+</Page>
