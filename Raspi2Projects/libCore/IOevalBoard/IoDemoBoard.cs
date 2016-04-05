@@ -23,7 +23,7 @@ using libSharedProject.ProtolV1Commands;
 
 namespace libCore.IOevalBoard
 {
-    public class IoDemoBoard : INotifyPropertyChanged
+    public class IoDemoBoard
     {
         //DispatcherTimer LEDdriverRefresh;
         //private void LEDrefresh_Tick(object sender, object e)
@@ -123,67 +123,6 @@ namespace libCore.IOevalBoard
         int _StatusRedCh = 0;
         #endregion
 
-        #region Public Attributes
-
-        public int StatusRedCh
-        {
-            get
-            {
-                return _StatusRedCh;
-            }
-            set
-            {
-                this.OnPropertyChanged();
-                _StatusRedCh = value;
-            }
-        }
-
-
-        int _StatusGreenCh = 0;
-        public int StatusGreenCh
-        {
-            get
-            {
-                return _StatusGreenCh;
-            }
-
-            set
-            {
-                this.OnPropertyChanged();
-                _StatusGreenCh = value;
-            }
-        }
-
-        int _StatusBlueCh = 0;
-        public int StatusBlueCh
-        {
-            get
-            {
-                return _StatusBlueCh;
-            }
-
-            set
-            {
-                this.OnPropertyChanged();
-                _StatusBlueCh = value;
-            }
-        }
-
-        int _StatusIntensitiy = 0;
-        public int StatusIntensitiy
-        {
-            get
-            {
-                return _StatusIntensitiy;
-            }
-
-            set
-            {
-                this.OnPropertyChanged();
-                _StatusIntensitiy = value;
-            }
-        }
-        #endregion
 
         public IoDemoBoard()
         {
@@ -249,6 +188,7 @@ namespace libCore.IOevalBoard
             {
                 throw new Exception("SPI Initialization Failed", ex);
             }
+
             try
             {
                 var settings = new SpiConnectionSettings(HW_SPI_CS_Line);
@@ -261,7 +201,9 @@ namespace libCore.IOevalBoard
             /* If initialization fails, display the exception and stop running */
             catch (Exception ex)
             {
-                throw new Exception("SPI Initialization Failed", ex);
+                // Beim Build 10586 (WinIoT-Version auf Raspi) ist die verwendung der zweiten SPI-Schnittstelle nicht vorgesehen
+                //throw new Exception("SPI Initialization Failed", ex);
+                StatusLEDInterface = null;
             }
         }
 
@@ -293,12 +235,14 @@ namespace libCore.IOevalBoard
             //AnalogRefresh = new DispatcherTimer();
             //AnalogRefresh.Interval = TimeSpan.FromMilliseconds(AnalogCycle);
             //AnalogRefresh.Tick += AnalogRefresh_Tick;
-
-
         }
 
         IoDemoAdc adc = new IoDemoAdc();
 
+        /// <summary>
+        /// Polls ADC-Data from Slave and returns Values
+        /// </summary>
+        /// <returns></returns>
         public IoDemoAdc GetAdc()
         {
             short[] tempResults = new short[8];
@@ -328,6 +272,10 @@ namespace libCore.IOevalBoard
 
         IoDemoDac dac = new IoDemoDac();
 
+        /// <summary>
+        /// Sets ADC-Slave according to Client Request
+        /// </summary>
+        /// <param name="_dac"></param>
         public void SetDac(IoDemoDac _dac)
         {
             dac.Dac0 = _dac.Dac0;
@@ -337,6 +285,10 @@ namespace libCore.IOevalBoard
             DACslave.SetSingleChannel(1, _dac.Dac1);
         }
 
+        /// <summary>
+        /// Return current DAC set
+        /// </summary>
+        /// <returns></returns>
         public IoDemoDac GetDac()
         {
             return this.dac;
@@ -344,14 +296,38 @@ namespace libCore.IOevalBoard
 
         IoDemoPowerState powerState = new IoDemoPowerState();
 
+        /// <summary>
+        /// Sets PowerOutputs according to Client Request
+        /// </summary>
+        /// <param name="_powerState"></param>
         public void SetPowerState(IoDemoPowerState _powerState)
         {
             powerState.Power1State = _powerState.Power1State;
             powerState.Power1State = _powerState.Power1State;
 
-            // Powerstate setzen
+            if (powerState.Power1State == true)
+            {
+                PowerOut1.Write(GpioPinValue.High);
+            }
+            else
+            {
+                PowerOut1.Write(GpioPinValue.Low);
+            }
+
+            if (powerState.Power1State == true)
+            {
+                PowerOut2.Write(GpioPinValue.High);
+            }
+            else
+            {
+                PowerOut2.Write(GpioPinValue.Low);
+            }
         }
 
+        /// <summary>
+        /// Return current PowerPin set
+        /// </summary>
+        /// <returns></returns>
         public IoDemoPowerState GetPowerState()
         {
             return this.powerState;
@@ -359,24 +335,68 @@ namespace libCore.IOevalBoard
 
         IoDemoGpio gpio = new IoDemoGpio();
 
+        /// <summary>
+        /// Sets GPIO COnfiguration and Outputs according to Client Request
+        /// </summary>
+        /// <param name="_gpio"></param>
         public void SetGpio(IoDemoGpio _gpio)
         {
             gpio.GpioDirection = _gpio.GpioDirection;
             gpio.GpioValue = _gpio.GpioValue;
+
+            byte[] ValStream = new byte[2]; // temporary Byte Stream
+
+            // Refresh / Change GPIO-Slave Configuration if necessary 
+            if (_gpio.ModifyCOnfig == true)
+            {
+                ValStream[0] = (byte)gpio.GpioDirection;
+                ValStream[1] = (byte)(gpio.GpioDirection >> 8);
+
+                GPIOslave.SetDirection(ValStream);
+                GPIOslave.SetPullUps(ValStream);
+                GPIOslave.SetInputLogic(new byte[] { 0xFF, 0xFF });
+            }
+
+            // Write Output-Data on Slave
+            ValStream[0] = (byte)gpio.GpioValue;
+            ValStream[1] = (byte)(gpio.GpioValue >> 8);
+
+            GPIOslave.SetPorts(ValStream);
+
         }
 
+        /// <summary>
+        /// Polls GPIO-Data from Slave and returns Values
+        /// </summary>
+        /// <returns></returns>
         public IoDemoGpio GetGpio()
         {
+            byte[] ValStream = new byte[2];
+            GPIOslave.GetPorts(out ValStream);
+
+            this.gpio.GpioValue = (ushort)((ushort)ValStream[0] | ((ushort)ValStream[1] << 8));
             return this.gpio;
         }
 
         IoDemoRgb rgb = new IoDemoRgb();
 
+        /// <summary>
+        /// Sets Status LED according to Client Request
+        /// </summary>
+        /// <param name="_rgb"></param>
         public void SetRgb(IoDemoRgb _rgb)
         {
             this.rgb.MyCol = _rgb.MyCol;
+
+            RGBValue tLEDval = new RGBValue(this.rgb.MyCol.Red, this.rgb.MyCol.Green, this.rgb.MyCol.Blue, this.rgb.MyCol.Intensity);
+            StatusLED.SetLED(0, tLEDval);
+            StatusLED.UpdateLEDs();
         }
 
+        /// <summary>
+        /// Return current RGB set
+        /// </summary>
+        /// <returns></returns>
         public IoDemoRgb GetRgb()
         {
             return this.rgb;
@@ -387,6 +407,9 @@ namespace libCore.IOevalBoard
         public void SetState(IoDemoState _state)
         {
             //state.x = _state.x
+
+            //@todo Hier müssen wir morgen über ein paar grundlegende Betriebsarten reden
+            // Bisher braucht man hier aber noch nichts zu implementieren.
         }
 
         public IoDemoState GetState()
@@ -394,23 +417,6 @@ namespace libCore.IOevalBoard
             return this.state;
         }
 
-
-        /// <summary>
-        /// Occurs when [property changed].
-        /// </summary>
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// Wird manuell Aufgerufen wenn sich eine Property ändert, dammit alle Elemente die an diese Property gebunden sind (UI-Elemente) aktualisiert werden.
-        /// </summary>
-        /// <param name="propertyname">Name der Property welche sich geändert hat.</param>
-        private void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
-        {
-            System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
+        // @todo LED-Objekt fehlt auf Seiten der IO-Modul-Klasse
     }
 }
