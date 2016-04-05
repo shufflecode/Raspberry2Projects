@@ -102,7 +102,7 @@ namespace libShared.HardwareNah
     /// Generates Patterns for LED Stripes
     /// </summary>
     public class PatternGenerator
-    {
+    {//@todo Doku for Pattern Generator
         public List<UInt16[]> Curves;
         public List<eCurveType> CurveTypes;
 
