@@ -240,82 +240,81 @@ namespace AppSimpleServer
         static ProtocolV1Base ProtocolV1BaseObj = new ProtocolV1Base();
         static string ProtocolV1Marker = nameof(ProtocolV1BaseObj.MyType);
 
-        App_IO_Demo.IoDemoBoard ioDemoBoard = new App_IO_Demo.IoDemoBoard();
+        //App_IO_Demo.IoDemoBoard ioDemoBoard = new App_IO_Demo.IoDemoBoard();
+
+        libCore.IOevalBoard.IoDemoBoard ioDemoBoard = new libCore.IOevalBoard.IoDemoBoard();
 
         private void Server_NotifyMessageReceivedEvent(object sender, byte[] data)
         {
             try
             {
-                string json = System.Text.Encoding.UTF8.GetString(data);
-                //var obj1 = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+                var obj = libSharedProject.ProtolV1Commands.ProtocolV1Base.ConvertJsonStingToObj(System.Text.Encoding.UTF8.GetString(data));
 
-                //string className = obj1.GetValue(nameof(libSharedProject.ProtolV1Commands.ProtocolV1Base.MyType)).ToString();
+                if (obj != null)
+                {
+                    if (obj.GetType().Equals(typeof(libSharedProject.ProtolV1Commands.IoDemoGetRequest)))
+                    {
+                        switch (((libSharedProject.ProtolV1Commands.IoDemoGetRequest)obj).Key)
+                        {
+                            case IoDemoGetRequest.CmdValue.Adc:
 
+                                this.SendText(Newtonsoft.Json.JsonConvert.SerializeObject(ioDemoBoard.GetAdc()));
 
-                //var obj = libSharedProject.ProtolV1Commands.ProtocolV1Base.ConvertJsonStingToObj(json);
+                                break;
+                            case IoDemoGetRequest.CmdValue.Dac:
 
-                //if (obj != null)
-                //{
-                //    if (obj.GetType().Equals(typeof(libSharedProject.ProtolV1Commands.IoDemoGetRequest)))
-                //    {
-                //        switch (((libSharedProject.ProtolV1Commands.IoDemoGetRequest)obj).Key)
-                //        {
-                //            case IoDemoGetRequest.CmdValue.Adc:
+                                this.SendText(Newtonsoft.Json.JsonConvert.SerializeObject(ioDemoBoard.GetDac()));
 
-                //                libSharedProject.ProtolV1Commands.IoDemoAdc adc = IoDemoBoardClasse.GetAdc();
-                //                this.SendText(Newtonsoft.Json.JsonConvert.SerializeObject(adc));
+                                break;
+                            case IoDemoGetRequest.CmdValue.Gpio:
 
-                //                break;
-                //            case IoDemoGetRequest.CmdValue.Dac:
-                //                break;
-                //            case IoDemoGetRequest.CmdValue.Gpio:
-                //                break;
-                //            case IoDemoGetRequest.CmdValue.Powerstate:
-                //                break;
-                //            case IoDemoGetRequest.CmdValue.Rgb:
-                //                break;
-                //            default:
-                //                break;
-                //        }
-                //    }
-                //    else if (obj.GetType().Equals(typeof(libSharedProject.ProtolV1Commands.IoDemoDac)))
-                //    {
-                //        IoDemoboard.SetDac((libSharedProject.ProtolV1Commands.IoDemoDac)obj);
-                //    }
-                //}
-                //else
-                //{
-                //    this.AddInfoTextLine("Text:" + json + " Data:" + Converters.ConvertByteArrayToHexString(data, " "));
-                //}
+                                this.SendText(Newtonsoft.Json.JsonConvert.SerializeObject(ioDemoBoard.GetGpio()));
 
-                //if (obj.GetType().Equals(typeof(IoDemoRequest)))
-                //{
-                //    switch ((IoDemoRequest)obj)
-                //    {
-                //        default:
-                //            break;
-                //    }
-                //}
+                                break;
+                            case IoDemoGetRequest.CmdValue.Powerstate:
 
+                                this.SendText(Newtonsoft.Json.JsonConvert.SerializeObject(ioDemoBoard.GetPowerState()));
 
-                //var obj = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+                                break;
+                            case IoDemoGetRequest.CmdValue.Rgb:
 
-                //if (obj.GetValue(ProtocolV1Marker).ToString() == nameof(libSharedProject.ProtolV1Commands.IoDemoDac))
-                //{
-                //    var adc = this.ioDemoBoard.SetDac((IoDemoDac)obj);
-                //    this.SendText(Newtonsoft.Json.JsonConvert.SerializeObject(adc));
-                    
-                //}
-                //esle if (obj.GetValue(ProtocolV1Marker).ToString() == nameof(IoDemoGetRequest))
-                //{
-                //    var adc = this.ioDemoBoard.SetDac((IoDemoDac)obj);
-                //    this.SendText(Newtonsoft.Json.JsonConvert.SerializeObject(adc));
+                                this.SendText(Newtonsoft.Json.JsonConvert.SerializeObject(ioDemoBoard.GetRgb()));
 
-                //}
-                //else
-                //{
-                //    this.AddInfoTextLine("Text:" + ret + " Data:" + Converters.ConvertByteArrayToHexString(data, " "));
-                //}
+                                break;
+                            case IoDemoGetRequest.CmdValue.State:
+
+                                this.SendText(Newtonsoft.Json.JsonConvert.SerializeObject(ioDemoBoard.GetState()));
+
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    else if (obj.GetType().Equals(typeof(IoDemoDac)))
+                    {
+                        ioDemoBoard.SetDac((IoDemoDac)obj);
+                    }
+                    else if (obj.GetType().Equals(typeof(IoDemoGpio)))
+                    {
+                        ioDemoBoard.SetGpio((IoDemoGpio)obj);
+                    }
+                    else if (obj.GetType().Equals(typeof(IoDemoPowerState)))
+                    {
+                        ioDemoBoard.SetPowerState((IoDemoPowerState)obj);
+                    }
+                    else if (obj.GetType().Equals(typeof(IoDemoState)))
+                    {
+                        ioDemoBoard.SetState((IoDemoState)obj);
+                    }
+                    else if (obj.GetType().Equals(typeof(IoDemoRgb)))
+                    {
+                        ioDemoBoard.SetRgb((IoDemoRgb)obj);
+                    }
+                }
+                else
+                {
+                    this.AddInfoTextLine("Text:" + System.Text.Encoding.UTF8.GetString(data) + " Data:" + Converters.ConvertByteArrayToHexString(data, " "));
+                }
             }
             catch (Exception ex)
             {

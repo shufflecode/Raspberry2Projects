@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libShared", "libShared\libShared.csproj", "{338154BB-0C23-4663-BD6B-D7C72DD15038}"
 EndProject
@@ -35,8 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppWpfToolkit", "AppWpfTool
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		libSharedProject\libSharedProject.projitems*{160c8752-82c8-48a5-9590-00ef55141a2b}*SharedItemsImports = 4
 		libSharedProject\libSharedProject.projitems*{f8a07aeb-0b43-4274-80ff-3917cbe6c48c}*SharedItemsImports = 4
-		libSharedProject\libSharedProject.projitems*{58acc36c-5f39-4f4f-b446-edeef6f5e08a}*SharedItemsImports = 4
 		libSharedProject\libSharedProject.projitems*{64b18241-80f4-40ff-b544-b6887ee26a0b}*SharedItemsImports = 4
 		libSharedProject\libSharedProject.projitems*{4bbfcc8b-5ddc-4d8d-a998-4d67c343c309}*SharedItemsImports = 13
 	EndGlobalSection
