@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libShared", "libShared\libShared.csproj", "{338154BB-0C23-4663-BD6B-D7C72DD15038}"
 EndProject
@@ -32,6 +32,12 @@ EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "libSharedProject", "libSharedProject\libSharedProject.shproj", "{4BBFCC8B-5DDC-4D8D-A998-4D67C343C309}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppWpfToolkit", "AppWpfToolkit\AppWpfToolkit.csproj", "{67B3DB3E-9F49-4CC5-A54F-F88C8738A1F7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HardwareNah", "HardwareNah", "{09A00DD9-FB0C-4967-B126-4963000151EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HDD_Tests", "HDD_Tests\HDD_Tests.csproj", "{3D63DC77-746D-443E-A065-9D37D2083DA5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StripeDemo", "StripeDemo\StripeDemo.csproj", "{BF014568-523F-4D07-855A-23567F52200A}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -283,6 +289,46 @@ Global
 		{67B3DB3E-9F49-4CC5-A54F-F88C8738A1F7}.Release|x64.Build.0 = Release|Any CPU
 		{67B3DB3E-9F49-4CC5-A54F-F88C8738A1F7}.Release|x86.ActiveCfg = Release|Any CPU
 		{67B3DB3E-9F49-4CC5-A54F-F88C8738A1F7}.Release|x86.Build.0 = Release|Any CPU
+		{3D63DC77-746D-443E-A065-9D37D2083DA5}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{3D63DC77-746D-443E-A065-9D37D2083DA5}.Debug|ARM.ActiveCfg = Debug|ARM
+		{3D63DC77-746D-443E-A065-9D37D2083DA5}.Debug|ARM.Build.0 = Debug|ARM
+		{3D63DC77-746D-443E-A065-9D37D2083DA5}.Debug|ARM.Deploy.0 = Debug|ARM
+		{3D63DC77-746D-443E-A065-9D37D2083DA5}.Debug|x64.ActiveCfg = Debug|x64
+		{3D63DC77-746D-443E-A065-9D37D2083DA5}.Debug|x64.Build.0 = Debug|x64
+		{3D63DC77-746D-443E-A065-9D37D2083DA5}.Debug|x64.Deploy.0 = Debug|x64
+		{3D63DC77-746D-443E-A065-9D37D2083DA5}.Debug|x86.ActiveCfg = Debug|x86
+		{3D63DC77-746D-443E-A065-9D37D2083DA5}.Debug|x86.Build.0 = Debug|x86
+		{3D63DC77-746D-443E-A065-9D37D2083DA5}.Debug|x86.Deploy.0 = Debug|x86
+		{3D63DC77-746D-443E-A065-9D37D2083DA5}.Release|Any CPU.ActiveCfg = Release|x86
+		{3D63DC77-746D-443E-A065-9D37D2083DA5}.Release|ARM.ActiveCfg = Release|ARM
+		{3D63DC77-746D-443E-A065-9D37D2083DA5}.Release|ARM.Build.0 = Release|ARM
+		{3D63DC77-746D-443E-A065-9D37D2083DA5}.Release|ARM.Deploy.0 = Release|ARM
+		{3D63DC77-746D-443E-A065-9D37D2083DA5}.Release|x64.ActiveCfg = Release|x64
+		{3D63DC77-746D-443E-A065-9D37D2083DA5}.Release|x64.Build.0 = Release|x64
+		{3D63DC77-746D-443E-A065-9D37D2083DA5}.Release|x64.Deploy.0 = Release|x64
+		{3D63DC77-746D-443E-A065-9D37D2083DA5}.Release|x86.ActiveCfg = Release|x86
+		{3D63DC77-746D-443E-A065-9D37D2083DA5}.Release|x86.Build.0 = Release|x86
+		{3D63DC77-746D-443E-A065-9D37D2083DA5}.Release|x86.Deploy.0 = Release|x86
+		{BF014568-523F-4D07-855A-23567F52200A}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{BF014568-523F-4D07-855A-23567F52200A}.Debug|ARM.ActiveCfg = Debug|ARM
+		{BF014568-523F-4D07-855A-23567F52200A}.Debug|ARM.Build.0 = Debug|ARM
+		{BF014568-523F-4D07-855A-23567F52200A}.Debug|ARM.Deploy.0 = Debug|ARM
+		{BF014568-523F-4D07-855A-23567F52200A}.Debug|x64.ActiveCfg = Debug|x64
+		{BF014568-523F-4D07-855A-23567F52200A}.Debug|x64.Build.0 = Debug|x64
+		{BF014568-523F-4D07-855A-23567F52200A}.Debug|x64.Deploy.0 = Debug|x64
+		{BF014568-523F-4D07-855A-23567F52200A}.Debug|x86.ActiveCfg = Debug|x86
+		{BF014568-523F-4D07-855A-23567F52200A}.Debug|x86.Build.0 = Debug|x86
+		{BF014568-523F-4D07-855A-23567F52200A}.Debug|x86.Deploy.0 = Debug|x86
+		{BF014568-523F-4D07-855A-23567F52200A}.Release|Any CPU.ActiveCfg = Release|x86
+		{BF014568-523F-4D07-855A-23567F52200A}.Release|ARM.ActiveCfg = Release|ARM
+		{BF014568-523F-4D07-855A-23567F52200A}.Release|ARM.Build.0 = Release|ARM
+		{BF014568-523F-4D07-855A-23567F52200A}.Release|ARM.Deploy.0 = Release|ARM
+		{BF014568-523F-4D07-855A-23567F52200A}.Release|x64.ActiveCfg = Release|x64
+		{BF014568-523F-4D07-855A-23567F52200A}.Release|x64.Build.0 = Release|x64
+		{BF014568-523F-4D07-855A-23567F52200A}.Release|x64.Deploy.0 = Release|x64
+		{BF014568-523F-4D07-855A-23567F52200A}.Release|x86.ActiveCfg = Release|x86
+		{BF014568-523F-4D07-855A-23567F52200A}.Release|x86.Build.0 = Release|x86
+		{BF014568-523F-4D07-855A-23567F52200A}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -292,9 +338,11 @@ Global
 		{379AA26E-1089-49BB-91D7-1C7A2FE45D1A} = {942FB9B0-E3A0-454F-B24E-1006DA4E1E3A}
 		{58ACC36C-5F39-4F4F-B446-EDEEF6F5E08A} = {942FB9B0-E3A0-454F-B24E-1006DA4E1E3A}
 		{F8A07AEB-0B43-4274-80FF-3917CBE6C48C} = {942FB9B0-E3A0-454F-B24E-1006DA4E1E3A}
+		{3D63DC77-746D-443E-A065-9D37D2083DA5} = {09A00DD9-FB0C-4967-B126-4963000151EC}
+		{BF014568-523F-4D07-855A-23567F52200A} = {09A00DD9-FB0C-4967-B126-4963000151EC}
 	EndGlobalSection
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 16
+		SccNumberOfProjects = 18
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://raspi2.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -348,5 +396,13 @@ Global
 		SccProjectUniqueName15 = AppWpfToolkit\\AppWpfToolkit.csproj
 		SccProjectName15 = AppWpfToolkit
 		SccLocalPath15 = AppWpfToolkit
+		SccProjectUniqueName16 = HDD_Tests\\HDD_Tests.csproj
+		SccProjectTopLevelParentUniqueName16 = Raspi2Projects.sln
+		SccProjectName16 = HDD_Tests
+		SccLocalPath16 = HDD_Tests
+		SccProjectUniqueName17 = StripeDemo\\StripeDemo.csproj
+		SccProjectTopLevelParentUniqueName17 = Raspi2Projects.sln
+		SccProjectName17 = StripeDemo
+		SccLocalPath17 = StripeDemo
 	EndGlobalSection
 EndGlobal

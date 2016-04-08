@@ -9,6 +9,7 @@ namespace App_IO_Demo
     using System.Runtime.InteropServices.WindowsRuntime;
     using Windows.Foundation;
     using Windows.Foundation.Collections;
+    using System.Collections.ObjectModel;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Controls.Primitives;
@@ -26,6 +27,9 @@ namespace App_IO_Demo
     using libCore.IOevalBoard;
     using libShared.HardwareNah;
     using System.Text.RegularExpressions;
+
+    using libSharedProject.ProtolV1Commands;
+    using libShared.Interfaces;
 
 
     // Die Vorlage "Leere Seite" ist unter http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 dokumentiert.
@@ -159,6 +163,26 @@ namespace App_IO_Demo
         #endregion
 
 
+        /// <summary>
+        /// Occurs when [property changed].
+        /// </summary>
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Wird manuell Aufgerufen wenn sich eine Property ändert, dammit alle Elemente die an diese Property gebunden sind (UI-Elemente) aktualisiert werden.
+        /// </summary>
+        /// <param name="propertyname">Name der Property welche sich geändert hat.</param>
+        private void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        #region Initialization
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -180,7 +204,7 @@ namespace App_IO_Demo
         }
 
         /// <summary>
-        /// Set Ressources Free
+        /// Set Resources Free
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
@@ -288,23 +312,258 @@ namespace App_IO_Demo
 
         }
 
-        /// <summary>
-        /// Occurs when [property changed].
-        /// </summary>
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        #endregion // Initialization
 
-        /// <summary>
-        /// Wird manuell Aufgerufen wenn sich eine Property ändert, dammit alle Elemente die an diese Property gebunden sind (UI-Elemente) aktualisiert werden.
-        /// </summary>
-        /// <param name="propertyname">Name der Property welche sich geändert hat.</param>
-        private void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
-        {
-            System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
+
+
+        #region EthernetCommand Handling
+
+
+        //static ProtocolV1Base ProtocolV1BaseObj = new ProtocolV1Base();
+        //static string ProtocolV1Marker = nameof(ProtocolV1BaseObj.MyType);
+
+        //App_IO_Demo.IoDemoBoard ioDemoBoard = new App_IO_Demo.IoDemoBoard();
+        //libCore.IOevalBoard.IoDemoBoard ioDemoBoard = new libCore.IOevalBoard.IoDemoBoard();
+
+        //private void Server_NotifyMessageReceivedEvent(object sender, byte[] data)
+        //{
+        //    try
+        //    {
+        //        var obj = libSharedProject.ProtolV1Commands.ProtocolV1Base.ConvertJsonStingToObj(System.Text.Encoding.UTF8.GetString(data));
+
+        //        if (obj != null)
+        //        {
+        //            if (obj.GetType().Equals(typeof(libSharedProject.ProtolV1Commands.IoDemoGetRequest)))
+        //            {
+        //                switch (((libSharedProject.ProtolV1Commands.IoDemoGetRequest)obj).Key)
+        //                {
+        //                    case IoDemoGetRequest.CmdValue.Adc:
+
+        //                        this.SendText(Newtonsoft.Json.JsonConvert.SerializeObject(ioDemoBoard.GetAdc()));
+
+        //                        break;
+        //                    case IoDemoGetRequest.CmdValue.Dac:
+
+        //                        this.SendText(Newtonsoft.Json.JsonConvert.SerializeObject(ioDemoBoard.GetDac()));
+
+        //                        break;
+        //                    case IoDemoGetRequest.CmdValue.Gpio:
+
+        //                        this.SendText(Newtonsoft.Json.JsonConvert.SerializeObject(ioDemoBoard.GetGpio()));
+
+        //                        break;
+        //                    case IoDemoGetRequest.CmdValue.Powerstate:
+
+        //                        this.SendText(Newtonsoft.Json.JsonConvert.SerializeObject(ioDemoBoard.GetPowerState()));
+
+        //                        break;
+        //                    case IoDemoGetRequest.CmdValue.Rgb:
+
+        //                        this.SendText(Newtonsoft.Json.JsonConvert.SerializeObject(ioDemoBoard.GetRgb()));
+
+        //                        break;
+        //                    case IoDemoGetRequest.CmdValue.State:
+
+        //                        this.SendText(Newtonsoft.Json.JsonConvert.SerializeObject(ioDemoBoard.GetState()));
+
+        //                        break;
+        //                    default:
+        //                        break;
+        //                }
+        //            }
+        //            else if (obj.GetType().Equals(typeof(IoDemoDac)))
+        //            {
+        //                ioDemoBoard.SetDac((IoDemoDac)obj);
+        //            }
+        //            else if (obj.GetType().Equals(typeof(IoDemoGpio)))
+        //            {
+        //                ioDemoBoard.SetGpio((IoDemoGpio)obj);
+        //            }
+        //            else if (obj.GetType().Equals(typeof(IoDemoPowerState)))
+        //            {
+        //                ioDemoBoard.SetPowerState((IoDemoPowerState)obj);
+        //            }
+        //            else if (obj.GetType().Equals(typeof(IoDemoState)))
+        //            {
+        //                ioDemoBoard.SetState((IoDemoState)obj);
+        //            }
+        //            else if (obj.GetType().Equals(typeof(IoDemoRgb)))
+        //            {
+        //                ioDemoBoard.SetRgb((IoDemoRgb)obj);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            this.AddInfoTextLine("Text:" + System.Text.Encoding.UTF8.GetString(data) + " Data:" + Converters.ConvertByteArrayToHexString(data, " "));
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ShowMessageBox(ExceptionHandling.GetExceptionText(new System.Exception(string.Format("Exception In: {0}", CallerName()), ex)));
+        //    }
+        //}
+
+        //libShared.Interfaces.IEthernetAsync server;
+
+        //public IEthernetAsync Server
+        //{
+        //    get
+        //    {
+        //        return server;
+        //    }
+
+        //    internal set
+        //    {
+        //        server = value;
+        //    }
+        //}
+
+        //string port = "27200";
+
+
+        //public string Port
+        //{
+        //    get { return port; }
+        //    set
+        //    {
+        //        port = value;
+        //        this.OnPropertyChanged();
+        //    }
+        //}
+
+        //string host = "localhost";
+
+        //public string Host
+        //{
+        //    get { return host; }
+        //    set
+        //    {
+        //        host = value;
+        //        this.OnPropertyChanged();
+        //    }
+        //}
+
+        //ObservableCollection<string> hostNames = new ObservableCollection<string>();
+
+        //public ObservableCollection<string> HostNames
+        //{
+        //    get
+        //    {
+        //        return hostNames;
+        //    }
+
+        //    set
+        //    {
+        //        hostNames = value;
+        //    }
+        //}
+
+        //private string valueSendText = "Test Cmd";
+
+        //public string ValueSendText
+        //{
+        //    get { return valueSendText; }
+        //    set
+        //    {
+        //        valueSendText = value;
+        //        this.OnPropertyChanged();
+        //    }
+        //}
+
+        //ObservableCollection<byte> valueSendData = new ObservableCollection<byte>();
+
+        //public ObservableCollection<byte> ValueSendData
+        //{
+        //    get { return valueSendData; }
+        //    set
+        //    {
+        //        valueSendData = value;
+        //        this.OnPropertyChanged();
+        //    }
+        //}
+
+        //public void SendText(string text)
+        //{
+        //    try
+        //    {
+        //        if (this.Server != null)
+        //        {
+        //            this.Server.SendText(text);
+        //        }
+        //        else
+        //        {
+        //            this.AddInfoTextLine("Server Not Running");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        //AddInfoTextLine(ExceptionHandling.GetExceptionText(new System.Exception(string.Format("Exception In: {0}", CallerName()), ex)));
+        //    }
+        //}
+
+        //public void SendData(byte[] data)
+        //{
+        //    try
+        //    {
+        //        if (this.Server != null)
+        //        {
+        //            this.Server.SendData(data);
+        //        }
+        //        else
+        //        {
+        //            this.AddInfoTextLine("Server Not Running");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        //AddInfoTextLine(ExceptionHandling.GetExceptionText(new System.Exception(string.Format("Exception In: {0}", CallerName()), ex)));
+        //    }
+        //}
+
+        #endregion
+        #region Debug-Ausgaben
+
+        ///// <summary>
+        ///// Fühgt der Infotext Liste einen weiteren Eintrag hinzu
+        ///// </summary>      
+        //public void AddInfoTextLine(string line)
+        //{
+        //    this.AddInfoTextLine(null, line);
+        //}
+
+        ///// <summary>
+        ///// ühgt der Infotext Liste einen weiteren Eintrag hinzu
+        ///// </summary>      
+        //public async void AddInfoTextLine(object sender, string line)
+        //{
+        //    //try
+        //    //{
+        //    //    //await this.dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+        //    //    //{
+        //    //    //    if (this.InfoText.Length > 1000)
+        //    //    //    {
+        //    //    //        this.InfoText = line + Environment.NewLine;
+        //    //    //    }
+        //    //    //    else
+        //    //    //    {
+        //    //    //        this.InfoText += line + Environment.NewLine;
+        //    //    //    }
+
+        //    //    //    Scoll1.ChangeView(null, Scoll1.ScrollableHeight, null);
+
+        //    //        //this.InfoTextList.Add(line);                    
+        //    //    //});
+        //    //}
+        //    //catch (Exception ex)
+        //    //{
+        //    //    //ShowMessageBox(ExceptionHandling.GetExceptionText(new System.Exception(string.Format("Exception In: {0}", CallerName()), ex)));
+        //    //}
+        //}
+
+        #endregion
+
+
+
 
         private void btn_SetRGBvalues(object sender, RoutedEventArgs e)
         {

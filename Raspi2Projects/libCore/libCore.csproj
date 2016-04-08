@@ -123,6 +123,7 @@
     <Compile Include="IOevalBoard\IOevalBoard.cs" />
     <Compile Include="IOevalBoard\LEDclasses.cs" />
     <Compile Include="IOevalBoard\RaspiSlaveEssentials.cs" />
+    <Compile Include="IOevalBoard\RGBstripe.cs" />
     <Compile Include="Pages\PageEthernet.xaml.cs">
       <DependentUpon>PageEthernet.xaml</DependentUpon>
     </Compile>

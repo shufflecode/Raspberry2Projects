@@ -47,8 +47,7 @@ namespace libSharedProject.ProtolV1Commands
         //        public System.Windows.Media.Color Color1 { get; set; } = System.Windows.Media.Colors.Blue;
         //#endif
 
-#if WINDOWS_UWP  || LIBSHARED
-#else
+#if WPF_TOOLKIT
         //[System.ComponentModel.Description("ProtocolV1 Kennung")]
         //[System.ComponentModel.Category("ProtocolV1")]
         //[Xceed.Wpf.Toolkit.PropertyGrid.Attributes.ExpandableObject]
@@ -77,8 +76,7 @@ namespace libSharedProject.ProtolV1Commands
         public double MyDouble { get; set; } = 99.99;
         public DateTime MyDateTime { get; set; } = DateTime.Now;
 
-#if WINDOWS_UWP  || LIBSHARED
-#else
+#if WPF_TOOLKIT
         [Xceed.Wpf.Toolkit.PropertyGrid.Attributes.ExpandableObject]
 #endif
         public Person Besitzer { get; set; } = new Person() { Alter = 50, FirstName = "Oli", LastName = "d" };
@@ -93,8 +91,7 @@ namespace libSharedProject.ProtolV1Commands
         //[Editor(typeof(FirstNameEditor), typeof(FirstNameEditor))]
         public string FirstName { get; set; }
 
-#if WINDOWS_UWP  || LIBSHARED
-#else
+#if WPF_TOOLKIT
         [System.ComponentModel.Editor(typeof(AppWpfToolkit.LastNameUserControlEditor), typeof(AppWpfToolkit.LastNameUserControlEditor))]
         [System.ComponentModel.Category("Information")]
         [System.ComponentModel.DisplayName("Last Name")]

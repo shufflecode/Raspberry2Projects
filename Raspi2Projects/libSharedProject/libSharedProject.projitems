@@ -18,6 +18,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ProtolV1Commands\IoDemoBoard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProtolV1Commands\ProtocolV1Base.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProtolV1Commands\RGBstripe.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProtolV1Commands\TestCmd.cs" />
   </ItemGroup>
 </Project>

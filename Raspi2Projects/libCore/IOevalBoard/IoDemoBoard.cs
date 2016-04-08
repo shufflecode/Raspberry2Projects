@@ -116,7 +116,7 @@ namespace libCore.IOevalBoard
 
         LEDD_TLC5941 GSLEDdriver;
         LEDD_TLC5925 DCLEDDriver;
-        LED_APA102 StatusLED;
+        //LED_APA102 StatusLED;
         ADC_MCP3208 ADCslave;
         DAC_MCP4922 DACslave;
         GPIO_MCP23S17 GPIOslave;
@@ -126,7 +126,7 @@ namespace libCore.IOevalBoard
 
         public IoDemoBoard()
         {
-
+            InitAll();
         }
 
         public async void InitAll()
@@ -189,22 +189,22 @@ namespace libCore.IOevalBoard
                 throw new Exception("SPI Initialization Failed", ex);
             }
 
-            try
-            {
-                var settings = new SpiConnectionSettings(HW_SPI_CS_Line);
-                settings.ClockFrequency = 4000000;
-                settings.Mode = SpiMode.Mode0; // CLK-Idle ist low, Dataset on Falling Edge, Sample on Rising Edge
-                string spiAqs = SpiDevice.GetDeviceSelector(HW_SPI_LED_Controller);
-                var devicesInfo = await DeviceInformation.FindAllAsync(spiAqs);
-                StatusLEDInterface = await SpiDevice.FromIdAsync(devicesInfo[0].Id, settings);
-            }
-            /* If initialization fails, display the exception and stop running */
-            catch (Exception ex)
-            {
-                // Beim Build 10586 (WinIoT-Version auf Raspi) ist die verwendung der zweiten SPI-Schnittstelle nicht vorgesehen
-                //throw new Exception("SPI Initialization Failed", ex);
-                StatusLEDInterface = null;
-            }
+            //try
+            //{
+            //    var settings = new SpiConnectionSettings(HW_SPI_CS_Line);
+            //    settings.ClockFrequency = 4000000;
+            //    settings.Mode = SpiMode.Mode0; // CLK-Idle ist low, Dataset on Falling Edge, Sample on Rising Edge
+            //    string spiAqs = SpiDevice.GetDeviceSelector(HW_SPI_LED_Controller);
+            //    var devicesInfo = await DeviceInformation.FindAllAsync(spiAqs);
+            //    StatusLEDInterface = await SpiDevice.FromIdAsync(devicesInfo[0].Id, settings);
+            //}
+            ///* If initialization fails, display the exception and stop running */
+            //catch (Exception ex)
+            //{
+            //    // Beim Build 10586 (WinIoT-Version auf Raspi) ist die verwendung der zweiten SPI-Schnittstelle nicht vorgesehen
+            //    //throw new Exception("SPI Initialization Failed", ex);
+            //    StatusLEDInterface = null;
+            //}
         }
 
         private void InitIOModule()
@@ -216,7 +216,7 @@ namespace libCore.IOevalBoard
 
             GSLEDdriver = new LEDD_TLC5941(SPIOInterface, CSadrLEDD, GSLEDdriverLatch, GSLEDdriverMode, GSLEDdriverBlank);
             DCLEDDriver = new LEDD_TLC5925(SPIOInterface, CSadrLEDD, DCLEDdriverLatch, null);
-            StatusLED = new LED_APA102(StatusLEDInterface, CSadrLEDD);
+            //StatusLED = new LED_APA102(StatusLEDInterface, CSadrLEDD);
             DACslave = new DAC_MCP4922(SPIOInterface, CSadrDAC, null, null);
             ADCslave = new ADC_MCP3208(SPIOInterface, CSadrADC);
             GPIOslave = new GPIO_MCP23S17(SPIOInterface, CSadrGPIO, null, null, 0);
@@ -246,8 +246,6 @@ namespace libCore.IOevalBoard
         public IoDemoAdc GetAdc()
         {
             short[] tempResults = new short[8];
-
-            libSharedProject.ProtolV1Commands.IoDemoAdc adc = new libSharedProject.ProtolV1Commands.IoDemoAdc();
 
             ADCslave.GetSingleChannel(0, out tempResults[0]);
             ADCslave.GetSingleChannel(1, out tempResults[1]);
@@ -347,7 +345,7 @@ namespace libCore.IOevalBoard
             byte[] ValStream = new byte[2]; // temporary Byte Stream
 
             // Refresh / Change GPIO-Slave Configuration if necessary 
-            if (_gpio.ModifyCOnfig == true)
+            if (_gpio.ModifyConfig == true)
             {
                 ValStream[0] = (byte)gpio.GpioDirection;
                 ValStream[1] = (byte)(gpio.GpioDirection >> 8);

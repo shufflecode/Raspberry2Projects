@@ -109,7 +109,7 @@ namespace libSharedProject.ProtolV1Commands
         /// </summary>
         public ushort GpioValue { get; set; }
 
-        public bool ModifyCOnfig { get; set; } = false;
+        public bool ModifyConfig { get; set; } = false;
     }
 
 #if WPF_TOOLKIT

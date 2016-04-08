@@ -63,6 +63,10 @@ namespace libSharedProject.ProtolV1Commands
             {
                 return (IoDemoException)obj.ToObject(typeof(IoDemoException));
             }
+            else if (mdName == nameof(RGBstripeColor))
+            {
+                return (RGBstripeColor)obj.ToObject(typeof(RGBstripeColor));
+            }
             else
             {
                 return null;

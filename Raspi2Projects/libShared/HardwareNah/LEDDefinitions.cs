@@ -57,6 +57,22 @@ namespace libShared.HardwareNah
             set { intensity = value; }
         }
 
+        public RGBValue (ushort r = 0, ushort g = 0, ushort b = 0, ushort i = 0)
+        {
+            red = r;
+            green = g;
+            blue = b;
+            intensity = i;
+
+        }
+        public RGBValue (byte r = 0, byte g = 0, byte b = 0, byte i = 0)
+        {
+            red = (ushort)(r<<8);
+            green = (ushort)(g << 8);
+            blue = (ushort)(b << 8);
+            intensity = (ushort)(i << 8);
+        }
+
         public static RGBValue operator * (RGBValue value, float factor)
         {
             value.red = (UInt16)((float)value.red * factor);
