@@ -240,6 +240,11 @@ namespace AppWpfSimpleClient
             this.ReceiveView = this.ReceiveTable.DefaultView;
 
 
+            //var x = this.ReceiveTable.NewDataTableCmdRow();
+            //x.Info = "kdfjsl";
+            //ReceiveTable.AddDataTableCmdRow(x);
+
+
             Assembly asem = fd.GetType().Assembly;
             Type[] types = asem.GetTypes(); //Assembly.GetExecutingAssembly().GetTypes();
 
@@ -336,24 +341,33 @@ namespace AppWpfSimpleClient
             {
                 string ret = Encoding.UTF8.GetString(data);
 
-                var obj = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(ret);
+                
 
-                if (obj.GetValue("MyType").ToString() == nameof(libSharedProject.ProtolV1Commands.TestCmd))
+
+
+                var obj = libSharedProject.ProtolV1Commands.ProtocolV1Base.ConvertJsonStingToObj(ret);
+
+                if (obj != null)
                 {
-                    libSharedProject.ProtolV1Commands.TestCmd dfdf = (libSharedProject.ProtolV1Commands.TestCmd)obj.ToObject(typeof(libSharedProject.ProtolV1Commands.TestCmd));
+                    //this.SelectedCmd = obj;
+
+                    //var x = this.ReceiveTable.NewDataTableCmdRow();
+                    //x.Info = "kdfjsl";
+                    //ReceiveTable.AddDataTableCmdRow(x);
 
                     var newRow = this.ReceiveTable.NewDataTableCmdRow();
-                    newRow.Info = obj.GetValue("MyType").ToString();
+                    newRow.Info = obj.GetType().Name;
                     newRow.TimeStamp = DateTime.Now;
                     newRow.JSON = ret;
                     this.ReceiveTable.AddDataTableCmdRow(newRow);
-
-                    //this.ReceiveList.Add(new KeyValuePair<string, object>(string.Format("RX: {0}", System.DateTime.Now), dfdf));
+                    this.AddInfoTextLine("Text:" + ret + " Data:" + Converters.ConvertByteArrayToHexString(data, " "));
                 }
                 else
                 {
                     this.AddInfoTextLine("Text:" + ret + " Data:" + Converters.ConvertByteArrayToHexString(data, " "));
                 }
+
+          
             }
             catch (Exception ex)
             {
@@ -600,6 +614,13 @@ namespace AppWpfSimpleClient
             newSendRow.ItemArray = (object[])(row.ItemArray.Clone());
             newSendRow.TimeStamp = DateTime.Now;
             this.SendTable.AddDataTableCmdRow(newSendRow);
+
+
+            // newSendRow = this.ReceiveTable.NewDataTableCmdRow();
+            //newSendRow.ItemArray = (object[])(row.ItemArray.Clone());
+            //newSendRow.TimeStamp = DateTime.Now;
+            //newSendRow.Info = "Test";
+            //this.ReceiveTable.AddDataTableCmdRow(newSendRow);
 
             this.SendText(row.JSON);
         }
