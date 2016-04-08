@@ -54,6 +54,22 @@ namespace AppWpfSimpleClient
 
         string protocolV1Kennung;
 
+        string reflectionText = string.Empty;
+
+        public string ReflectionText
+        {
+            get
+            {
+                return reflectionText;
+            }
+
+            internal set
+            {
+                reflectionText = value;
+                this.OnPropertyChanged();
+            }
+        }
+
         /// <summary>
         /// View: String Collection in der Informationen Angezeigt werden können.
         /// </summary>
@@ -440,7 +456,7 @@ namespace AppWpfSimpleClient
                             //}
 
                             //DataContractSerializer
-                            //saveFileDialog1.Filter = "xml files (*.xml)|*.xml";// "json files (*.json)|*.json";// ;
+                            saveFileDialog1.Filter = "xml files (*.xml)|*.xml";// "json files (*.json)|*.json";// ;
 
                             if (saveFileDialog1.ShowDialog() == true)
                             {
@@ -860,6 +876,7 @@ namespace AppWpfSimpleClient
                 this.SelectedRow = (DataSet1.DataTableCmdRow)((System.Data.DataRowView)e.AddedItems[0]).Row;
 
                 var obj = libSharedProject.ProtolV1Commands.ProtocolV1Base.ConvertJsonStingToObj(this.SelectedRow.JSON);
+                this.ReflectionText = GetInfo(obj);
 
                 this.SelectedCmd = obj;
 
@@ -881,7 +898,38 @@ namespace AppWpfSimpleClient
 
         }
 
-       
+        public string GetInfo(object obj)
+        {
+            StringBuilder sb = new StringBuilder();
+            try
+            {
+                Type type = obj.GetType();
+                object[] customAttributes = type.GetCustomAttributes(true);
+                for (int i = 0; i < (int)customAttributes.Length; i++)
+                {
+                    object attribut = customAttributes[i];
+                    if (attribut.GetType().Equals(typeof(DescriptionAttribute)))
+                    {
+                        sb.AppendLine(string.Format("{0}", ((DescriptionAttribute)attribut).Description));
+                    }
+                }
+
+                if ((sb == null ? false : sb.Length > 0))
+                {
+                    return sb.ToString();
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+            catch (Exception exception)
+            {
+                return exception.Message;
+            }
+        }
+
+
 
         //private void Window_Loaded(object sender, RoutedEventArgs e)
         //{

@@ -52,7 +52,7 @@
                     </StackPanel>
                 </StackPanel>
             </MenuItem>
-            <MenuItem Header="Send Raw Data">
+            <!--<MenuItem Header="Send Raw Data">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -74,15 +74,15 @@
                     <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ValueSendData, Mode=TwoWay, Converter={StaticResource VcObservableByteCollectionToWindows1252String},ConverterParameter=0}"></TextBox>
 
                     <TextBox Grid.Row="2" Grid.Column="0" Text="Hex"></TextBox>
-                    <!--<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ValueX,Converter={StaticResource HexConverter},UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="OnPreviewHexTextInput"></TextBox>-->
+                    --><!--<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ValueX,Converter={StaticResource HexConverter},UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="OnPreviewHexTextInput"></TextBox>--><!--
                     <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ValueSendData, Mode=TwoWay, Converter={StaticResource VcObservableByteCollectionToHexString},ConverterParameter=0}"></TextBox>
 
-                    <!--<Label Grid.Column="0" Grid.Row="4" Content="Bin"></Label>-->
-                    <!--<TextBox Grid.Row="4" Grid.Column="1"  Text="{Binding ValueX,Converter={StaticResource BinConverter},UpdateSourceTrigger=PropertyChanged}"   PreviewTextInput="OnPreviewBinTextInput" ></TextBox>-->
+                    --><!--<Label Grid.Column="0" Grid.Row="4" Content="Bin"></Label>-->
+                    <!--<TextBox Grid.Row="4" Grid.Column="1"  Text="{Binding ValueX,Converter={StaticResource BinConverter},UpdateSourceTrigger=PropertyChanged}"   PreviewTextInput="OnPreviewBinTextInput" ></TextBox>--><!--
 
                     <Button Grid.Row="1" Grid.Column="2" Content="Send Data" Command="{Binding Command}" CommandParameter="Send Data"></Button>
                 </Grid>
-            </MenuItem>
+            </MenuItem>-->
             <MenuItem Header="Add Comands">
                 <MenuItem.ItemsSource>
                     <CompositeCollection>
@@ -107,25 +107,34 @@
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition Height="Auto"></RowDefinition>
                                     <RowDefinition Height="*"></RowDefinition>
                                     <RowDefinition Height="Auto"></RowDefinition>
                                 </Grid.RowDefinitions>
-                                <StackPanel Orientation="Horizontal">
+                                <!--<StackPanel Orientation="Horizontal">
                                     <Label Content="Beschreibung (Key)"></Label>
                                     <TextBox Text="{Binding SelectedKey}"></TextBox>
-                                </StackPanel>
+                                </StackPanel>-->
                                 <!--<xctk:PropertyGrid Grid.Row="1" SelectedObject="{Binding SelectedCmd}" PropertyValueChanged="PropertyGrid_PropertyValueChanged">
                                 </xctk:PropertyGrid>-->
-                                <xctk:PropertyGrid x:Name="propGrid" Grid.Row="1" SelectedObject="{Binding SelectedCmd}" SelectedPropertyItemChanged="PropertyGrid_SelectedPropertyItemChanged"   PropertyValueChanged="PropertyGrid_PropertyValueChanged" ShowSummary="True"
+                                <TextBox TextWrapping="Wrap" Text="{Binding ReflectionText, Mode=OneWay}" Grid.Row="1"></TextBox>
+                                <xctk:PropertyGrid x:Name="propGrid" Grid.Row="2" SelectedObject="{Binding SelectedCmd}" SelectedPropertyItemChanged="PropertyGrid_SelectedPropertyItemChanged"   PropertyValueChanged="PropertyGrid_PropertyValueChanged" 
                                Filter=""
                                IsCategorized="True"
-                               ShowAdvancedOptions="True"
+                               ShowAdvancedOptions="False"
+                               ShowSearchBox="False"
+                               ShowPreview="False"
+                               ShowSortOptions="False"
+                               ShowTitle="True"
+                               ShowDescriptionByTooltip="True"
+                               ShowSummary="True"                                                   
                                IsReadOnly="False"
                                UpdateTextBoxSourceOnEnterKey="True"
                                IsMiscCategoryLabelHidden="True"
-                               ShowPreview="True">
+                              >
                                 </xctk:PropertyGrid>
-                                <StackPanel Orientation="Horizontal" Grid.Row="2">
+                                
+                                <StackPanel Orientation="Horizontal" Grid.Row="3">
                                     <!--<Button Content="Create Json" Command="{Binding Command}" CommandParameter="Create Json"></Button>-->
                                     <Button Content="Send" Command="{Binding Command}" CommandParameter="Send Selected Command"></Button>
                                 </StackPanel>

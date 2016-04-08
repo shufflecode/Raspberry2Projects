@@ -7,8 +7,7 @@ namespace libSharedProject.ProtolV1Commands
     public class ProtocolV1Base
     {
 
-#if WINDOWS_UWP  || LIBSHARED
-#else
+#if WPF_TOOLKIT
         [System.ComponentModel.Browsable(false)]
 #endif
         public string MyType

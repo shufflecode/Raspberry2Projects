@@ -388,9 +388,9 @@ namespace libCore.IOevalBoard
         {
             this.rgb.MyCol = _rgb.MyCol;
 
-            RGBValue tLEDval = new RGBValue(this.rgb.MyCol.Red, this.rgb.MyCol.Green, this.rgb.MyCol.Blue, this.rgb.MyCol.Intensity);
-            StatusLED.SetLED(0, tLEDval);
-            StatusLED.UpdateLEDs();
+            //RGBValue tLEDval = new RGBValue(this.rgb.MyCol.Red, this.rgb.MyCol.Green, this.rgb.MyCol.Blue, this.rgb.MyCol.Intensity);
+            //StatusLED.SetLED(0, tLEDval);
+            //StatusLED.UpdateLEDs();
         }
 
         /// <summary>

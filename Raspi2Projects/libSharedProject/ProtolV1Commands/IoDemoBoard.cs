@@ -112,13 +112,23 @@ namespace libSharedProject.ProtolV1Commands
         public bool ModifyCOnfig { get; set; } = false;
     }
 
+#if WPF_TOOLKIT
+     [System.ComponentModel.Description("Output values for power pins")]
+#endif
     // Power Outputs
     /// <summary>
     /// Output values for power pins
     /// </summary>
     public class IoDemoPowerState : ProtocolV1Base
     {
+#if WPF_TOOLKIT
+     [System.ComponentModel.Description(" Output value for power pin 1")]
+#endif
         public bool Power1State { get; set; }
+
+#if WPF_TOOLKIT
+     [System.ComponentModel.Description(" Output value for power pin 2")]
+#endif
         public bool Power2State { get; set; }
     }
 
@@ -135,10 +145,9 @@ namespace libSharedProject.ProtolV1Commands
 
     public class IoDemoRgb : ProtocolV1Base
     {
-#if WINDOWS_UWP || LIBSHARED
-#else        
+#if WPF_TOOLKIT
         [System.ComponentModel.Editor(typeof(AppWpfToolkit.UcColorEditor), typeof(AppWpfToolkit.UcColorEditor))]
-#endif       
+#endif
         public libShared.SharedColor MyCol { get; set; } = new libShared.SharedColor();
     }
 
