@@ -81,7 +81,7 @@ namespace libCore.IOevalBoard
             StripePattern.AddCurve(PatternGenerator.eCurveType.Triangle);
             StripePattern.AddCurve(PatternGenerator.eCurveType.Sawtooth);
 
-            StripeTimer.Start();
+            //StripeTimer.Start();
         }
 
         private async Task InitSpi()
@@ -90,9 +90,9 @@ namespace libCore.IOevalBoard
             settings.ClockFrequency = 8000000;                             /* Datasheet specifies maximum SPI clock frequency of 10MHz         */
             settings.Mode = SpiMode.Mode0; // Bedeutet, dass CLK-Idle ist low, Sample bei Steigender Flank
 
-            string spiAqs1 = SpiDevice.GetDeviceSelector(SPI_DEMO_CONTROLLER_NAME);       /* Find the selector string for the SPI bus controller          */
-            var devicesInfo1 = await DeviceInformation.FindAllAsync(spiAqs1);         /* Find the SPI bus controller device with our selector string  */
-            SPIinterface_Demo = await SpiDevice.FromIdAsync(devicesInfo1[0].Id, settings);  /* Create an SpiDevice with our bus controller and SPI settings */
+            string spiAqs = SpiDevice.GetDeviceSelector(SPI_DEMO_CONTROLLER_NAME);
+            var devicesInfo = await DeviceInformation.FindAllAsync(spiAqs);
+            SPIinterface_Demo = await SpiDevice.FromIdAsync(devicesInfo[0].Id, settings);
         }
 
 

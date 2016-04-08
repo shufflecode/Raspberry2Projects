@@ -244,7 +244,7 @@ namespace AppSimpleServer
 
 
         libCore.IOevalBoard.IoDemoBoard ioDemoBoard = null; // @todo hier wieder einbauen, sobald passt. new libCore.IOevalBoard.IoDemoBoard();
-        libCore.IOevalBoard.RGBstripe LEDstripe = null;
+        libCore.IOevalBoard.RGBstripe LEDstripe = new libCore.IOevalBoard.RGBstripe();
 
         private void Server_NotifyMessageReceivedEvent(object sender, byte[] data)
         {
@@ -314,10 +314,6 @@ namespace AppSimpleServer
                     }
                     else if (obj.GetType().Equals(typeof(RGBstripeColor)))
                     {
-                        if (LEDstripe == null)
-                        {
-                            LEDstripe = new libCore.IOevalBoard.RGBstripe();
-                        }
                         LEDstripe.SetSingleColor((RGBstripeColor)obj);
                     }
                 }
