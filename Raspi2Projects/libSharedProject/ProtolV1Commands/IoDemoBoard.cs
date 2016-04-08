@@ -132,12 +132,17 @@ namespace libSharedProject.ProtolV1Commands
         public bool Power2State { get; set; }
     }
 
+    public class IoDemoException : ProtocolV1Base
+    {
+       public Exception IoException { get; set; }
+    }
+
     // LED entries
     /// <summary>
     /// Status RGB-LED
     /// </summary>
     //@todo LEDs nachtragen
-        //public RGBValue Out_StatusLED = RGBDefines.Black;
+    //public RGBValue Out_StatusLED = RGBDefines.Black;
     // Alternative Definition
     // public RGBValue Test = new RGBValue() { Intensity = 0xFFFF, Red = 0xFFFF, Green = 0xFFFF, Blue = 0xFFFF}
 

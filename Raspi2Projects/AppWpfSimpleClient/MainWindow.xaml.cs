@@ -18,6 +18,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Reflection;
+using System.Net;
+using System.Net.Sockets;
 
 namespace AppWpfSimpleClient
 {
@@ -144,7 +146,7 @@ namespace AppWpfSimpleClient
             }
         }
 
-        string host = "localhost";
+        string host = Properties.Settings.Default.Host;// Dns.GetHostEntry(Dns.GetHostName()).AddressList.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork).ToString();//"localhost";
 
         public string Host
         {
@@ -153,6 +155,12 @@ namespace AppWpfSimpleClient
             {
                 host = value;
                 this.OnPropertyChanged();
+
+                if (Properties.Settings.Default.Host != value)
+                {
+                    Properties.Settings.Default.Host = value;
+                    Properties.Settings.Default.Save();
+                }
             }
         }
 

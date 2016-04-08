@@ -59,6 +59,10 @@ namespace libSharedProject.ProtolV1Commands
             {
                 return (IoDemoState)obj.ToObject(typeof(IoDemoState));
             }
+            else if (mdName == nameof(IoDemoException))
+            {
+                return (IoDemoException)obj.ToObject(typeof(IoDemoException));
+            }
             else
             {
                 return null;

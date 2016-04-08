@@ -318,7 +318,20 @@ namespace AppSimpleServer
             }
             catch (Exception ex)
             {
-                ShowMessageBox(ExceptionHandling.GetExceptionText(new System.Exception(string.Format("Exception In: {0}", CallerName()), ex)));
+
+                try
+                {
+                    this.SendText(Newtonsoft.Json.JsonConvert.SerializeObject(new IoDemoException() { IoException = ex }));
+                }
+                catch (Exception eex)
+                {
+                    AddInfoTextLine(ExceptionHandling.GetExceptionText(new System.Exception(string.Format("Exception In: {0}", CallerName()), eex)));
+                    //ShowMessageBox(ExceptionHandling.GetExceptionText(new System.Exception(string.Format("Exception In: {0}", CallerName()), ex)));
+                    //throw;
+                }
+
+
+                AddInfoTextLine(ExceptionHandling.GetExceptionText(new System.Exception(string.Format("Exception In: {0}", CallerName()), ex)));
             }
         }
 

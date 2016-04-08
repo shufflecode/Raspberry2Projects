@@ -66,6 +66,8 @@
                 </MenuItem.ItemsSource>
 
             </MenuItem>
+            <Label Content="IP:"></Label>
+            <TextBox Text="{Binding Host, Mode=TwoWay}"></TextBox>
         </Menu>
 
       
