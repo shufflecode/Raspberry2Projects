@@ -40,6 +40,16 @@ using libCore;
 ///  Achtung Das Projekt taugt noch nicht als Vorlage!!
 /// </summary>
 
+/*
+Demo-Projekt für RGB-LED-Streifen mit 20 APA102 LEDs
+
+    Der LED-Streifen wechselt Farben und Muster durch (in einem Zyklus das Muster, im nächsten die Farbe)
+    Der Wechsel ist geschmeidig durch eine art Kreuzblende realisiert
+    Auf dem GUI kann aber auch eine feste Farbe eingestellt werden
+
+    Es ist auch eine Ethernet-Schnittstelle implementiert, diese ist aber noch nicht getestet.
+    */
+
 namespace StripeDemo
 {
     public sealed partial class MainPage : Page, INotifyPropertyChanged
@@ -472,8 +482,14 @@ namespace StripeDemo
         int nextMode = 0;
         int colorCycle = 0;
         int patternCycle = 0;
+        /// <summary>
+        /// Leitet Farb-, oder Muster-Wechsel ein
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Sweep_Tick(object sender, object e)
         {
+            // Wenn Farbwechsel ansteht
             if (nextMode == 0)
             {
                 nextMode = 1;
@@ -483,7 +499,7 @@ namespace StripeDemo
                     colorCycle = 1;
                 }
 
-                UInt16[] tempRGB = new ushort[3] { 0, 0, 0 };
+                Byte[] tempRGB = new Byte[3] { 0, 0, 0 };
                 for (int i = 0; i < 3; i++)
                 {
                     if ((colorCycle & (1 << i)) != 0)
@@ -496,6 +512,7 @@ namespace StripeDemo
                 StripePattern.InitColorChange(tempVal);
 
             }
+            // Wenn Musterwechsel ansteht
             else
             {
                 nextMode = 0;
@@ -533,10 +550,10 @@ namespace StripeDemo
             this.SendText("Color set locally");
 
             RGBValue tempVal = new RGBValue();
-            tempVal.Red = (UInt16)((int)SliderRed.Value << 8);
-            tempVal.Green = (UInt16)((int)SliderGreen.Value << 8);
-            tempVal.Blue = (UInt16)((int)SliderBlue.Value << 8);
-            tempVal.Intensity = (UInt16)((int)SliderIntens.Value << 8);
+            tempVal.Red = (Byte)SliderRed.Value;
+            tempVal.Green = (Byte)SliderGreen.Value;
+            tempVal.Blue = (Byte)SliderBlue.Value;
+            tempVal.Intensity = (Byte)SliderIntens.Value;
 
             StripePattern.InitColorChange(tempVal);
 
@@ -602,10 +619,10 @@ namespace StripeDemo
             }
 
             RGBValue tempLEDobj = new RGBValue();
-            tempLEDobj.Intensity = (UInt16)((int)newIndensitiy << 8);
-            tempLEDobj.Red = (UInt16)((int)newRed << 8);
-            tempLEDobj.Green = (UInt16)((int)newGreen << 8);
-            tempLEDobj.Blue = (UInt16)((int)newBlue << 8);
+            tempLEDobj.Intensity = newIndensitiy;
+            tempLEDobj.Red = newRed;
+            tempLEDobj.Green = newGreen;
+            tempLEDobj.Blue = newBlue;
 
             StripePattern.InitColorChange(tempLEDobj);
 

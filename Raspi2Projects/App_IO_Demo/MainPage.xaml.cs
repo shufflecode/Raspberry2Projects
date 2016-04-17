@@ -573,7 +573,7 @@ namespace App_IO_Demo
             int tempGreen = (int)RGBValue.MaxValue * (int)GreenChannel.Value / MaxSliderValue;
             int tempBlue = (int)RGBValue.MaxValue * (int)BlueChannel.Value / MaxSliderValue;
             int tempIntens = (int)RGBValue.MaxValue * (int)IntensitySet.Value / MaxSliderValue;
-            RGBValue newLEDval = new RGBValue { Red = (ushort)tempRed, Green = (ushort)tempGreen, Blue = (ushort)tempBlue, Intensity = (ushort)tempIntens };
+            RGBValue newLEDval = new RGBValue { Red = (byte)tempRed, Green = (byte)tempGreen, Blue = (byte)tempBlue, Intensity = (byte)tempIntens };
 
             StatusLED.SetLED(0, newLEDval);
             StatusLED.UpdateLEDs();

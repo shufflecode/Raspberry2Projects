@@ -153,33 +153,33 @@ namespace RGB_Demo
             switch (statusMachineCount)
             {
                 case 0: // fading red
-                    tempLEDobj.Red = (ushort)currCount;
+                    tempLEDobj.Red = (byte)currCount;
                     break;
                 case 1: // fading green
-                    tempLEDobj.Green = (ushort)currCount;
+                    tempLEDobj.Green = (byte)currCount;
                     break;
                 case 2: // fading blue
-                    tempLEDobj.Blue = (ushort)currCount;
+                    tempLEDobj.Blue = (byte)currCount;
                     break;
                 case 3: // fading red
-                    tempLEDobj.Red = (ushort)currCount;
-                    tempLEDobj.Green = (ushort)currCount;
+                    tempLEDobj.Red = (byte)currCount;
+                    tempLEDobj.Green = (byte)currCount;
                     break;
                 case 4: // fading red
-                    tempLEDobj.Red = (ushort)currCount;
-                    tempLEDobj.Blue = (ushort)currCount;
+                    tempLEDobj.Red = (byte)currCount;
+                    tempLEDobj.Blue = (byte)currCount;
                     break;
                 case 5: // fading red
-                    tempLEDobj.Green = (ushort)currCount;
-                    tempLEDobj.Blue = (ushort)currCount;
+                    tempLEDobj.Green = (byte)currCount;
+                    tempLEDobj.Blue = (byte)currCount;
                     break;
                 case 6: // fading red
-                    tempLEDobj.Red = (ushort)currCount;
-                    tempLEDobj.Green = (ushort)currCount;
-                    tempLEDobj.Blue = (ushort)currCount;
+                    tempLEDobj.Red = (byte)currCount;
+                    tempLEDobj.Green = (byte)currCount;
+                    tempLEDobj.Blue = (byte)currCount;
                     break;
                 case 7: // fading red
-                    tempLEDobj.Red = (ushort)currCount;
+                    tempLEDobj.Red = (byte)currCount;
                     statusMachineCount = 0;
                     break;
 
