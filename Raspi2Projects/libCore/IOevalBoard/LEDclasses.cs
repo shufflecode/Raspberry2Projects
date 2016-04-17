@@ -688,7 +688,7 @@
             public const int MinIntensStepValue = 2048;
             public const int LEDValueWidt = 32;
             public const int LEDValByteWidth = 4;
-            // @todo diese Definitionen in LED-Beschreibung einfüren
+            // @todo diese Definitionen in LED-Beschreibung einführen
 
             /// <summary>
             /// Binary LED-value of RGB-LED
@@ -726,10 +726,10 @@
             /// <param name="color"></param>
             public void SetRGBvalue(RGBValue color)
             {
-                byte intens = (byte)(color.Intensity >> 11);
-                byte red = (byte)(color.Red >> 8);
-                byte green = (byte)(color.Green >> 8);
-                byte blue = (byte)(color.Blue >> 8);
+                byte intens = (byte)(color.Intensity >> 3);
+                byte red = color.Red;
+                byte green = color.Green;
+                byte blue = color.Blue;
                 this.SetRGBvalue(intens, red, green, blue);
             }
 
@@ -762,10 +762,10 @@
                 RGBValue tVal = new RGBValue();
                 this.GetRGBValue(out intens, out red, out green, out blue);
 
-                tVal.Intensity = (UInt16)((UInt16)intens << 11);
-                tVal.Red = (UInt16)((UInt16)red << 8);
-                tVal.Green = (UInt16)((UInt16)green << 8);
-                tVal.Blue = (UInt16)((UInt16)blue << 8);
+                tVal.Intensity = (Byte)((Byte)intens << 3);
+                tVal.Red = red;
+                tVal.Green = green;
+                tVal.Blue = blue;
                 color = tVal;
             }
         }

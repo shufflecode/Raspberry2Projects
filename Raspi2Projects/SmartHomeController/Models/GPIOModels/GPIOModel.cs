@@ -240,7 +240,7 @@ namespace WebServer.Models
             int tempGreen = (int)RGBValue.MaxValue * 50 / MaxSliderValue;
             int tempBlue = (int)RGBValue.MaxValue * 0 / MaxSliderValue;
             int tempIntens = (int)RGBValue.MaxValue * 10 / MaxSliderValue;
-            RGBValue newLEDval = new RGBValue { Red = (ushort)tempRed, Green = (ushort)tempGreen, Blue = (ushort)tempBlue, Intensity = (ushort)tempIntens };
+            RGBValue newLEDval = new RGBValue { Red = (byte)tempRed, Green = (byte)tempGreen, Blue = (byte)tempBlue, Intensity = (byte)tempIntens };
 
             StatusLED.SetLED(0, newLEDval);
             StatusLED.UpdateLEDs();

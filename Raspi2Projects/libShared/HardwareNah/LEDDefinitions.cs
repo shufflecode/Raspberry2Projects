@@ -15,49 +15,56 @@ namespace libShared.HardwareNah
         /// Defines the Maximum Value that can be set
         /// </summary>
         public const int NormValueWidt = 16;
-        public const int MaxValue = UInt16.MaxValue;
+        public const int MaxValue = Byte.MaxValue;
 
-        private UInt16 red;
+        private Byte red;
         /// <summary>
         /// Red Value
         /// </summary>
-        public UInt16 Red
+        public Byte Red
         {
             get { return red; }
             set { red = value; }
         }
 
-        private UInt16 green;
+        private Byte green;
         /// <summary>
         /// Green Value
         /// </summary>
-        public UInt16 Green
+        public Byte Green
         {
             get { return green; }
             set { green = value; }
         }
 
-        private UInt16 blue;
+        private Byte blue;
         /// <summary>
         /// Blue Value
         /// </summary>
-        public UInt16 Blue
+        public Byte Blue
         {
             get { return blue; }
             set { blue = value; }
         }
 
-        private UInt16 intensity;
+        private Byte intensity;
         /// <summary>
         /// Intensity Value
         /// </summary>
-        public UInt16 Intensity
+        public Byte Intensity
         {
             get { return intensity; }
             set { intensity = value; }
         }
 
-        public RGBValue (ushort r = 0, ushort g = 0, ushort b = 0, ushort i = 0)
+        /// <summary>
+        /// Method to preset all color values
+        /// </summary>
+        /// <param name="r"></param>
+        /// <param name="g"></param>
+        /// <param name="b"></param>
+        /// <param name="i"></param>
+        public RGBValue (byte r = 0, byte g = 0, byte b = 0, byte i = 0)
         {
             red = r;
             green = g;
@@ -65,19 +72,12 @@ namespace libShared.HardwareNah
             intensity = i;
 
         }
-        public RGBValue (byte r = 0, byte g = 0, byte b = 0, byte i = 0)
-        {
-            red = (ushort)(r<<8);
-            green = (ushort)(g << 8);
-            blue = (ushort)(b << 8);
-            intensity = (ushort)(i << 8);
-        }
 
         public static RGBValue operator * (RGBValue value, float factor)
         {
-            value.red = (UInt16)((float)value.red * factor);
-            value.green = (UInt16)((float)value.green * factor);
-            value.blue = (UInt16)((float)value.blue * factor);
+            value.red = (byte)((float)value.red * factor);
+            value.green = (byte)((float)value.green * factor);
+            value.blue = (byte)((float)value.blue * factor);
             return (value);
         }
 
@@ -103,7 +103,7 @@ namespace libShared.HardwareNah
     /// </summary>
     public static class RGBDefines
     {
-        const UInt16 MaxValue = UInt16.MaxValue;
+        const Byte MaxValue = Byte.MaxValue;
         public readonly static RGBValue Black = new RGBValue { Intensity = MaxValue, Red = 0, Green = 0, Blue = 0 };
         public readonly static RGBValue Red = new RGBValue { Intensity = MaxValue, Red = MaxValue, Green = 0, Blue = 0 };
         public readonly static RGBValue Green = new RGBValue { Intensity = MaxValue, Red = 0, Green = MaxValue, Blue = 0 };
@@ -119,7 +119,7 @@ namespace libShared.HardwareNah
     /// </summary>
     public class PatternGenerator
     {//@todo Doku for Pattern Generator
-        public List<UInt16[]> Curves;
+        public List<Byte[]> Curves;
         public List<eCurveType> CurveTypes;
 
         public int CurveLenght { get; }
@@ -165,38 +165,38 @@ namespace libShared.HardwareNah
             CurveLenght = arrayLen * resFactor;
             ResolutionFactor = resFactor;
 
-            Curves = new List<UInt16[]>();
+            Curves = new List<Byte[]>();
             CurveTypes = new List<eCurveType>();
 
         }
 
         public void AddCurve(eCurveType curveType)
         {
-            UInt16[] CurvePrototype = new UInt16[CurveLenght * 2];
+            Byte[] CurvePrototype = new Byte[CurveLenght * 2];
             Curves.Add(CurvePrototype);
             CurveTypes.Add(curveType);
-
+            // @todo Pattern Generator auf generischen Datentyp umstellen
             switch (curveType)
             {
                 case eCurveType.Sine:
                     for (int i = 0; i < CurveLenght; i++)
                     {
-                        CurvePrototype[i] = (UInt16)((Math.Sin(2 * Math.PI / CurveLenght * i) + 1) / 2 * UInt16.MaxValue);
+                        CurvePrototype[i] = (Byte)((Math.Sin(2 * Math.PI / CurveLenght * i) + 1) / 2 * Byte.MaxValue);
                     }
                     break;
                 case eCurveType.Cosine:
                     for (int i = 0; i < CurveLenght; i++)
                     {
-                        CurvePrototype[i] = (UInt16)((-Math.Cos(2 * Math.PI / CurveLenght * i) + 1) / 2 * UInt16.MaxValue);
+                        CurvePrototype[i] = (Byte)((-Math.Cos(2 * Math.PI / CurveLenght * i) + 1) / 2 * Byte.MaxValue);
                     }
                     break;
                 case eCurveType.Pulse:
-                    UInt16[] temp = new UInt16[CurveLenght / 10];
+                    Byte[] temp = new Byte[CurveLenght / 10];
                     for (int i = 0; i < temp.Length; i++)
                     {
-                        temp[i] = (UInt16)((float)1 / (2 * Math.PI) * Math.Exp(-(Math.Pow(3 / temp.Length * i, 2) / 2)) * UInt16.MaxValue);
+                        temp[i] = (Byte)((float)1 / (2 * Math.PI) * Math.Exp(-(Math.Pow(3 / temp.Length * i, 2) / 2)) * Byte.MaxValue);
                     }
-                    CurvePrototype[CurveLenght / 2] = UInt16.MaxValue;
+                    CurvePrototype[CurveLenght / 2] = Byte.MaxValue;
                     for (int i = 1; i < temp.Length; i++)
                     {
                         CurvePrototype[CurveLenght / 2 + i] = temp[i];
@@ -206,14 +206,14 @@ namespace libShared.HardwareNah
                 case eCurveType.Triangle:
                     for (int i = 0; i < CurveLenght / 2; i++)
                     {
-                        CurvePrototype[i] = (UInt16)(UInt16.MaxValue / CurveLenght * 2 * i);
-                        CurvePrototype[CurveLenght / 2 + i] = (UInt16)(UInt16.MaxValue - UInt16.MaxValue / CurveLenght * 2 * i);
+                        CurvePrototype[i] = (Byte)(Byte.MaxValue / CurveLenght * 2 * i);
+                        CurvePrototype[CurveLenght / 2 + i] = (Byte)(Byte.MaxValue - Byte.MaxValue / CurveLenght * 2 * i);
                     }
                     break;
                 case eCurveType.Sawtooth:
                     for (int i = 0; i < CurveLenght; i++)
                     {
-                        CurvePrototype[i] = (UInt16)(UInt16.MaxValue / CurveLenght * i);
+                        CurvePrototype[i] = (Byte)(Byte.MaxValue / CurveLenght * i);
                     }
                     break;
                 default:
@@ -275,9 +275,9 @@ namespace libShared.HardwareNah
 
             for (int idx = 0; idx < StripeLenght; idx++)
             {
-                UInt16 red = (UInt16)((int)Curves[CurveIndex][idx + cycleCount] * currentRGBrefValue.Red / RGBValue.MaxValue);
-                UInt16 green = (UInt16)((int)Curves[CurveIndex][idx + cycleCount] * currentRGBrefValue.Green / RGBValue.MaxValue);
-                UInt16 blue = (UInt16)((int)Curves[CurveIndex][idx + cycleCount] * currentRGBrefValue.Blue / RGBValue.MaxValue);
+                Byte red = (Byte)((int)Curves[CurveIndex][idx + cycleCount] * currentRGBrefValue.Red / RGBValue.MaxValue);
+                Byte green = (Byte)((int)Curves[CurveIndex][idx + cycleCount] * currentRGBrefValue.Green / RGBValue.MaxValue);
+                Byte blue = (Byte)((int)Curves[CurveIndex][idx + cycleCount] * currentRGBrefValue.Blue / RGBValue.MaxValue);
 
                 rgbStripeHandle[idx] = new RGBValue() { Intensity = currentRGBrefValue.Intensity, Red = red, Green = green, Blue = blue };
             }
@@ -293,7 +293,7 @@ namespace libShared.HardwareNah
             switch (curveChangeState)
             {
                 case 1:
-                    currentRGBrefValue.Intensity = (UInt16)((int)oldRGBrefValue.Intensity * (curveChangeStep - curveChangeCycle) / curveChangeStep);
+                    currentRGBrefValue.Intensity = (Byte)((int)oldRGBrefValue.Intensity * (curveChangeStep - curveChangeCycle) / curveChangeStep);
                     curveChangeCycle++;
                     if (curveChangeCycle > curveChangeStep)
                     {
@@ -303,7 +303,7 @@ namespace libShared.HardwareNah
                     }
                     break;
                 case 2:
-                    currentRGBrefValue.Intensity = (UInt16)((int)newRGBrefValue.Intensity * curveChangeCycle / curveChangeStep);
+                    currentRGBrefValue.Intensity = (Byte)((int)newRGBrefValue.Intensity * curveChangeCycle / curveChangeStep);
                     curveChangeCycle++;
                     if (curveChangeCycle > curveChangeStep)
                     {
