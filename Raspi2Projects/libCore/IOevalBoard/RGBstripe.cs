@@ -24,10 +24,10 @@ namespace libCore.IOevalBoard
         private const int SPI_CS_LINE = 0;
 
         // Interface Objects
-        private GpioController GPIOvar;
+        private GpioController GPIOvar; 
         private SpiDevice SPIinterface_Demo;
         private DispatcherTimer StripeTimer;
-        private DispatcherTimer SweepTimer;
+        private DispatcherTimer PatternTimer;
 
         // Objects for cyclic access
         SPIAddressObject CSadrLEDD;
@@ -38,6 +38,7 @@ namespace libCore.IOevalBoard
         const int MaxSliderValue = 0xFF;
 
         const int refreshCycle = 25;
+        const int patternPeriod = 10000;
 
         
         /// <summary>
@@ -53,13 +54,13 @@ namespace libCore.IOevalBoard
         /// </summary>
         private async void InitAll()
         {
-            //StripeTimer = new DispatcherTimer();
-            //StripeTimer.Interval = TimeSpan.FromMilliseconds(refreshCycle);
-            //StripeTimer.Tick += StripeRefresh_Tick;
+            StripeTimer = new DispatcherTimer();
+            StripeTimer.Interval = TimeSpan.FromMilliseconds(refreshCycle);
+            StripeTimer.Tick += StripeRefresh_Tick;
 
-            //SweepTimer = new DispatcherTimer();
-            //SweepTimer.Interval = TimeSpan.FromMilliseconds(3000);
-            //SweepTimer.Tick += Sweep_Tick;
+            PatternTimer = new DispatcherTimer();
+            PatternTimer.Interval = TimeSpan.FromMilliseconds(patternPeriod);
+            PatternTimer.Tick += ChangePattern_Tick;
 
             GPIOvar = GpioController.GetDefault(); /* Get the default GPIO controller on the system */
             await InitSpi();        /* Initialize the SPI controller                */
@@ -67,7 +68,6 @@ namespace libCore.IOevalBoard
             CSadrLEDD = new SPIAddressObject(SPIAddressObject.eCSadrMode.SPIdedicated, null, null, 0);
             ColorStripe = new LED_APA102(SPIinterface_Demo, CSadrLEDD);
             // Bei der Instanziierung wird erstes LED-Objekt erstellt.
-
             for (int i = 0; i < StripeLen - 1; i++)
             {
                 ColorStripe.AddLED(RGBDefines.Black);
@@ -81,7 +81,7 @@ namespace libCore.IOevalBoard
             StripePattern.AddCurve(PatternGenerator.eCurveType.Triangle);
             StripePattern.AddCurve(PatternGenerator.eCurveType.Sawtooth);
 
-            //StripeTimer.Start();
+            StripeTimer.Start();
         }
 
         private async Task InitSpi()
@@ -96,77 +96,63 @@ namespace libCore.IOevalBoard
         }
 
 
-        //UInt16[] StripeRGB = new ushort[3] { 0, 0, 0 };
-        //UInt16[] oldStripeRGB = new ushort[3] { 0, 0, 0 };
-        //UInt16[] newStripeRGB = new ushort[3] { 0, 0, 0 };
-        //UInt16[] RGBindex = new ushort[9] { 1, 2, 3, 1, 2, 3, 1, 2, 3 };
+        UInt16[] StripeRGB = new ushort[3] { 0, 0, 0 };
+        UInt16[] oldStripeRGB = new ushort[3] { 0, 0, 0 };
+        UInt16[] newStripeRGB = new ushort[3] { 0, 0, 0 };
+        UInt16[] RGBindex = new ushort[9] { 1, 2, 3, 1, 2, 3, 1, 2, 3 };
 
-        //RGBValue[] newColors = new RGBValue[StripeLen];
-        //private void StripeRefresh_Tick(object sender, object e)
-        //{
-        //    StripePattern.RefreshData(newColors);
-        //    ColorStripe.SetAllLEDs(newColors);
-        //    ColorStripe.UpdateLEDs();
-        //}
+        RGBValue[] newColors = new RGBValue[StripeLen];
+        private void StripeRefresh_Tick(object sender, object e)
+        {
+            StripePattern.RefreshData(newColors);
+            ColorStripe.SetAllLEDs(newColors);
+            ColorStripe.UpdateLEDs();
+        }
 
-        //int nextMode = 0;
-        //int colorCycle = 0;
-        //int patternCycle = 0;
-        //private void Sweep_Tick(object sender, object e)
-        //{
-        //    if (nextMode == 0)
-        //    {
-        //        nextMode = 1;
-        //        colorCycle++;
-        //        if (colorCycle >= 7)
-        //        {
-        //            colorCycle = 1;
-        //        }
+        int colorCycle = 0;
+        int patternCycle = 0;
+        /// <summary>
+        /// Routine zum Wechseln des dargestellten Musters
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ChangePattern_Tick(object sender, object e)
+        {
+            patternCycle++;
+            if (colorCycle >= StripePattern.Curves.Count)
+            {
+                patternCycle = 0;
+            }
 
-        //        UInt16[] tempRGB = new ushort[3] { 0, 0, 0 };
-        //        for (int i = 0; i < 3; i++)
-        //        {
-        //            if ((colorCycle & (1 << i)) != 0)
-        //            {
-        //                tempRGB[i] = RGBValue.MaxValue;
-        //            }
-        //        }
-        //        RGBValue tempVal = new RGBValue() { Intensity = RGBValue.MaxValue, Red = tempRGB[0], Green = tempRGB[1], Blue = tempRGB[2] };
-
-        //        StripePattern.InitColorChange(tempVal);
-
-        //    }
-        //    else
-        //    {
-        //        nextMode = 0;
-        //        patternCycle++;
-        //        if (colorCycle >= StripePattern.Curves.Count)
-        //        {
-        //            patternCycle = 0;
-        //        }
-
-        //        StripePattern.InitCurveChange(patternCycle);
-        //    }
-        //}
+            StripePattern.InitCurveChange(patternCycle);
+        }
 
 
         libSharedProject.ProtolV1Commands.RGBstripeColor StripeColor = new libSharedProject.ProtolV1Commands.RGBstripeColor();
 
+        /// <summary>
+        /// Methode zum abfragen des aktuell eingestellten Farbwertes
+        /// </summary>
+        /// <returns></returns>
         public libSharedProject.ProtolV1Commands.RGBstripeColor GetSingleColor()
         {
             return this.StripeColor;
         }
 
+        /// <summary>
+        /// Methode zum einstellen des nächsten Farbwertes 
+        /// Der Farbwert wird per Kreuzblende sanft umgeschaltet
+        /// </summary>
+        /// <param name="myStripe"></param>
         public void SetSingleColor(libSharedProject.ProtolV1Commands.RGBstripeColor myStripe)
         {
             StripeColor.StripeSingleColor = myStripe.StripeSingleColor;
 
             RGBValue tLEDval = new RGBValue(StripeColor.StripeSingleColor.Red, StripeColor.StripeSingleColor.Green, StripeColor.StripeSingleColor.Blue, StripeColor.StripeSingleColor.Intensity);
-            ColorStripe.SetLED(0, tLEDval);
-            ColorStripe.UpdateLEDs();
-
+            //ColorStripe.SetLED(0, tLEDval);
+            //ColorStripe.UpdateLEDs();
+            StripePattern.InitColorChange(tLEDval);
         }
-
     }
 }
 
