@@ -1,0 +1,65 @@
+﻿<Window x:Class="AppWpfInterfacesDemoV1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AppWpfInterfacesDemoV1"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Window.Resources>
+        <CollectionViewSource Source="{Binding View.ControlCollection1}" x:Key="YourMenuItems"/>
+    </Window.Resources>
+
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" Name="mnuMenu">
+            <MenuItem Header="_Datei">
+                <MenuItem Header="_Neu" />
+                <MenuItem Header="_Öffnen" />
+                <Separator />
+                <MenuItem Header="_Speichern" />
+                <MenuItem Header="Speichern _unter ..." />
+                <Separator />
+                <MenuItem Header="_Senden an">
+                    <MenuItem Header="_Mail" />
+                    <MenuItem Header="_Desktop" />
+                </MenuItem>
+                <MenuItem Header="_Beenden" />
+            </MenuItem>
+            <MenuItem Header="_Bearbeiten" />
+            <MenuItem Header="_Hilfe" />
+            <MenuItem Header="_Ethernet">
+                <MenuItem.ItemsSource>
+                    <CompositeCollection>
+                        <CollectionContainer Collection="{Binding Source={StaticResource YourMenuItems}}" />
+                        <MenuItem Header="Show TCP Server" Command="{Binding View.Command}" CommandParameter="Show TCP Server" />
+                        <MenuItem Header="Show TCP Client" Command="{Binding View.Command}" CommandParameter="Show TCP Client" />
+                    </CompositeCollection>
+                </MenuItem.ItemsSource>
+            </MenuItem>
+            <MenuItem Header="_Serial">
+                <MenuItem.ItemsSource>
+                    <CompositeCollection>
+                        <MenuItem Header="Show RS232" Command="{Binding View.Command}" CommandParameter="Show RS232" />
+                    </CompositeCollection>
+                </MenuItem.ItemsSource>
+            </MenuItem>
+        </Menu>
+
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+
+        </Grid>
+
+        <ScrollViewer DockPanel.Dock="Bottom" ScrollChanged="ScrollViewer_ScrollChanged" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <ListBox ItemsSource="{Binding InfoTextList}" BorderThickness="0"/>
+        </ScrollViewer>
+
+    </DockPanel>
+</Window>
