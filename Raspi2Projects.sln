@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libShared", "libShared\libShared.csproj", "{338154BB-0C23-4663-BD6B-D7C72DD15038}"
 EndProject
@@ -39,12 +39,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HDD_Tests", "HDD_Tests\HDD_
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StripeDemo", "StripeDemo\StripeDemo.csproj", "{BF014568-523F-4D07-855A-23567F52200A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{583436FC-2EFD-43E1-A209-F3D741D14B75}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		Readme.md = Readme.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		libSharedProject\libSharedProject.projitems*{f8a07aeb-0b43-4274-80ff-3917cbe6c48c}*SharedItemsImports = 4
 		libSharedProject\libSharedProject.projitems*{338154bb-0c23-4663-bd6b-d7c72dd15038}*SharedItemsImports = 4
-		libSharedProject\libSharedProject.projitems*{64b18241-80f4-40ff-b544-b6887ee26a0b}*SharedItemsImports = 4
 		libSharedProject\libSharedProject.projitems*{4bbfcc8b-5ddc-4d8d-a998-4d67c343c309}*SharedItemsImports = 13
+		libSharedProject\libSharedProject.projitems*{64b18241-80f4-40ff-b544-b6887ee26a0b}*SharedItemsImports = 4
+		libSharedProject\libSharedProject.projitems*{f8a07aeb-0b43-4274-80ff-3917cbe6c48c}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

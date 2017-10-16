@@ -4,7 +4,7 @@
 library
 C#
 .cs
-C:\Users\micha\Source\Repos\Raspberry2\Raspi2Team\Raspi2Projects\libDesktop\obj\Debug\
+C:\Users\micha\Source\Repos\Raspberry2Projects\libDesktop\obj\Debug\
 libDesktop
 none
 false
@@ -13,8 +13,8 @@ DEBUG;TRACE
 2-582455786
 
 131369557077
-67934985905
+67-1412886349
 UserControls\UcEthernet.xaml;UserControls\UcSerial.xaml;
 
-True
+False
 
