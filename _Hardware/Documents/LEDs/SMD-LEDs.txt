@@ -1,0 +1,17 @@
+25 Stück SMD RGB-LEDs - 3in1 - Bauform 5050
+
+gegurtet
+
+schwarz gefärbte Vorderseite (Blackface)
+
+Technische Daten:
+
+Rot	Grün	Blau
+
+Helligkeit (mcd)	550-800	1000-1400	210-295
+
+Durchlassspannung (V)	1,8-2,2	3,0-3,4	3,0-3,4
+
+Wellenlänge (nm)	620-626	520-525	465-470
+
+Abmessung: 5,5x5,0x2,8mm
